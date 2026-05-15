@@ -1,21 +1,11 @@
-import { createClient }
+import { supabaseClient }
 
-from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
+from './supabase.js'
 
-const SUPABASE_URL =
-  'https://ocakjidyndcojeapdsop.supabase.co'
-
-const SUPABASE_KEY =
-  'sb_publishable_sBVisHxIzGA1pEtlChR5pw_pcF-J3nm'
-
-const supabase =
-  createClient(
-    SUPABASE_URL,
-    SUPABASE_KEY
-  )
+console.log('AUTH ACTIVE')
 
 // =========================
-// LOGIN PAGE
+// LOGIN
 // =========================
 
 const loginForm =
@@ -35,13 +25,21 @@ if (loginForm) {
       const password =
         document.getElementById('password').value
 
-      const { error } =
-        await supabase.auth.signInWithPassword({
+      console.log(email, password)
 
-          email,
-          password
+      const { data, error } =
 
-        })
+        await supabaseClient.auth
+
+          .signInWithPassword({
+
+            email,
+            password
+
+          })
+
+      console.log(data)
+      console.log(error)
 
       if (error) {
 
@@ -60,7 +58,7 @@ if (loginForm) {
 }
 
 // =========================
-// CEK LOGIN
+// CHECK AUTH
 // =========================
 
 async function checkAuth() {
@@ -69,14 +67,20 @@ async function checkAuth() {
 
     data: { session }
 
-  } = await supabase.auth.getSession()
+  } = await supabaseClient.auth
 
-  // kalau belum login
+    .getSession()
+
+  console.log(session)
 
   if (
+
     !session &&
+
     window.location.pathname
+
       .includes('dashboard.html')
+
   ) {
 
     window.location.href =
@@ -101,7 +105,9 @@ if (logoutBtn) {
     'click',
     async () => {
 
-      await supabase.auth.signOut()
+      await supabaseClient.auth
+
+        .signOut()
 
       window.location.href =
         'index.html'
