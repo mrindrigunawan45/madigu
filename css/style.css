@@ -1,0 +1,615 @@
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+:root{
+
+  --primary:#2563eb;
+  --primary-dark:#1d4ed8;
+
+  --bg:#f1f5f9;
+
+  --white:#ffffff;
+
+  --text:#0f172a;
+
+  --border:#e2e8f0;
+
+  --shadow:
+    0 4px 20px rgba(0,0,0,0.05);
+
+}
+
+body{
+
+  font-family:Arial,sans-serif;
+
+  background:var(--bg);
+
+  color:var(--text);
+
+}
+
+/* HEADER */
+
+header{
+
+  height:90px;
+
+  background:var(--primary);
+
+  color:white;
+
+  display:flex;
+
+  align-items:center;
+
+  gap:20px;
+
+  padding:0 28px;
+
+  position:sticky;
+
+  top:0;
+
+  z-index:999;
+
+  box-shadow:var(--shadow);
+
+}
+
+header h1{
+
+  font-size:32px;
+
+  font-weight:700;
+
+}
+
+.menu-btn{
+
+  font-size:34px;
+
+  cursor:pointer;
+
+}
+
+/* SIDEBAR */
+
+.sidebar{
+
+  position:fixed;
+
+  top:0;
+
+  left:-280px;
+
+  width:280px;
+
+  height:100vh;
+
+  background:white;
+
+  z-index:9999;
+
+  box-shadow:var(--shadow);
+
+  padding:24px;
+
+  transition:0.3s;
+
+}
+
+.sidebar.active{
+
+  left:0;
+
+}
+
+.sidebar-logo{
+
+  text-align:center;
+
+  margin-bottom:30px;
+
+}
+
+.sidebar-logo img{
+
+  width:150px;
+
+}
+
+.sidebar-menu{
+
+  display:flex;
+
+  flex-direction:column;
+
+  gap:14px;
+
+}
+
+.sidebar-menu button{
+
+  border:none;
+
+  background:#f8fafc;
+
+  padding:16px;
+
+  border-radius:16px;
+
+  font-size:17px;
+
+  cursor:pointer;
+
+  text-align:left;
+
+  transition:0.2s;
+
+  color:#0f172a;
+
+  font-weight:600;
+
+}
+
+.sidebar-menu button:hover{
+
+  background:var(--primary);
+
+  color:white;
+
+}
+
+/* OVERLAY */
+
+.overlay{
+
+  position:fixed;
+
+  inset:0;
+
+  background:rgba(0,0,0,0.3);
+
+  opacity:0;
+
+  visibility:hidden;
+
+  transition:0.3s;
+
+  z-index:999;
+
+}
+
+.overlay.active{
+
+  opacity:1;
+
+  visibility:visible;
+
+}
+
+/* MAIN */
+
+main{
+
+  padding:34px;
+
+}
+
+/* CARD */
+
+.card{
+
+  background:white;
+
+  border-radius:26px;
+
+  padding:30px;
+
+  box-shadow:var(--shadow);
+
+}
+
+/* FORM */
+
+input,
+select,
+textarea{
+
+  width:100%;
+
+  padding:18px;
+
+  border-radius:18px;
+
+  border:2px solid var(--border);
+
+  font-size:17px;
+
+  margin-bottom:18px;
+
+  outline:none;
+
+  transition:0.2s;
+
+  background:white;
+
+}
+
+input:focus,
+select:focus,
+textarea:focus{
+
+  border-color:var(--primary);
+
+}
+
+textarea{
+
+  min-height:120px;
+
+  resize:vertical;
+
+}
+
+/* BUTTON */
+
+button{
+
+  border:none;
+
+  background:var(--primary);
+
+  color:white;
+
+  padding:18px;
+
+  border-radius:18px;
+
+  font-size:18px;
+
+  font-weight:600;
+
+  cursor:pointer;
+
+  transition:0.2s;
+
+}
+
+button:hover{
+
+  background:var(--primary-dark);
+
+}
+
+/* TAB */
+
+.tab{
+
+  display:none;
+
+}
+
+.tab.active{
+
+  display:block;
+
+}
+
+/* SISWA */
+
+.siswa-card{
+
+  margin-bottom:30px;
+
+  padding-bottom:22px;
+
+  border-bottom:1px solid #e5e7eb;
+
+}
+
+.siswa-card h4{
+
+  margin-bottom:18px;
+
+  font-size:24px;
+
+  color:#0f172a;
+
+}
+
+/* ABSENSI MODERN */
+
+.absen-modern{
+
+  display:grid;
+
+  grid-template-columns:
+    repeat(4,1fr);
+
+  gap:16px;
+
+}
+
+.absen-card{
+
+  position:relative;
+
+  border:2px solid #e5e7eb;
+
+  border-radius:22px;
+
+  padding:20px;
+
+  cursor:pointer;
+
+  transition:0.25s;
+
+  background:white;
+
+}
+
+.absen-card:hover{
+
+  transform:translateY(-2px);
+
+}
+
+.absen-card input{
+
+  position:absolute;
+
+  opacity:0;
+
+}
+
+.absen-content{
+
+  display:flex;
+
+  flex-direction:column;
+
+  align-items:center;
+
+  justify-content:center;
+
+  gap:12px;
+
+}
+
+.absen-icon{
+
+  width:58px;
+
+  height:58px;
+
+  border-radius:18px;
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:center;
+
+  color:white;
+
+  font-size:28px;
+
+  font-weight:700;
+
+}
+
+/* HADIR */
+
+.absen-card.hadir .absen-icon{
+
+  background:#16a34a;
+
+}
+
+.absen-card.hadir:has(input:checked){
+
+  border-color:#16a34a;
+
+  background:#f0fdf4;
+
+}
+
+/* SAKIT */
+
+.absen-card.sakit .absen-icon{
+
+  background:#eab308;
+
+}
+
+.absen-card.sakit:has(input:checked){
+
+  border-color:#eab308;
+
+  background:#fefce8;
+
+}
+
+/* IZIN */
+
+.absen-card.izin .absen-icon{
+
+  background:#2563eb;
+
+}
+
+.absen-card.izin:has(input:checked){
+
+  border-color:#2563eb;
+
+  background:#eff6ff;
+
+}
+
+/* ALPA */
+
+.absen-card.alpa .absen-icon{
+
+  background:#ef4444;
+
+}
+
+.absen-card.alpa:has(input:checked){
+
+  border-color:#ef4444;
+
+  background:#fef2f2;
+
+}
+
+.absen-content span{
+
+  font-size:17px;
+
+  font-weight:600;
+
+  color:#0f172a;
+
+}
+
+/* NILAI */
+
+.nilai-row{
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:space-between;
+
+  gap:20px;
+
+  padding:18px;
+
+  border-radius:18px;
+
+  background:#f8fafc;
+
+  margin-bottom:14px;
+
+}
+
+.nilai-row span{
+
+  font-weight:600;
+
+  font-size:17px;
+
+}
+
+.nilai-row input{
+
+  width:120px;
+
+  margin-bottom:0;
+
+}
+
+/* TABLE */
+
+.table-container{
+
+  overflow-x:auto;
+
+  margin-top:24px;
+
+}
+
+table{
+
+  width:100%;
+
+  border-collapse:collapse;
+
+  min-width:1000px;
+
+}
+
+th{
+
+  background:var(--primary);
+
+  color:white;
+
+  padding:16px;
+
+}
+
+td{
+
+  padding:14px;
+
+  border-bottom:1px solid #e5e7eb;
+
+  text-align:center;
+
+}
+
+tr:nth-child(even){
+
+  background:#f8fafc;
+
+}
+
+/* MOBILE */
+
+@media(max-width:768px){
+
+  header{
+
+    height:76px;
+
+    padding:0 20px;
+
+  }
+
+  header h1{
+
+    font-size:24px;
+
+  }
+
+  main{
+
+    padding:18px;
+
+  }
+
+  .card{
+
+    padding:20px;
+
+  }
+
+  .absen-modern{
+
+    grid-template-columns:
+      repeat(2,1fr);
+
+  }
+
+  .nilai-row{
+
+    flex-direction:column;
+
+    align-items:stretch;
+
+  }
+
+  .nilai-row input{
+
+    width:100%;
+
+  }
+
+}

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login MaDiGU</title>
+
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+
+<div class="login-container">
+
+  <div class="login-card">
+
+    <img
+      src="https://drive.google.com/thumbnail?id=1FWj7nowDdr3UFBKNbXxp4pOMQ2daCMKw&sz=w500"
+      class="login-logo"
+    >
+
+    <h2>Login MaDiGU</h2>
+
+    <input type="email" id="email" placeholder="Email">
+    <input type="password" id="password" placeholder="Password">
+
+    <button onclick="login()">
+      <i class="fas fa-sign-in-alt"></i>
+      Masuk
+    </button>
+
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+<div class="loading hidden" id="loading">
+  <div class="spinner"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script type="module" src="js/auth.js"></script>
+
+</body>
+</html>

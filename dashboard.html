@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+
+  <meta charset="UTF-8" />
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+
+  <title>Dashboard MaDiGU</title>
+
+  <link
+    rel="stylesheet"
+    href="css/style.css"
+  />
+
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+  />
+
+  <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+
+</head>
+
+<body>
+
+  <!-- OVERLAY -->
+
+  <div
+    class="overlay"
+    id="overlay"
+  ></div>
+
+  <!-- SIDEBAR -->
+
+  <aside
+    class="sidebar"
+    id="sidebar"
+  >
+
+    <div class="sidebar-logo">
+
+      <img
+        src="https://drive.google.com/thumbnail?id=1FWj7nowDdr3UFBKNbXxp4pOMQ2daCMKw&sz=w500"
+      />
+
+    </div>
+
+    <div class="sidebar-menu">
+
+      <button onclick="showTab('jurnalTab')">
+
+        <i class="fa-solid fa-book"></i>
+        Jurnal
+
+      </button>
+
+      <button onclick="showTab('nilaiTab')">
+
+        <i class="fa-solid fa-pen"></i>
+        Input Nilai
+
+      </button>
+
+      <button onclick="showTab('rekapTab')">
+
+        <i class="fa-solid fa-chart-line"></i>
+        Rekap Nilai
+
+      </button>
+
+      <button onclick="showTab('rekapJurnalTab')">
+
+        <i class="fa-solid fa-book-open"></i>
+        Rekap Jurnal
+
+      </button>
+
+      <button onclick="showTab('rekapAbsenTab')">
+
+        <i class="fa-solid fa-user-check"></i>
+        Rekap Absen
+
+      </button>
+
+      <button id="logoutBtn">
+
+        <i class="fa-solid fa-right-from-bracket"></i>
+        Logout
+
+      </button>
+
+    </div>
+
+  </aside>
+
+  <!-- HEADER -->
+
+  <header>
+
+    <div
+      class="menu-btn"
+      id="menuBtn"
+    >
+
+      <i class="fa-solid fa-bars"></i>
+
+    </div>
+
+    <h1>MaDiGU Dashboard</h1>
+
+  </header>
+
+  <!-- MAIN -->
+
+  <main>
+
+    <!-- =========================
+         JURNAL
+    ========================== -->
+
+    <section
+      class="tab active"
+      id="jurnalTab"
+    >
+
+      <div class="card">
+
+        <input
+          type="date"
+          id="tanggal"
+        />
+
+        <select id="mapel-jurnal"></select>
+
+        <select id="kelas-jurnal"></select>
+
+        <textarea
+          id="materi"
+          placeholder="Materi Pembelajaran"
+        ></textarea>
+
+        <div id="list-siswa-jurnal"></div>
+
+        <button id="saveJurnalBtn">
+
+          Simpan Jurnal
+
+        </button>
+
+      </div>
+
+    </section>
+
+    <!-- =========================
+         INPUT NILAI
+    ========================== -->
+
+    <section
+      class="tab"
+      id="nilaiTab"
+    >
+
+      <div class="card">
+
+        <select id="mapel-nilai"></select>
+
+        <select id="jenis-nilai">
+
+          <option value="s1">S1</option>
+          <option value="s2">S2</option>
+          <option value="s3">S3</option>
+          <option value="s4">S4</option>
+
+          <option value="f1">F1</option>
+          <option value="f2">F2</option>
+          <option value="f3">F3</option>
+          <option value="f4">F4</option>
+
+          <option value="asts">ASTS</option>
+          <option value="asas">ASAS</option>
+
+        </select>
+
+        <select id="kelas-nilai"></select>
+
+        <div id="list-siswa-nilai"></div>
+
+        <button id="saveNilaiBtn">
+
+          Simpan Nilai
+
+        </button>
+
+      </div>
+
+    </section>
+
+    <!-- =========================
+         REKAP NILAI
+    ========================== -->
+
+    <section
+      class="tab"
+      id="rekapTab"
+    >
+
+      <div class="card">
+
+        <select id="rekap-mapel"></select>
+
+        <select id="rekap-kelas"></select>
+
+        <button id="downloadExcelBtn">
+
+          Download Excel
+
+        </button>
+
+        <div class="table-container">
+
+          <table id="rekap-table"></table>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- =========================
+         REKAP JURNAL
+    ========================== -->
+
+    <section
+      class="tab"
+      id="rekapJurnalTab"
+    >
+
+      <div class="card">
+
+        <select id="rekap-jurnal-mapel"></select>
+
+        <select id="rekap-jurnal-kelas"></select>
+
+        <button id="downloadJurnalBtn">
+
+          Download Excel
+
+        </button>
+
+        <div class="table-container">
+
+          <table id="rekap-jurnal-table"></table>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- =========================
+         REKAP ABSEN
+    ========================== -->
+
+    <section
+      class="tab"
+      id="rekapAbsenTab"
+    >
+
+      <div class="card">
+
+        <select id="rekap-absen-kelas"></select>
+
+        <button id="downloadAbsenBtn">
+
+          Download Excel
+
+        </button>
+
+        <div class="table-container">
+
+          <table id="rekap-absen-table"></table>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- =========================
+       SIDEBAR SCRIPT
+  ========================== -->
+
+  <script>
+
+    const menuBtn =
+      document.getElementById('menuBtn')
+
+    const sidebar =
+      document.getElementById('sidebar')
+
+    const overlay =
+      document.getElementById('overlay')
+
+    menuBtn.onclick = () => {
+
+      sidebar.classList.toggle('active')
+
+      overlay.classList.toggle('active')
+
+    }
+
+    overlay.onclick = () => {
+
+      sidebar.classList.remove('active')
+
+      overlay.classList.remove('active')
+
+    }
+
+    function showTab(tabId) {
+
+      document
+        .querySelectorAll('.tab')
+        .forEach(tab => {
+
+          tab.classList.remove('active')
+
+        })
+
+      document
+        .getElementById(tabId)
+
+        .classList.add('active')
+
+      sidebar.classList.remove('active')
+
+      overlay.classList.remove('active')
+
+    }
+
+  </script>
+
+  <!-- =========================
+       MODULE SCRIPT
+  ========================== -->
+
+  <script
+    type="module"
+    src="js/auth.js"
+  ></script>
+
+  <script
+    type="module"
+    src="js/jurnal.js"
+  ></script>
+
+  <script
+    type="module"
+    src="js/nilai.js"
+  ></script>
+
+  <script
+    type="module"
+    src="js/rekapNilai.js"
+  ></script>
+
+  <script
+    type="module"
+    src="js/rekapJurnal.js"
+  ></script>
+
+  <script
+    type="module"
+    src="js/rekapAbsen.js"
+  ></script>
+
+</body>
+
+</html>
