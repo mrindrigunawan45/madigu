@@ -96,13 +96,15 @@ async function loadKelas() {
 
 async function loadSiswaDanNilai() {
 
+  const {
+    data: { user }
+  } = await supabaseClient.auth.getUser()
+
   if (
     !kelasSelect.value ||
     !mapelSelect.value ||
     !jenisSelect.value
   ) return
-
-  // LOAD SISWA
 
   const { data: siswa } = await supabaseClient
 
@@ -114,13 +116,13 @@ async function loadSiswaDanNilai() {
 
   siswaData = siswa
 
-  // LOAD NILAI EXISTING
-
   const { data: nilaiExisting } = await supabaseClient
 
     .from('nilai')
 
     .select('*')
+
+    .eq('user_id', user.id)
 
     .eq('kelas', kelasSelect.value)
 
@@ -178,6 +180,10 @@ jenisSelect.addEventListener(
 
 saveBtn.addEventListener('click', async () => {
 
+  const {
+    data: { user }
+  } = await supabaseClient.auth.getUser()
+
   const jenis = jenisSelect.value
 
   for (const [index, item] of siswaData.entries()) {
@@ -190,13 +196,13 @@ saveBtn.addEventListener('click', async () => {
 
     )
 
-    // CEK DATA LAMA
-
     const { data: existing } = await supabaseClient
 
       .from('nilai')
 
       .select('*')
+
+      .eq('user_id', user.id)
 
       .eq('siswa', item.nama_siswa)
 
@@ -208,6 +214,8 @@ saveBtn.addEventListener('click', async () => {
 
       ...existing,
 
+      user_id: user.id,
+
       siswa: item.nama_siswa,
 
       kelas: kelasSelect.value,
@@ -217,8 +225,6 @@ saveBtn.addEventListener('click', async () => {
       [jenis]: nilaiInput
 
     }
-
-    // HITUNG NILAI AKHIR
 
     const sAvg = (
 

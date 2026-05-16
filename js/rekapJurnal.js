@@ -9,26 +9,15 @@ const kelasSelect =
 const table =
   document.getElementById('rekap-jurnal-table')
 
-const downloadBtn =
-  document.getElementById('downloadJurnalBtn')
-
 let jurnalData = []
 
 async function loadMapel() {
 
-  const { data, error } = await supabaseClient
+  const { data } = await supabaseClient
 
     .from('mata_pelajaran')
 
     .select('*')
-
-  if (error) {
-
-    console.error(error)
-
-    return
-
-  }
 
   mapelSelect.innerHTML = ''
 
@@ -53,19 +42,11 @@ async function loadMapel() {
 
 async function loadKelas() {
 
-  const { data, error } = await supabaseClient
+  const { data } = await supabaseClient
 
     .from('siswa')
 
     .select('kelas')
-
-  if (error) {
-
-    console.error(error)
-
-    return
-
-  }
 
   const kelasUnik =
     [...new Set(data.map(item => item.kelas))]
@@ -93,32 +74,28 @@ async function loadKelas() {
 
 async function loadRekapJurnal() {
 
+  const {
+    data: { user }
+  } = await supabaseClient.auth.getUser()
+
   if (
     !kelasSelect.value ||
     !mapelSelect.value
   ) return
 
-  const { data, error } = await supabaseClient
+  const { data } = await supabaseClient
 
     .from('jurnal')
 
     .select('*')
+
+    .eq('user_id', user.id)
 
     .eq('kelas', kelasSelect.value)
 
     .eq('mapel', mapelSelect.value)
 
     .order('tanggal', { ascending:false })
-
-  if (error) {
-
-    console.error(error)
-
-    return
-
-  }
-
-  // GROUP DATA
 
   const grouped = {}
 
@@ -170,17 +147,11 @@ function renderTable() {
   table.innerHTML = `
 
     <tr>
-
       <th>Tanggal</th>
-
       <th>Kelas</th>
-
       <th>Mapel</th>
-
       <th>Materi</th>
-
       <th>Tidak Hadir</th>
-
     </tr>
 
   `
@@ -192,11 +163,8 @@ function renderTable() {
       <tr>
 
         <td>${item.tanggal}</td>
-
         <td>${item.kelas}</td>
-
         <td>${item.mapel}</td>
-
         <td>${item.materi}</td>
 
         <td>
@@ -224,42 +192,6 @@ mapelSelect.addEventListener(
   'change',
   loadRekapJurnal
 )
-
-downloadBtn.addEventListener('click', () => {
-
-  if (!jurnalData.length) {
-
-    alert('Data kosong')
-
-    return
-
-  }
-
-  const worksheet =
-    XLSX.utils.json_to_sheet(jurnalData)
-
-  const workbook =
-    XLSX.utils.book_new()
-
-  XLSX.utils.book_append_sheet(
-
-    workbook,
-
-    worksheet,
-
-    'Rekap Jurnal'
-
-  )
-
-  XLSX.writeFile(
-
-    workbook,
-
-    `Rekap_Jurnal_${kelasSelect.value}.xlsx`
-
-  )
-
-})
 
 loadMapel()
 

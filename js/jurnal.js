@@ -129,11 +129,27 @@ kelasSelect.addEventListener('change', async () => {
 
       <div class="siswa-card">
 
-        <h4>${item.nama_siswa}</h4>
+        <div class="siswa-info">
+
+          <div class="siswa-avatar">
+
+            ${item.nama_siswa
+              .split(' ')
+              .map(n => n[0])
+              .slice(0,2)
+              .join('')}
+
+          </div>
+
+          <div class="siswa-name">
+
+            <h4>${item.nama_siswa}</h4>
+
+          </div>
+
+        </div>
 
         <div class="absen-modern">
-
-          <!-- HADIR -->
 
           <label class="absen-card hadir">
 
@@ -156,8 +172,6 @@ kelasSelect.addEventListener('change', async () => {
 
           </label>
 
-          <!-- SAKIT -->
-
           <label class="absen-card sakit">
 
             <input
@@ -178,8 +192,6 @@ kelasSelect.addEventListener('change', async () => {
 
           </label>
 
-          <!-- IZIN -->
-
           <label class="absen-card izin">
 
             <input
@@ -199,8 +211,6 @@ kelasSelect.addEventListener('change', async () => {
             </div>
 
           </label>
-
-          <!-- ALPA -->
 
           <label class="absen-card alpa">
 
@@ -234,6 +244,10 @@ kelasSelect.addEventListener('change', async () => {
 
 saveBtn.addEventListener('click', async () => {
 
+  const {
+    data: { user }
+  } = await supabaseClient.auth.getUser()
+
   if (
     !tanggal.value ||
     !kelasSelect.value ||
@@ -258,6 +272,8 @@ saveBtn.addEventListener('click', async () => {
     ).value
 
     return {
+
+      user_id: user.id,
 
       tanggal: tanggal.value,
 
