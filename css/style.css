@@ -897,13 +897,16 @@ tr:nth-child(even){
 
 }
 
-.rekap-center{
+..rekap-center{
 
-  display:flex;
+  display:grid;
 
-  align-items:center;
+  grid-template-columns:
+    repeat(4,1fr);
 
   gap:10px;
+
+  width:100%;
 
 }
 
@@ -1009,7 +1012,13 @@ tr:nth-child(even){
 
   align-items:center;
 
-  gap:12px;
+  gap:14px;
+
+  padding-top:12px;
+
+  border-top:1px solid #e5e7eb;
+
+  width:100%;
 
 }
 
@@ -1540,19 +1549,22 @@ tr:nth-child(even){
 
   .rekap-center{
 
-    flex-wrap:wrap;
+  display:grid;
 
-    justify-content:flex-start;
+  grid-template-columns:
+    repeat(4,1fr);
 
-    gap:12px;
+  gap:10px;
 
-  }
+  width:100%;
+
+}
 
   .rekap-badge{
 
-    width:84px;
+  width:100%;
 
-    height:76px;
+  height:72px;
 
     border-radius:18px;
 
@@ -1582,9 +1594,11 @@ tr:nth-child(even){
 
   .rekap-right{
 
-    justify-content:flex-start;
+  justify-content:flex-start;
 
-  }
+  margin-top:2px;
+
+}
 
   .persen-circle{
 
