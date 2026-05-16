@@ -391,7 +391,7 @@ button:hover{
   display:grid;
 
   grid-template-columns:
-    minmax(260px, 420px)
+    minmax(220px, 320px)
     1fr;
 
   gap:20px;
@@ -1623,6 +1623,52 @@ tr:nth-child(even){
   .guru-item strong{
 
     font-size:14px;
+
+  }
+
+}
+/* =========================
+   MOBILE FIX FINAL
+========================= */
+
+@media(max-width:768px){
+
+  .siswa-card{
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:stretch;
+
+    gap:16px;
+
+  }
+
+  .siswa-info{
+
+    width:100%;
+
+  }
+
+  .absen-modern{
+
+    width:100%;
+
+    display:grid;
+
+    grid-template-columns:
+      repeat(2,1fr);
+
+    gap:12px;
+
+  }
+
+  .absen-card{
+
+    width:100%;
+
+    min-height:110px;
 
   }
 
