@@ -11,9 +11,6 @@ const mapelSelect =
 const kelasSelect =
   document.getElementById('rekap-kelas')
 
-const downloadBtn =
-  document.getElementById('downloadExcelBtn')
-
 let rekapData = []
 
 async function loadMapel() {
@@ -24,8 +21,6 @@ async function loadMapel() {
 
     .select('*')
 
-  console.log('MAPEL REKAP:', data)
-
   if (error) {
 
     console.error(error)
@@ -34,19 +29,27 @@ async function loadMapel() {
 
   }
 
+  const mapelUnik =
+    [...new Set(data.map(item => item.nama_mapel))]
+
+  console.log(
+    'MAPEL REKAP:',
+    mapelUnik
+  )
+
   mapelSelect.innerHTML = ''
 
   mapelSelect.appendChild(
     new Option('Pilih Mata Pelajaran', '')
   )
 
-  data.forEach(item => {
+  mapelUnik.forEach(mapel => {
 
     mapelSelect.appendChild(
 
       new Option(
-        item.nama_mapel,
-        item.nama_mapel
+        mapel,
+        mapel
       )
 
     )
@@ -63,8 +66,6 @@ async function loadKelas() {
 
     .select('kelas')
 
-  console.log('KELAS REKAP:', data)
-
   if (error) {
 
     console.error(error)
@@ -75,6 +76,11 @@ async function loadKelas() {
 
   const kelasUnik =
     [...new Set(data.map(item => item.kelas))]
+
+  console.log(
+    'KELAS REKAP:',
+    kelasUnik
+  )
 
   kelasSelect.innerHTML = ''
 
@@ -99,10 +105,25 @@ async function loadKelas() {
 
 async function loadRekap() {
 
+  const {
+    data: { user }
+  } = await supabaseClient.auth.getUser()
+
   if (
     !kelasSelect.value ||
     !mapelSelect.value
-  ) return
+  ) {
+
+    table.innerHTML = ''
+
+    return
+
+  }
+
+  console.log(
+    'USER LOGIN:',
+    user.id
+  )
 
   const { data, error } = await supabaseClient
 
@@ -110,11 +131,11 @@ async function loadRekap() {
 
     .select('*')
 
+    .eq('user_id', user.id)
+
     .eq('kelas', kelasSelect.value)
 
     .eq('mapel', mapelSelect.value)
-
-  console.log('REKAP DATA:', data)
 
   if (error) {
 
@@ -124,7 +145,18 @@ async function loadRekap() {
 
   }
 
+  console.log(
+    'REKAP DATA:',
+    data
+  )
+
   rekapData = data
+
+  renderTable()
+
+}
+
+function renderTable() {
 
   table.innerHTML = `
 
@@ -151,7 +183,27 @@ async function loadRekap() {
 
   `
 
-  data.forEach(item => {
+  if (!rekapData.length) {
+
+    table.innerHTML += `
+
+      <tr>
+
+        <td colspan="12">
+
+          Belum ada data
+
+        </td>
+
+      </tr>
+
+    `
+
+    return
+
+  }
+
+  rekapData.forEach(item => {
 
     table.innerHTML += `
 
@@ -159,23 +211,25 @@ async function loadRekap() {
 
         <td>${item.siswa || '-'}</td>
 
-        <td>${item.s1 || '-'}</td>
-        <td>${item.s2 || '-'}</td>
-        <td>${item.s3 || '-'}</td>
-        <td>${item.s4 || '-'}</td>
+        <td>${item.s1 ?? '-'}</td>
+        <td>${item.s2 ?? '-'}</td>
+        <td>${item.s3 ?? '-'}</td>
+        <td>${item.s4 ?? '-'}</td>
 
-        <td>${item.f1 || '-'}</td>
-        <td>${item.f2 || '-'}</td>
-        <td>${item.f3 || '-'}</td>
-        <td>${item.f4 || '-'}</td>
+        <td>${item.f1 ?? '-'}</td>
+        <td>${item.f2 ?? '-'}</td>
+        <td>${item.f3 ?? '-'}</td>
+        <td>${item.f4 ?? '-'}</td>
 
-        <td>${item.asts || '-'}</td>
-        <td>${item.asas || '-'}</td>
+        <td>${item.asts ?? '-'}</td>
+        <td>${item.asas ?? '-'}</td>
 
         <td>
 
           ${item.nilai_akhir
-            ? Number(item.nilai_akhir).toFixed(2)
+            ? Number(
+                item.nilai_akhir
+              ).toFixed(2)
             : '-'}
 
         </td>
@@ -197,63 +251,6 @@ mapelSelect.addEventListener(
   'change',
   loadRekap
 )
-
-downloadBtn.addEventListener('click', () => {
-
-  if (!rekapData.length) {
-
-    alert('Data kosong')
-
-    return
-
-  }
-
-  const exportData = rekapData.map(item => ({
-
-    Nama: item.siswa,
-
-    S1: item.s1,
-    S2: item.s2,
-    S3: item.s3,
-    S4: item.s4,
-
-    F1: item.f1,
-    F2: item.f2,
-    F3: item.f3,
-    F4: item.f4,
-
-    ASTS: item.asts,
-    ASAS: item.asas,
-
-    'Nilai Akhir': item.nilai_akhir
-
-  }))
-
-  const worksheet =
-    XLSX.utils.json_to_sheet(exportData)
-
-  const workbook =
-    XLSX.utils.book_new()
-
-  XLSX.utils.book_append_sheet(
-
-    workbook,
-
-    worksheet,
-
-    'Rekap Nilai'
-
-  )
-
-  XLSX.writeFile(
-
-    workbook,
-
-    `Rekap_${kelasSelect.value}_${mapelSelect.value}.xlsx`
-
-  )
-
-})
 
 loadMapel()
 
