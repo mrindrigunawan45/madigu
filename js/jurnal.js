@@ -1,55 +1,32 @@
 import { supabaseClient } from './supabase.js'
 
-// =========================
-// USER LOGIN
-// =========================
-
-const sessionData =
-
-  JSON.parse(
-    localStorage.getItem('session')
-  )
-
-const userLogin =
-
-  sessionData?.email ||
-
-  sessionData?.username ||
-
-  'unknown-user'
-
-// =========================
-// ELEMENT
-// =========================
-
-const tanggalInput =
+const tanggal =
   document.getElementById('tanggal')
-
-const mapelSelect =
-  document.getElementById('mapel-jurnal')
 
 const kelasSelect =
   document.getElementById('kelas-jurnal')
 
-const listSiswa =
+const mapelSelect =
+  document.getElementById('mapel-jurnal')
+
+const siswaContainer =
   document.getElementById('list-siswa-jurnal')
 
 const saveBtn =
   document.getElementById('saveJurnalBtn')
 
-// =========================
-// LOAD MAPEL
-// =========================
+let siswaData = []
+
+tanggal.value =
+  new Date().toISOString().split('T')[0]
 
 async function loadMapel() {
 
-  const { data, error } =
+  const { data, error } = await supabaseClient
 
-    await supabaseClient
+    .from('mata_pelajaran')
 
-      .from('mata_pelajaran')
-
-      .select('*')
+    .select('*')
 
   if (error) {
 
@@ -59,43 +36,34 @@ async function loadMapel() {
 
   }
 
-  mapelSelect.innerHTML = `
+  mapelSelect.innerHTML = ''
 
-    <option value="">
-      Pilih Mata Pelajaran
-    </option>
-
-  `
+  mapelSelect.appendChild(
+    new Option('Pilih Mata Pelajaran', '')
+  )
 
   data.forEach(item => {
 
-    mapelSelect.innerHTML += `
+    mapelSelect.appendChild(
 
-      <option value="${item.nama_mapel}">
+      new Option(
+        item.nama_mapel,
+        item.nama_mapel
+      )
 
-        ${item.nama_mapel}
-
-      </option>
-
-    `
+    )
 
   })
 
 }
 
-// =========================
-// LOAD KELAS
-// =========================
-
 async function loadKelas() {
 
-  const { data, error } =
+  const { data, error } = await supabaseClient
 
-    await supabaseClient
+    .from('siswa')
 
-      .from('siswa')
-
-      .select('kelas')
+    .select('kelas')
 
   if (error) {
 
@@ -106,56 +74,42 @@ async function loadKelas() {
   }
 
   const kelasUnik =
+    [...new Set(data.map(item => item.kelas))]
 
-    [...new Set(
-      data.map(item => item.kelas)
-    )]
+  kelasSelect.innerHTML = ''
 
-  kelasSelect.innerHTML = `
-
-    <option value="">
-      Pilih Kelas
-    </option>
-
-  `
+  kelasSelect.appendChild(
+    new Option('Pilih Kelas', '')
+  )
 
   kelasUnik.forEach(kelas => {
 
-    kelasSelect.innerHTML += `
+    kelasSelect.appendChild(
 
-      <option value="${kelas}">
+      new Option(
+        kelas,
+        kelas
+      )
 
-        ${kelas}
-
-      </option>
-
-    `
+    )
 
   })
 
 }
 
-// =========================
-// LOAD SISWA
-// =========================
-
-async function loadSiswa() {
+kelasSelect.addEventListener('change', async () => {
 
   const kelas = kelasSelect.value
 
   if (!kelas) return
 
-  const { data, error } =
+  const { data, error } = await supabaseClient
 
-    await supabaseClient
+    .from('siswa')
 
-      .from('siswa')
+    .select('*')
 
-      .select('*')
-
-      .eq('kelas', kelas)
-
-      .order('nama_siswa')
+    .eq('kelas', kelas)
 
   if (error) {
 
@@ -165,49 +119,17 @@ async function loadSiswa() {
 
   }
 
-  listSiswa.innerHTML = ''
+  siswaData = data
 
-  data.forEach(item => {
+  siswaContainer.innerHTML = ''
 
-    const initials =
+  data.forEach((item, index) => {
 
-      item.nama_siswa
-
-        .split(' ')
-
-        .map(n => n[0])
-
-        .slice(0,2)
-
-        .join('')
-
-    listSiswa.innerHTML += `
+    siswaContainer.innerHTML += `
 
       <div class="siswa-card">
 
-        <!-- LEFT -->
-
-        <div class="siswa-info">
-
-          <div class="siswa-avatar">
-
-            ${initials}
-
-          </div>
-
-          <div class="siswa-name">
-
-            <h4>
-
-              ${item.nama_siswa}
-
-            </h4>
-
-          </div>
-
-        </div>
-
-        <!-- RIGHT -->
+        <h4>${item.nama_siswa}</h4>
 
         <div class="absen-modern">
 
@@ -217,17 +139,15 @@ async function loadSiswa() {
 
             <input
               type="radio"
-              name="status-${item.id}"
+              name="absen-${index}"
               value="H"
               checked
-            />
+            >
 
             <div class="absen-content">
 
               <div class="absen-icon">
-
                 H
-
               </div>
 
               <span>Hadir</span>
@@ -242,16 +162,14 @@ async function loadSiswa() {
 
             <input
               type="radio"
-              name="status-${item.id}"
+              name="absen-${index}"
               value="S"
-            />
+            >
 
             <div class="absen-content">
 
               <div class="absen-icon">
-
                 S
-
               </div>
 
               <span>Sakit</span>
@@ -266,16 +184,14 @@ async function loadSiswa() {
 
             <input
               type="radio"
-              name="status-${item.id}"
+              name="absen-${index}"
               value="I"
-            />
+            >
 
             <div class="absen-content">
 
               <div class="absen-icon">
-
                 I
-
               </div>
 
               <span>Izin</span>
@@ -290,16 +206,14 @@ async function loadSiswa() {
 
             <input
               type="radio"
-              name="status-${item.id}"
+              name="absen-${index}"
               value="A"
-            />
+            >
 
             <div class="absen-content">
 
               <div class="absen-icon">
-
                 A
-
               </div>
 
               <span>Alpa</span>
@@ -316,115 +230,81 @@ async function loadSiswa() {
 
   })
 
-}
+})
 
-// =========================
-// SAVE JURNAL
-// =========================
-
-async function saveJurnal() {
-
-  const tanggal =
-    tanggalInput.value
-
-  const mapel =
-    mapelSelect.value
-
-  const kelas =
-    kelasSelect.value
-
-  const materi =
-    document
-      .getElementById('materi')
-      .value
+saveBtn.addEventListener('click', async () => {
 
   if (
-    !tanggal ||
-    !mapel ||
-    !kelas
+    !tanggal.value ||
+    !kelasSelect.value ||
+    !mapelSelect.value
   ) {
 
-    alert(
-      'Lengkapi data terlebih dahulu'
-    )
+    alert('Lengkapi data terlebih dahulu')
 
     return
 
   }
 
-  const { data: siswaData } =
+  const materi =
+    document.getElementById('materi').value
 
-    await supabaseClient
+  const payload = siswaData.map((item, index) => {
 
-      .from('siswa')
+    const status = document.querySelector(
 
-      .select('*')
+      `input[name="absen-${index}"]:checked`
 
-      .eq('kelas', kelas)
+    ).value
 
-  for (const siswa of siswaData) {
+    return {
 
-    const status =
+      tanggal: tanggal.value,
 
-      document.querySelector(
+      kelas: kelasSelect.value,
 
-        `input[name="status-${siswa.id}"]:checked`
+      mapel: mapelSelect.value,
 
-      )?.value || 'H'
+      materi: materi,
 
-    const { error } =
+      nama: item.nama_siswa,
 
-      await supabaseClient
-
-        .from('jurnal')
-
-        .insert({
-
-          tanggal,
-          kelas,
-          mapel,
-          nama: siswa.nama_siswa,
-          status,
-          materi,
-
-          // MULTI USER
-
-          created_by:
-            userLogin
-
-        })
-
-    if (error) {
-
-      console.error(error)
+      status: status
 
     }
 
+  })
+
+  saveBtn.innerHTML =
+    'Menyimpan...'
+
+  saveBtn.disabled = true
+
+  const { error } = await supabaseClient
+
+    .from('jurnal')
+
+    .insert(payload)
+
+  saveBtn.innerHTML =
+    'Simpan Jurnal'
+
+  saveBtn.disabled = false
+
+  if (error) {
+
+    console.error(error)
+
+    alert(error.message)
+
+    return
+
   }
 
-  alert(
-    'Jurnal berhasil disimpan'
-  )
+  alert('Jurnal berhasil disimpan')
 
-}
-
-// =========================
-// EVENT
-// =========================
-
-kelasSelect.addEventListener(
-  'change',
-  loadSiswa
-)
-
-saveBtn.addEventListener(
-  'click',
-  saveJurnal
-)
-
-// =========================
-// INIT
-// =========================
+})
 
 loadMapel()
+
 loadKelas()
