@@ -1,5 +1,15 @@
 import { supabaseClient } from './supabase.js'
 
+const sessionData =
+  JSON.parse(
+    localStorage.getItem('session')
+  )
+
+const userLogin =
+  sessionData?.email ||
+  sessionData?.username ||
+  'unknown-user'
+  
 const kelasSelect =
   document.getElementById('kelas-nilai')
 

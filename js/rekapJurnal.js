@@ -1,5 +1,27 @@
 import { supabaseClient } from './supabase.js'
 
+// =========================
+// USER LOGIN
+// =========================
+
+const sessionData =
+
+  JSON.parse(
+    localStorage.getItem('session')
+  )
+
+const userLogin =
+
+  sessionData?.email ||
+
+  sessionData?.username ||
+
+  'unknown-user'
+
+// =========================
+// ELEMENT
+// =========================
+
 const mapelSelect =
   document.getElementById('rekap-jurnal-mapel')
 
@@ -14,13 +36,19 @@ const downloadBtn =
 
 let jurnalData = []
 
+// =========================
+// LOAD MAPEL
+// =========================
+
 async function loadMapel() {
 
-  const { data, error } = await supabaseClient
+  const { data, error } =
 
-    .from('mata_pelajaran')
+    await supabaseClient
 
-    .select('*')
+      .from('mata_pelajaran')
+
+      .select('*')
 
   if (error) {
 
@@ -30,34 +58,43 @@ async function loadMapel() {
 
   }
 
-  mapelSelect.innerHTML = ''
+  mapelSelect.innerHTML = `
 
-  mapelSelect.appendChild(
-    new Option('Pilih Mata Pelajaran', '')
-  )
+    <option value="">
+      Pilih Mata Pelajaran
+    </option>
+
+  `
 
   data.forEach(item => {
 
-    mapelSelect.appendChild(
+    mapelSelect.innerHTML += `
 
-      new Option(
-        item.nama_mapel,
-        item.nama_mapel
-      )
+      <option value="${item.nama_mapel}">
 
-    )
+        ${item.nama_mapel}
+
+      </option>
+
+    `
 
   })
 
 }
 
+// =========================
+// LOAD KELAS
+// =========================
+
 async function loadKelas() {
 
-  const { data, error } = await supabaseClient
+  const { data, error } =
 
-    .from('siswa')
+    await supabaseClient
 
-    .select('kelas')
+      .from('siswa')
+
+      .select('kelas')
 
   if (error) {
 
@@ -68,47 +105,69 @@ async function loadKelas() {
   }
 
   const kelasUnik =
-    [...new Set(data.map(item => item.kelas))]
 
-  kelasSelect.innerHTML = ''
+    [...new Set(
+      data.map(item => item.kelas)
+    )]
 
-  kelasSelect.appendChild(
-    new Option('Pilih Kelas', '')
-  )
+  kelasSelect.innerHTML = `
+
+    <option value="">
+      Pilih Kelas
+    </option>
+
+  `
 
   kelasUnik.forEach(kelas => {
 
-    kelasSelect.appendChild(
+    kelasSelect.innerHTML += `
 
-      new Option(
-        kelas,
-        kelas
-      )
+      <option value="${kelas}">
 
-    )
+        ${kelas}
+
+      </option>
+
+    `
 
   })
 
 }
 
-async function loadRekapJurnal() {
+// =========================
+// LOAD REKAP
+// =========================
+
+async function loadRekap() {
+
+  const mapel =
+    mapelSelect.value
+
+  const kelas =
+    kelasSelect.value
 
   if (
-    !kelasSelect.value ||
-    !mapelSelect.value
+    !mapel ||
+    !kelas
   ) return
 
-  const { data, error } = await supabaseClient
+  const { data, error } =
 
-    .from('jurnal')
+    await supabaseClient
 
-    .select('*')
+      .from('jurnal')
 
-    .eq('kelas', kelasSelect.value)
+      .select('*')
 
-    .eq('mapel', mapelSelect.value)
+      .eq('mapel', mapel)
 
-    .order('tanggal', { ascending:false })
+      .eq('kelas', kelas)
+
+      // MULTI USER
+
+      .eq('created_by', userLogin)
+
+      .order('tanggal')
 
   if (error) {
 
@@ -118,92 +177,89 @@ async function loadRekapJurnal() {
 
   }
 
-  // GROUP DATA
-
-  const grouped = {}
-
-  data.forEach(item => {
-
-    const key =
-
-      `${item.tanggal}_${item.kelas}_${item.mapel}_${item.materi}`
-
-    if (!grouped[key]) {
-
-      grouped[key] = {
-
-        tanggal: item.tanggal,
-
-        kelas: item.kelas,
-
-        mapel: item.mapel,
-
-        materi: item.materi,
-
-        tidakHadir: []
-
-      }
-
-    }
-
-    if (item.status !== 'H') {
-
-      grouped[key].tidakHadir.push(
-
-        `${item.nama} (${item.status})`
-
-      )
-
-    }
-
-  })
-
-  jurnalData =
-    Object.values(grouped)
+  jurnalData = data
 
   renderTable()
 
 }
 
+// =========================
+// RENDER TABLE
+// =========================
+
 function renderTable() {
 
-  table.innerHTML = `
+  if (!jurnalData.length) {
+
+    table.innerHTML = `
+
+      <tr>
+
+        <td>
+
+          Tidak ada data
+
+        </td>
+
+      </tr>
+
+    `
+
+    return
+
+  }
+
+  let html = `
 
     <tr>
 
+      <th>No</th>
+
       <th>Tanggal</th>
 
-      <th>Kelas</th>
+      <th>Nama</th>
 
-      <th>Mapel</th>
+      <th>Status</th>
 
       <th>Materi</th>
-
-      <th>Tidak Hadir</th>
 
     </tr>
 
   `
 
-  jurnalData.forEach(item => {
+  jurnalData.forEach((item, index) => {
 
-    table.innerHTML += `
+    html += `
 
       <tr>
 
-        <td>${item.tanggal}</td>
+        <td>
 
-        <td>${item.kelas}</td>
+          ${index + 1}
 
-        <td>${item.mapel}</td>
-
-        <td>${item.materi}</td>
+        </td>
 
         <td>
 
-          ${item.tidakHadir.length
-            ? item.tidakHadir.join(', ')
-            : '-'}
+          ${item.tanggal}
+
+        </td>
+
+        <td>
+
+          ${item.nama}
+
+        </td>
+
+        <td>
+
+          ${item.status}
+
+        </td>
+
+        <td>
+
+          ${item.materi || '-'}
 
         </td>
 
@@ -213,54 +269,72 @@ function renderTable() {
 
   })
 
+  table.innerHTML = html
+
 }
 
-kelasSelect.addEventListener(
-  'change',
-  loadRekapJurnal
+// =========================
+// DOWNLOAD EXCEL
+// =========================
+
+downloadBtn.addEventListener(
+  'click',
+  () => {
+
+    if (!jurnalData.length) {
+
+      alert('Data kosong')
+
+      return
+
+    }
+
+    const worksheet =
+
+      XLSX.utils.table_to_sheet(
+        table
+      )
+
+    const workbook =
+
+      XLSX.utils.book_new()
+
+    XLSX.utils.book_append_sheet(
+
+      workbook,
+      worksheet,
+      'Rekap Jurnal'
+
+    )
+
+    XLSX.writeFile(
+
+      workbook,
+
+      `Rekap_Jurnal_${kelasSelect.value}.xlsx`
+
+    )
+
+  }
 )
+
+// =========================
+// EVENT
+// =========================
 
 mapelSelect.addEventListener(
   'change',
-  loadRekapJurnal
+  loadRekap
 )
 
-downloadBtn.addEventListener('click', () => {
+kelasSelect.addEventListener(
+  'change',
+  loadRekap
+)
 
-  if (!jurnalData.length) {
-
-    alert('Data kosong')
-
-    return
-
-  }
-
-  const worksheet =
-    XLSX.utils.json_to_sheet(jurnalData)
-
-  const workbook =
-    XLSX.utils.book_new()
-
-  XLSX.utils.book_append_sheet(
-
-    workbook,
-
-    worksheet,
-
-    'Rekap Jurnal'
-
-  )
-
-  XLSX.writeFile(
-
-    workbook,
-
-    `Rekap_Jurnal_${kelasSelect.value}.xlsx`
-
-  )
-
-})
+// =========================
+// INIT
+// =========================
 
 loadMapel()
-
 loadKelas()

@@ -1,32 +1,55 @@
 import { supabaseClient } from './supabase.js'
 
-const tanggal =
-  document.getElementById('tanggal')
+// =========================
+// USER LOGIN
+// =========================
 
-const kelasSelect =
-  document.getElementById('kelas-jurnal')
+const sessionData =
+
+  JSON.parse(
+    localStorage.getItem('session')
+  )
+
+const userLogin =
+
+  sessionData?.email ||
+
+  sessionData?.username ||
+
+  'unknown-user'
+
+// =========================
+// ELEMENT
+// =========================
+
+const tanggalInput =
+  document.getElementById('tanggal')
 
 const mapelSelect =
   document.getElementById('mapel-jurnal')
 
-const siswaContainer =
+const kelasSelect =
+  document.getElementById('kelas-jurnal')
+
+const listSiswa =
   document.getElementById('list-siswa-jurnal')
 
 const saveBtn =
   document.getElementById('saveJurnalBtn')
 
-let siswaData = []
-
-tanggal.value =
-  new Date().toISOString().split('T')[0]
+// =========================
+// LOAD MAPEL
+// =========================
 
 async function loadMapel() {
 
-  const { data, error } = await supabaseClient
+  const { data, error } =
 
-    .from('mata_pelajaran')
+    await supabaseClient
 
-    .select('*')
+      .from('mata_pelajaran')
+
+      .select('*')
 
   if (error) {
 
@@ -36,34 +59,43 @@ async function loadMapel() {
 
   }
 
-  mapelSelect.innerHTML = ''
+  mapelSelect.innerHTML = `
 
-  mapelSelect.appendChild(
-    new Option('Pilih Mata Pelajaran', '')
-  )
+    <option value="">
+      Pilih Mata Pelajaran
+    </option>
+
+  `
 
   data.forEach(item => {
 
-    mapelSelect.appendChild(
+    mapelSelect.innerHTML += `
 
-      new Option(
-        item.nama_mapel,
-        item.nama_mapel
-      )
+      <option value="${item.nama_mapel}">
 
-    )
+        ${item.nama_mapel}
+
+      </option>
+
+    `
 
   })
 
 }
 
+// =========================
+// LOAD KELAS
+// =========================
+
 async function loadKelas() {
 
-  const { data, error } = await supabaseClient
+  const { data, error } =
 
-    .from('siswa')
+    await supabaseClient
 
-    .select('kelas')
+      .from('siswa')
+
+      .select('kelas')
 
   if (error) {
 
@@ -74,42 +106,56 @@ async function loadKelas() {
   }
 
   const kelasUnik =
-    [...new Set(data.map(item => item.kelas))]
 
-  kelasSelect.innerHTML = ''
+    [...new Set(
+      data.map(item => item.kelas)
+    )]
 
-  kelasSelect.appendChild(
-    new Option('Pilih Kelas', '')
-  )
+  kelasSelect.innerHTML = `
+
+    <option value="">
+      Pilih Kelas
+    </option>
+
+  `
 
   kelasUnik.forEach(kelas => {
 
-    kelasSelect.appendChild(
+    kelasSelect.innerHTML += `
 
-      new Option(
-        kelas,
-        kelas
-      )
+      <option value="${kelas}">
 
-    )
+        ${kelas}
+
+      </option>
+
+    `
 
   })
 
 }
 
-kelasSelect.addEventListener('change', async () => {
+// =========================
+// LOAD SISWA
+// =========================
+
+async function loadSiswa() {
 
   const kelas = kelasSelect.value
 
   if (!kelas) return
 
-  const { data, error } = await supabaseClient
+  const { data, error } =
 
-    .from('siswa')
+    await supabaseClient
 
-    .select('*')
+      .from('siswa')
 
-    .eq('kelas', kelas)
+      .select('*')
+
+      .eq('kelas', kelas)
+
+      .order('nama_siswa')
 
   if (error) {
 
@@ -119,17 +165,49 @@ kelasSelect.addEventListener('change', async () => {
 
   }
 
-  siswaData = data
+  listSiswa.innerHTML = ''
 
-  siswaContainer.innerHTML = ''
+  data.forEach(item => {
 
-  data.forEach((item, index) => {
+    const initials =
 
-    siswaContainer.innerHTML += `
+      item.nama_siswa
+
+        .split(' ')
+
+        .map(n => n[0])
+
+        .slice(0,2)
+
+        .join('')
+
+    listSiswa.innerHTML += `
 
       <div class="siswa-card">
 
-        <h4>${item.nama_siswa}</h4>
+        <!-- LEFT -->
+
+        <div class="siswa-info">
+
+          <div class="siswa-avatar">
+
+            ${initials}
+
+          </div>
+
+          <div class="siswa-name">
+
+            <h4>
+
+              ${item.nama_siswa}
+
+            </h4>
+
+          </div>
+
+        </div>
+
+        <!-- RIGHT -->
 
         <div class="absen-modern">
 
@@ -139,15 +217,17 @@ kelasSelect.addEventListener('change', async () => {
 
             <input
               type="radio"
-              name="absen-${index}"
+              name="status-${item.id}"
               value="H"
               checked
-            >
+            />
 
             <div class="absen-content">
 
               <div class="absen-icon">
+
                 H
+
               </div>
 
               <span>Hadir</span>
@@ -162,14 +242,16 @@ kelasSelect.addEventListener('change', async () => {
 
             <input
               type="radio"
-              name="absen-${index}"
+              name="status-${item.id}"
               value="S"
-            >
+            />
 
             <div class="absen-content">
 
               <div class="absen-icon">
+
                 S
+
               </div>
 
               <span>Sakit</span>
@@ -184,14 +266,16 @@ kelasSelect.addEventListener('change', async () => {
 
             <input
               type="radio"
-              name="absen-${index}"
+              name="status-${item.id}"
               value="I"
-            >
+            />
 
             <div class="absen-content">
 
               <div class="absen-icon">
+
                 I
+
               </div>
 
               <span>Izin</span>
@@ -206,14 +290,16 @@ kelasSelect.addEventListener('change', async () => {
 
             <input
               type="radio"
-              name="absen-${index}"
+              name="status-${item.id}"
               value="A"
-            >
+            />
 
             <div class="absen-content">
 
               <div class="absen-icon">
+
                 A
+
               </div>
 
               <span>Alpa</span>
@@ -230,81 +316,115 @@ kelasSelect.addEventListener('change', async () => {
 
   })
 
-})
+}
 
-saveBtn.addEventListener('click', async () => {
+// =========================
+// SAVE JURNAL
+// =========================
+
+async function saveJurnal() {
+
+  const tanggal =
+    tanggalInput.value
+
+  const mapel =
+    mapelSelect.value
+
+  const kelas =
+    kelasSelect.value
+
+  const materi =
+    document
+      .getElementById('materi')
+      .value
 
   if (
-    !tanggal.value ||
-    !kelasSelect.value ||
-    !mapelSelect.value
+    !tanggal ||
+    !mapel ||
+    !kelas
   ) {
 
-    alert('Lengkapi data terlebih dahulu')
+    alert(
+      'Lengkapi data terlebih dahulu'
+    )
 
     return
 
   }
 
-  const materi =
-    document.getElementById('materi').value
+  const { data: siswaData } =
 
-  const payload = siswaData.map((item, index) => {
+    await supabaseClient
 
-    const status = document.querySelector(
+      .from('siswa')
 
-      `input[name="absen-${index}"]:checked`
+      .select('*')
 
-    ).value
+      .eq('kelas', kelas)
 
-    return {
+  for (const siswa of siswaData) {
 
-      tanggal: tanggal.value,
+    const status =
 
-      kelas: kelasSelect.value,
+      document.querySelector(
 
-      mapel: mapelSelect.value,
+        `input[name="status-${siswa.id}"]:checked`
 
-      materi: materi,
+      )?.value || 'H'
 
-      nama: item.nama_siswa,
+    const { error } =
 
-      status: status
+      await supabaseClient
+
+        .from('jurnal')
+
+        .insert({
+
+          tanggal,
+          kelas,
+          mapel,
+          nama: siswa.nama_siswa,
+          status,
+          materi,
+
+          // MULTI USER
+
+          created_by:
+            userLogin
+
+        })
+
+    if (error) {
+
+      console.error(error)
 
     }
 
-  })
-
-  saveBtn.innerHTML =
-    'Menyimpan...'
-
-  saveBtn.disabled = true
-
-  const { error } = await supabaseClient
-
-    .from('jurnal')
-
-    .insert(payload)
-
-  saveBtn.innerHTML =
-    'Simpan Jurnal'
-
-  saveBtn.disabled = false
-
-  if (error) {
-
-    console.error(error)
-
-    alert(error.message)
-
-    return
-
   }
 
-  alert('Jurnal berhasil disimpan')
+  alert(
+    'Jurnal berhasil disimpan'
+  )
 
-})
+}
+
+// =========================
+// EVENT
+// =========================
+
+kelasSelect.addEventListener(
+  'change',
+  loadSiswa
+)
+
+saveBtn.addEventListener(
+  'click',
+  saveJurnal
+)
+
+// =========================
+// INIT
+// =========================
 
 loadMapel()
-
 loadKelas()

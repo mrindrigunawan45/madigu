@@ -1,87 +1,18 @@
-import { supabaseClient }
+import { supabaseClient } from './supabase.js'
 
-from './supabase.js'
-
-console.log('AUTH ACTIVE')
-
-// =========================
-// LOGIN
-// =========================
-
-const loginForm =
-  document.getElementById('loginForm')
-
-if (loginForm) {
-
-  loginForm.addEventListener(
-    'submit',
-    async (e) => {
-
-      e.preventDefault()
-
-      const email =
-        document.getElementById('email').value
-
-      const password =
-        document.getElementById('password').value
-
-      console.log(email, password)
-
-      const { data, error } =
-
-        await supabaseClient.auth
-
-          .signInWithPassword({
-
-            email,
-            password
-
-          })
-
-      console.log(data)
-      console.log(error)
-
-      if (error) {
-
-        alert(error.message)
-
-        return
-
-      }
-
-      window.location.href =
-        'dashboard.html'
-
-    }
-  )
-
-}
+const logoutBtn =
+  document.getElementById('logoutBtn')
 
 // =========================
-// CHECK AUTH
+// CEK LOGIN
 // =========================
 
-async function checkAuth() {
+async function checkLogin() {
 
-  const {
+  const session =
+    localStorage.getItem('session')
 
-    data: { session }
-
-  } = await supabaseClient.auth
-
-    .getSession()
-
-  console.log(session)
-
-  if (
-
-    !session &&
-
-    window.location.pathname
-
-      .includes('dashboard.html')
-
-  ) {
+  if (!session) {
 
     window.location.href =
       'index.html'
@@ -90,14 +21,11 @@ async function checkAuth() {
 
 }
 
-checkAuth()
+checkLogin()
 
 // =========================
 // LOGOUT
 // =========================
-
-const logoutBtn =
-  document.getElementById('logoutBtn')
 
 if (logoutBtn) {
 
@@ -105,12 +33,113 @@ if (logoutBtn) {
     'click',
     async () => {
 
-      await supabaseClient.auth
+      localStorage.removeItem('session')
 
-        .signOut()
+      localStorage.removeItem('guru_nama')
+
+      localStorage.removeItem('school_id')
 
       window.location.href =
         'index.html'
+
+    }
+  )
+
+}
+
+// =========================
+// LOGIN PAGE
+// =========================
+
+const loginBtn =
+  document.getElementById('loginBtn')
+
+if (loginBtn) {
+
+  loginBtn.addEventListener(
+    'click',
+    async () => {
+
+      const username =
+        document
+          .getElementById('username')
+          .value
+
+      const password =
+        document
+          .getElementById('password')
+          .value
+
+      if (!username || !password) {
+
+        alert(
+          'Username dan password wajib diisi'
+        )
+
+        return
+
+      }
+
+      // =========================
+      // CEK KE DATABASE GURU
+      // =========================
+
+      const { data, error } =
+        await supabaseClient
+
+          .from('guru')
+
+          .select('*')
+
+          .eq('username', username)
+
+          .eq('password', password)
+
+          .single()
+
+      if (error || !data) {
+
+        alert(
+          'Username atau password salah'
+        )
+
+        return
+
+      }
+
+      // =========================
+      // SIMPAN SESSION
+      // =========================
+
+      localStorage.setItem(
+        'session',
+        JSON.stringify(data)
+      )
+
+      // =========================
+      // SIMPAN NAMA GURU
+      // =========================
+
+      localStorage.setItem(
+        'guru_nama',
+        data.nama_guru
+      )
+
+      // =========================
+      // SIMPAN SCHOOL ID
+      // =========================
+
+      localStorage.setItem(
+        'school_id',
+        data.school_id
+      )
+
+      // =========================
+      // REDIRECT
+      // =========================
+
+      window.location.href =
+        'dashboard.html'
 
     }
   )

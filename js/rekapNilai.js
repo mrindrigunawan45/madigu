@@ -2,6 +2,16 @@ import { supabaseClient } from './supabase.js'
 
 console.log('REKAP AKTIF')
 
+const sessionData =
+  JSON.parse(
+    localStorage.getItem('session')
+  )
+
+const userLogin =
+  sessionData?.email ||
+  sessionData?.username ||
+  'unknown-user'
+  
 const table =
   document.getElementById('rekap-table')
 

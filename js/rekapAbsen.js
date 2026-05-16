@@ -1,5 +1,27 @@
 import { supabaseClient } from './supabase.js'
 
+// =========================
+// USER LOGIN
+// =========================
+
+const sessionData =
+
+  JSON.parse(
+    localStorage.getItem('session')
+  )
+
+const userLogin =
+
+  sessionData?.email ||
+
+  sessionData?.username ||
+
+  'unknown-user'
+
+// =========================
+// ELEMENT
+// =========================
+
 const kelasSelect =
   document.getElementById('rekap-absen-kelas')
 
@@ -17,11 +39,13 @@ let absenData = []
 
 async function loadKelas() {
 
-  const { data, error } = await supabaseClient
+  const { data, error } =
 
-    .from('siswa')
+    await supabaseClient
 
-    .select('kelas')
+      .from('siswa')
+
+      .select('kelas')
 
   if (error) {
 
@@ -32,12 +56,18 @@ async function loadKelas() {
   }
 
   const kelasUnik =
-    [...new Set(data.map(item => item.kelas))]
+
+    [...new Set(
+      data.map(item => item.kelas)
+    )]
 
   kelasSelect.innerHTML = ''
 
   kelasSelect.appendChild(
-    new Option('Pilih Kelas', '')
+    new Option(
+      'Pilih Kelas',
+      ''
+    )
   )
 
   kelasUnik.forEach(kelas => {
@@ -56,20 +86,26 @@ async function loadKelas() {
 }
 
 // =========================
-// LOAD REKAP
+// LOAD REKAP ABSEN
 // =========================
 
 async function loadRekapAbsen() {
 
   if (!kelasSelect.value) return
 
-  const { data, error } = await supabaseClient
+  const { data, error } =
 
-    .from('jurnal')
+    await supabaseClient
 
-    .select('*')
+      .from('jurnal')
 
-    .eq('kelas', kelasSelect.value)
+      .select('*')
+
+      .eq('kelas', kelasSelect.value)
+
+      // MULTI USER
+
+      .eq('created_by', userLogin)
 
   if (error) {
 
@@ -299,6 +335,79 @@ function renderTable() {
 }
 
 // =========================
+// DOWNLOAD EXCEL
+// =========================
+
+downloadBtn.addEventListener(
+  'click',
+  () => {
+
+    if (!absenData.length) {
+
+      alert('Data kosong')
+
+      return
+
+    }
+
+    const exportData =
+
+      absenData.map(
+
+        (item, index) => ({
+
+          No: index + 1,
+
+          Nama: item.nama,
+
+          Hadir: item.hadir,
+
+          Sakit: item.sakit,
+
+          Izin: item.izin,
+
+          Alpa: item.alpa,
+
+          Kehadiran:
+
+            ((item.hadir / item.total) * 100)
+
+            .toFixed(1) + '%'
+
+        })
+
+      )
+
+    const worksheet =
+
+      XLSX.utils.json_to_sheet(
+        exportData
+      )
+
+    const workbook =
+
+      XLSX.utils.book_new()
+
+    XLSX.utils.book_append_sheet(
+
+      workbook,
+      worksheet,
+      'Rekap Absen'
+
+    )
+
+    XLSX.writeFile(
+
+      workbook,
+
+      `Rekap_Absen_${kelasSelect.value}.xlsx`
+
+    )
+
+  }
+)
+
+// =========================
 // EVENT
 // =========================
 
@@ -306,68 +415,6 @@ kelasSelect.addEventListener(
   'change',
   loadRekapAbsen
 )
-
-// =========================
-// DOWNLOAD EXCEL
-// =========================
-
-downloadBtn.addEventListener('click', () => {
-
-  if (!absenData.length) {
-
-    alert('Data kosong')
-
-    return
-
-  }
-
-  const exportData = absenData.map((item, index) => ({
-
-    No: index + 1,
-
-    Nama: item.nama,
-
-    Hadir: item.hadir,
-
-    Sakit: item.sakit,
-
-    Izin: item.izin,
-
-    Alpa: item.alpa,
-
-    Kehadiran:
-
-      ((item.hadir / item.total) * 100)
-
-      .toFixed(1) + '%'
-
-  }))
-
-  const worksheet =
-    XLSX.utils.json_to_sheet(exportData)
-
-  const workbook =
-    XLSX.utils.book_new()
-
-  XLSX.utils.book_append_sheet(
-
-    workbook,
-
-    worksheet,
-
-    'Rekap Absen'
-
-  )
-
-  XLSX.writeFile(
-
-    workbook,
-
-    `Rekap_Absen_${kelasSelect.value}.xlsx`
-
-  )
-
-})
 
 // =========================
 // INIT
