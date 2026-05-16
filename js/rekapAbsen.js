@@ -11,6 +11,10 @@ const downloadBtn =
 
 let absenData = []
 
+// =========================
+// LOAD KELAS
+// =========================
+
 async function loadKelas() {
 
   const { data, error } = await supabaseClient
@@ -51,6 +55,10 @@ async function loadKelas() {
 
 }
 
+// =========================
+// LOAD REKAP
+// =========================
+
 async function loadRekapAbsen() {
 
   if (!kelasSelect.value) return
@@ -75,109 +83,233 @@ async function loadRekapAbsen() {
 
   data.forEach(item => {
 
-  // skip data kosong
-  if (!item.nama) return
+    if (!item.nama) return
 
-  if (!grouped[item.nama]) {
+    if (!grouped[item.nama]) {
 
-    grouped[item.nama] = {
+      grouped[item.nama] = {
 
-      nama: item.nama,
+        nama: item.nama,
 
-      sakit: 0,
+        sakit: 0,
 
-      izin: 0,
+        izin: 0,
 
-      alpa: 0,
+        alpa: 0,
 
-      hadir: 0,
+        hadir: 0,
 
-      total: 0
+        total: 0
+
+      }
 
     }
 
-  }
+    grouped[item.nama].total++
 
-  grouped[item.nama].total++
+    if (item.status === 'H')
+      grouped[item.nama].hadir++
 
-  if (item.status === 'H')
-    grouped[item.nama].hadir++
+    if (item.status === 'S')
+      grouped[item.nama].sakit++
 
-  if (item.status === 'S')
-    grouped[item.nama].sakit++
+    if (item.status === 'I')
+      grouped[item.nama].izin++
 
-  if (item.status === 'I')
-    grouped[item.nama].izin++
+    if (item.status === 'A')
+      grouped[item.nama].alpa++
 
-  if (item.status === 'A')
-    grouped[item.nama].alpa++
+  })
 
-})
-
-  absenData = Object.values(grouped)
+  absenData =
+    Object.values(grouped)
 
   renderTable()
 
 }
 
+// =========================
+// RENDER TABLE
+// =========================
+
 function renderTable() {
 
-  table.innerHTML = `
+  if (!absenData.length) {
 
-    <tr>
+    table.innerHTML = `
 
-      <th>No</th>
+      <div class="empty-state">
 
-      <th>Nama</th>
+        Tidak ada data absen
 
-      <th>S</th>
-
-      <th>I</th>
-
-      <th>A</th>
-
-      <th>Kehadiran</th>
-
-    </tr>
-
-  `
-
-  absenData.forEach((item, index) => {
-
-    const persen =
-
-      ((item.hadir / item.total) * 100)
-
-      .toFixed(1)
-
-    table.innerHTML += `
-
-      <tr>
-
-        <td>${index + 1}</td>
-
-        <td>${item.nama}</td>
-
-        <td>${item.sakit}</td>
-
-        <td>${item.izin}</td>
-
-        <td>${item.alpa}</td>
-
-        <td>${persen}%</td>
-
-      </tr>
+      </div>
 
     `
 
-  })
+    return
+
+  }
+
+  table.innerHTML = `
+
+    <div class="rekap-modern">
+
+      ${absenData.map(item => {
+
+        const persen =
+
+          ((item.hadir / item.total) * 100)
+
+          .toFixed(1)
+
+        return `
+
+          <div class="rekap-card">
+
+            <!-- LEFT -->
+
+            <div class="rekap-left">
+
+              <div class="rekap-avatar">
+
+                ${item.nama
+                  .split(' ')
+                  .map(n => n[0])
+                  .slice(0,2)
+                  .join('')}
+
+              </div>
+
+              <div class="rekap-user">
+
+                <h3>${item.nama}</h3>
+
+                <p>
+
+                  Total Pertemuan:
+                  ${item.total}
+
+                </p>
+
+              </div>
+
+            </div>
+
+            <!-- CENTER -->
+
+            <div class="rekap-center">
+
+              <!-- HADIR -->
+
+              <div class="rekap-badge hadir">
+
+                <i class="fa-solid fa-circle-check"></i>
+
+                <div class="rekap-badge-content">
+
+                  <span>H</span>
+
+                  <strong>${item.hadir}</strong>
+
+                </div>
+
+              </div>
+
+              <!-- SAKIT -->
+
+              <div class="rekap-badge sakit">
+
+                <i class="fa-regular fa-face-frown"></i>
+
+                <div class="rekap-badge-content">
+
+                  <span>S</span>
+
+                  <strong>${item.sakit}</strong>
+
+                </div>
+
+              </div>
+
+              <!-- IZIN -->
+
+              <div class="rekap-badge izin">
+
+                <i class="fa-solid fa-circle-info"></i>
+
+                <div class="rekap-badge-content">
+
+                  <span>I</span>
+
+                  <strong>${item.izin}</strong>
+
+                </div>
+
+              </div>
+
+              <!-- ALPA -->
+
+              <div class="rekap-badge alpa">
+
+                <i class="fa-regular fa-circle-xmark"></i>
+
+                <div class="rekap-badge-content">
+
+                  <span>A</span>
+
+                  <strong>${item.alpa}</strong>
+
+                </div>
+
+              </div>
+
+            </div>
+
+            <!-- RIGHT -->
+
+            <div class="rekap-right">
+
+              <div
+                class="persen-circle"
+                style="--percent:${persen};"
+              >
+
+                <span>${persen}%</span>
+
+              </div>
+
+              <div class="rekap-label">
+
+                Kehadiran
+
+              </div>
+
+            </div>
+
+          </div>
+
+        `
+
+      }).join('')}
+
+    </div>
+
+  `
 
 }
+
+// =========================
+// EVENT
+// =========================
 
 kelasSelect.addEventListener(
   'change',
   loadRekapAbsen
 )
+
+// =========================
+// DOWNLOAD EXCEL
+// =========================
 
 downloadBtn.addEventListener('click', () => {
 
@@ -194,6 +326,8 @@ downloadBtn.addEventListener('click', () => {
     No: index + 1,
 
     Nama: item.nama,
+
+    Hadir: item.hadir,
 
     Sakit: item.sakit,
 
@@ -234,5 +368,9 @@ downloadBtn.addEventListener('click', () => {
   )
 
 })
+
+// =========================
+// INIT
+// =========================
 
 loadKelas()

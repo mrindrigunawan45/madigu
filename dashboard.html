@@ -42,11 +42,17 @@
     id="sidebar"
   >
 
-    <div class="sidebar-logo">
+    <div class="sidebar-top">
 
-      <img
-        src="https://drive.google.com/thumbnail?id=1FWj7nowDdr3UFBKNbXxp4pOMQ2daCMKw&sz=w500"
-      />
+      <div class="sidebar-logo">
+
+        <img
+          src="https://drive.google.com/thumbnail?id=1FWj7nowDdr3UFBKNbXxp4pOMQ2daCMKw&sz=w500"
+        />
+
+      </div>
+
+      <h2>MaDiGU</h2>
 
     </div>
 
@@ -55,42 +61,42 @@
       <button onclick="showTab('jurnalTab')">
 
         <i class="fa-solid fa-book"></i>
-        Jurnal
+        <span>Jurnal</span>
 
       </button>
 
       <button onclick="showTab('nilaiTab')">
 
         <i class="fa-solid fa-pen"></i>
-        Input Nilai
+        <span>Input Nilai</span>
 
       </button>
 
       <button onclick="showTab('rekapTab')">
 
         <i class="fa-solid fa-chart-line"></i>
-        Rekap Nilai
+        <span>Rekap Nilai</span>
 
       </button>
 
       <button onclick="showTab('rekapJurnalTab')">
 
         <i class="fa-solid fa-book-open"></i>
-        Rekap Jurnal
+        <span>Rekap Jurnal</span>
 
       </button>
 
       <button onclick="showTab('rekapAbsenTab')">
 
         <i class="fa-solid fa-user-check"></i>
-        Rekap Absen
+        <span>Rekap Absen</span>
 
       </button>
 
       <button id="logoutBtn">
 
         <i class="fa-solid fa-right-from-bracket"></i>
-        Logout
+        <span>Logout</span>
 
       </button>
 
@@ -98,204 +104,268 @@
 
   </aside>
 
-  <!-- HEADER -->
+  <!-- CONTENT -->
 
-  <header>
+  <div class="content-wrapper">
 
-    <div
-      class="menu-btn"
-      id="menuBtn"
-    >
+    <!-- HEADER -->
 
-      <i class="fa-solid fa-bars"></i>
+    <header>
 
-    </div>
+      <div
+        class="menu-btn"
+        id="menuBtn"
+      >
 
-    <h1>MaDiGU Dashboard</h1>
-
-  </header>
-
-  <!-- MAIN -->
-
-  <main>
-
-    <!-- =========================
-         JURNAL
-    ========================== -->
-
-    <section
-      class="tab active"
-      id="jurnalTab"
-    >
-
-      <div class="card">
-
-        <input
-          type="date"
-          id="tanggal"
-        />
-
-        <select id="mapel-jurnal"></select>
-
-        <select id="kelas-jurnal"></select>
-
-        <textarea
-          id="materi"
-          placeholder="Materi Pembelajaran"
-        ></textarea>
-
-        <div id="list-siswa-jurnal"></div>
-
-        <button id="saveJurnalBtn">
-
-          Simpan Jurnal
-
-        </button>
+        <i class="fa-solid fa-bars"></i>
 
       </div>
 
-    </section>
+      <div class="header-title">
 
-    <!-- =========================
-         INPUT NILAI
-    ========================== -->
+        <h1>MaDiGU Dashboard</h1>
 
-    <section
-      class="tab"
-      id="nilaiTab"
-    >
+        <!-- USER BOX -->
 
-      <div class="card">
+        <div class="guru-box">
 
-        <select id="mapel-nilai"></select>
+          <div class="guru-item">
 
-        <select id="jenis-nilai">
+            <span>
 
-          <option value="s1">S1</option>
-          <option value="s2">S2</option>
-          <option value="s3">S3</option>
-          <option value="s4">S4</option>
+              Selamat Datang di Mitra Digital Guru
 
-          <option value="f1">F1</option>
-          <option value="f2">F2</option>
-          <option value="f3">F3</option>
-          <option value="f4">F4</option>
+            </span>
 
-          <option value="asts">ASTS</option>
-          <option value="asas">ASAS</option>
-
-        </select>
-
-        <select id="kelas-nilai"></select>
-
-        <div id="list-siswa-nilai"></div>
-
-        <button id="saveNilaiBtn">
-
-          Simpan Nilai
-
-        </button>
-
-      </div>
-
-    </section>
-
-    <!-- =========================
-         REKAP NILAI
-    ========================== -->
-
-    <section
-      class="tab"
-      id="rekapTab"
-    >
-
-      <div class="card">
-
-        <select id="rekap-mapel"></select>
-
-        <select id="rekap-kelas"></select>
-
-        <button id="downloadExcelBtn">
-
-          Download Excel
-
-        </button>
-
-        <div class="table-container">
-
-          <table id="rekap-table"></table>
+          </div>
 
         </div>
 
       </div>
 
-    </section>
+    </header>
 
-    <!-- =========================
-         REKAP JURNAL
-    ========================== -->
+    <!-- MAIN -->
 
-    <section
-      class="tab"
-      id="rekapJurnalTab"
-    >
+    <main>
 
-      <div class="card">
+      <!-- JURNAL -->
 
-        <select id="rekap-jurnal-mapel"></select>
+      <section
+        class="tab active"
+        id="jurnalTab"
+      >
 
-        <select id="rekap-jurnal-kelas"></select>
+        <div class="card">
 
-        <button id="downloadJurnalBtn">
+          <input
+            type="date"
+            id="tanggal"
+          />
 
-          Download Excel
+          <select id="mapel-jurnal">
 
-        </button>
+            <option value="">
+              Pilih Mata Pelajaran
+            </option>
 
-        <div class="table-container">
+          </select>
 
-          <table id="rekap-jurnal-table"></table>
+          <select id="kelas-jurnal">
 
-        </div>
+            <option value="">
+              Pilih Kelas
+            </option>
 
-      </div>
+          </select>
 
-    </section>
+          <textarea
+            id="materi"
+            placeholder="Materi Pembelajaran"
+          ></textarea>
 
-    <!-- =========================
-         REKAP ABSEN
-    ========================== -->
+          <div id="list-siswa-jurnal"></div>
 
-    <section
-      class="tab"
-      id="rekapAbsenTab"
-    >
+          <button id="saveJurnalBtn">
 
-      <div class="card">
+            Simpan Jurnal
 
-        <select id="rekap-absen-kelas"></select>
-
-        <button id="downloadAbsenBtn">
-
-          Download Excel
-
-        </button>
-
-        <div class="table-container">
-
-          <table id="rekap-absen-table"></table>
+          </button>
 
         </div>
 
-      </div>
+      </section>
 
-    </section>
+      <!-- INPUT NILAI -->
 
-  </main>
+      <section
+        class="tab"
+        id="nilaiTab"
+      >
 
-  <!-- =========================
-       SIDEBAR SCRIPT
-  ========================== -->
+        <div class="card">
+
+          <select id="mapel-nilai">
+
+            <option value="">
+              Pilih Mata Pelajaran
+            </option>
+
+          </select>
+
+          <select id="jenis-nilai">
+
+            <option value="s1">S1</option>
+            <option value="s2">S2</option>
+            <option value="s3">S3</option>
+            <option value="s4">S4</option>
+
+            <option value="f1">F1</option>
+            <option value="f2">F2</option>
+            <option value="f3">F3</option>
+            <option value="f4">F4</option>
+
+            <option value="asts">ASTS</option>
+            <option value="asas">ASAS</option>
+
+          </select>
+
+          <select id="kelas-nilai">
+
+            <option value="">
+              Pilih Kelas
+            </option>
+
+          </select>
+
+          <div id="list-siswa-nilai"></div>
+
+          <button id="saveNilaiBtn">
+
+            Simpan Nilai
+
+          </button>
+
+        </div>
+
+      </section>
+
+      <!-- REKAP NILAI -->
+
+      <section
+        class="tab"
+        id="rekapTab"
+      >
+
+        <div class="card">
+
+          <select id="rekap-mapel">
+
+            <option value="">
+              Pilih Mata Pelajaran
+            </option>
+
+          </select>
+
+          <select id="rekap-kelas">
+
+            <option value="">
+              Pilih Kelas
+            </option>
+
+          </select>
+
+          <button id="downloadExcelBtn">
+
+            Download Excel
+
+          </button>
+
+          <div class="table-container">
+
+            <table id="rekap-table"></table>
+
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- REKAP JURNAL -->
+
+      <section
+        class="tab"
+        id="rekapJurnalTab"
+      >
+
+        <div class="card">
+
+          <select id="rekap-jurnal-mapel">
+
+            <option value="">
+              Pilih Mata Pelajaran
+            </option>
+
+          </select>
+
+          <select id="rekap-jurnal-kelas">
+
+            <option value="">
+              Pilih Kelas
+            </option>
+
+          </select>
+
+          <button id="downloadJurnalBtn">
+
+            Download Excel
+
+          </button>
+
+          <div class="table-container">
+
+            <table id="rekap-jurnal-table"></table>
+
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- REKAP ABSEN -->
+
+      <section
+        class="tab"
+        id="rekapAbsenTab"
+      >
+
+        <div class="card">
+
+          <select id="rekap-absen-kelas">
+
+            <option value="">
+              Pilih Kelas
+            </option>
+
+          </select>
+
+          <button id="downloadAbsenBtn">
+
+            Download Excel
+
+          </button>
+
+          <div id="rekap-absen-table"></div>
+
+        </div>
+
+      </section>
+
+    </main>
+
+  </div>
+
+  <!-- SIDEBAR SCRIPT -->
 
   <script>
 
@@ -336,7 +406,6 @@
 
       document
         .getElementById(tabId)
-
         .classList.add('active')
 
       sidebar.classList.remove('active')
@@ -347,9 +416,8 @@
 
   </script>
 
-  <!-- =========================
-       MODULE SCRIPT
-  ========================== -->
+  
+  <!-- MODULE -->
 
   <script
     type="module"

@@ -18,7 +18,7 @@
   --border:#e2e8f0;
 
   --shadow:
-    0 4px 20px rgba(0,0,0,0.05);
+    0 10px 30px rgba(0,0,0,0.06);
 
 }
 
@@ -32,51 +32,39 @@ body{
 
 }
 
-/* HEADER */
+/* =========================
+   OVERLAY
+========================= */
 
-header{
+.overlay{
 
-  height:90px;
+  position:fixed;
 
-  background:var(--primary);
+  inset:0;
 
-  color:white;
+  background:rgba(0,0,0,0.4);
 
-  display:flex;
+  opacity:0;
 
-  align-items:center;
+  visibility:hidden;
 
-  gap:20px;
+  transition:0.3s;
 
-  padding:0 28px;
-
-  position:sticky;
-
-  top:0;
-
-  z-index:999;
-
-  box-shadow:var(--shadow);
+  z-index:998;
 
 }
 
-header h1{
+.overlay.active{
 
-  font-size:32px;
+  opacity:1;
 
-  font-weight:700;
-
-}
-
-.menu-btn{
-
-  font-size:34px;
-
-  cursor:pointer;
+  visibility:visible;
 
 }
 
-/* SIDEBAR */
+/* =========================
+   SIDEBAR
+========================= */
 
 .sidebar{
 
@@ -84,7 +72,7 @@ header h1{
 
   top:0;
 
-  left:-280px;
+  left:-290px;
 
   width:280px;
 
@@ -92,13 +80,15 @@ header h1{
 
   background:white;
 
-  z-index:9999;
-
-  box-shadow:var(--shadow);
+  z-index:999;
 
   padding:24px;
 
   transition:0.3s;
+
+  overflow-y:auto;
+
+  box-shadow:var(--shadow);
 
 }
 
@@ -108,17 +98,33 @@ header h1{
 
 }
 
+.sidebar-top{
+
+  margin-bottom:32px;
+
+}
+
 .sidebar-logo{
 
   text-align:center;
 
-  margin-bottom:30px;
+  margin-bottom:16px;
 
 }
 
 .sidebar-logo img{
 
-  width:150px;
+  width:140px;
+
+}
+
+.sidebar-top h2{
+
+  text-align:center;
+
+  font-size:28px;
+
+  color:var(--primary);
 
 }
 
@@ -138,21 +144,31 @@ header h1{
 
   background:#f8fafc;
 
-  padding:16px;
+  padding:18px;
 
-  border-radius:16px;
+  border-radius:18px;
 
-  font-size:17px;
+  font-size:16px;
 
   cursor:pointer;
 
-  text-align:left;
+  display:flex;
 
-  transition:0.2s;
+  align-items:center;
+
+  gap:14px;
+
+  font-weight:600;
+
+  transition:0.25s;
 
   color:#0f172a;
 
-  font-weight:600;
+}
+
+.sidebar-menu button i{
+
+  width:22px;
 
 }
 
@@ -162,59 +178,121 @@ header h1{
 
   color:white;
 
-}
-
-/* OVERLAY */
-
-.overlay{
-
-  position:fixed;
-
-  inset:0;
-
-  background:rgba(0,0,0,0.3);
-
-  opacity:0;
-
-  visibility:hidden;
-
-  transition:0.3s;
-
-  z-index:999;
+  transform:translateX(3px);
 
 }
 
-.overlay.active{
+/* =========================
+   CONTENT
+========================= */
 
-  opacity:1;
+.content-wrapper{
 
-  visibility:visible;
+  width:100%;
+
+  min-height:100vh;
 
 }
 
-/* MAIN */
+/* =========================
+   HEADER
+========================= */
+
+header{
+
+  height:86px;
+
+  background:white;
+
+  display:flex;
+
+  align-items:center;
+
+  gap:20px;
+
+  padding:0 24px;
+
+  position:sticky;
+
+  top:0;
+
+  z-index:100;
+
+  box-shadow:0 2px 10px rgba(0,0,0,0.04);
+
+}
+
+.menu-btn{
+
+  width:50px;
+
+  height:50px;
+
+  border-radius:14px;
+
+  background:#eff6ff;
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:center;
+
+  cursor:pointer;
+
+  color:var(--primary);
+
+  font-size:22px;
+
+}
+
+.header-title h1{
+
+  font-size:26px;
+
+  margin-bottom:4px;
+
+}
+
+.header-title p{
+
+  color:#64748b;
+
+  font-size:14px;
+
+}
+
+/* =========================
+   MAIN
+========================= */
 
 main{
 
-  padding:34px;
+  padding:24px;
 
 }
 
-/* CARD */
+/* =========================
+   CARD
+========================= */
 
 .card{
 
   background:white;
 
-  border-radius:26px;
+  border-radius:28px;
 
-  padding:30px;
+  padding:28px;
 
   box-shadow:var(--shadow);
 
+  margin-bottom:24px;
+
 }
 
-/* FORM */
+/* =========================
+   FORM
+========================= */
 
 input,
 select,
@@ -228,13 +306,13 @@ textarea{
 
   border:2px solid var(--border);
 
-  font-size:17px;
+  font-size:16px;
 
   margin-bottom:18px;
 
   outline:none;
 
-  transition:0.2s;
+  transition:0.25s;
 
   background:white;
 
@@ -250,13 +328,15 @@ textarea:focus{
 
 textarea{
 
-  min-height:120px;
+  min-height:130px;
 
   resize:vertical;
 
 }
 
-/* BUTTON */
+/* =========================
+   BUTTON
+========================= */
 
 button{
 
@@ -266,17 +346,17 @@ button{
 
   color:white;
 
-  padding:18px;
+  padding:18px 24px;
 
   border-radius:18px;
 
-  font-size:18px;
+  font-size:16px;
 
   font-weight:600;
 
   cursor:pointer;
 
-  transition:0.2s;
+  transition:0.25s;
 
 }
 
@@ -286,7 +366,9 @@ button:hover{
 
 }
 
-/* TAB */
+/* =========================
+   TAB
+========================= */
 
 .tab{
 
@@ -300,13 +382,23 @@ button:hover{
 
 }
 
-/* SISWA */
+/* =========================
+   SISWA CARD
+========================= */
 
 .siswa-card{
 
-  margin-bottom:30px;
+  display:grid;
 
-  padding-bottom:22px;
+  grid-template-columns:
+    minmax(260px, 420px)
+    1fr;
+
+  gap:20px;
+
+  align-items:center;
+
+  padding:18px 0;
 
   border-bottom:1px solid #e5e7eb;
 
@@ -314,15 +406,68 @@ button:hover{
 
 .siswa-card h4{
 
-  margin-bottom:18px;
+  font-size:19px;
 
-  font-size:24px;
+  font-weight:700;
 
   color:#0f172a;
 
+  line-height:1.4;
+
+  word-break:break-word;
+
 }
 
-/* ABSENSI MODERN */
+.siswa-info{
+
+  display:flex;
+
+  align-items:center;
+
+  gap:14px;
+
+  min-width:0;
+
+}
+
+.siswa-avatar{
+
+  width:44px;
+
+  height:44px;
+
+  border-radius:50%;
+
+  background:linear-gradient(
+    135deg,
+    #2563eb,
+    #1d4ed8
+  );
+
+  color:white;
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:center;
+
+  font-weight:700;
+
+  font-size:16px;
+
+  flex-shrink:0;
+
+}
+
+.siswa-name{
+
+  min-width:0;
+
+}
+/* =========================
+   ABSENSI
+========================= */
 
 .absen-modern{
 
@@ -337,8 +482,6 @@ button:hover{
 
 .absen-card{
 
-  position:relative;
-
   border:2px solid #e5e7eb;
 
   border-radius:22px;
@@ -351,11 +494,13 @@ button:hover{
 
   background:white;
 
+  position:relative;
+
 }
 
 .absen-card:hover{
 
-  transform:translateY(-2px);
+  transform:translateY(-3px);
 
 }
 
@@ -375,19 +520,17 @@ button:hover{
 
   align-items:center;
 
-  justify-content:center;
-
   gap:12px;
 
 }
 
 .absen-icon{
 
-  width:58px;
+  width:35px;
 
-  height:58px;
+  height:30px;
 
-  border-radius:18px;
+  border-radius:5px;
 
   display:flex;
 
@@ -397,9 +540,9 @@ button:hover{
 
   color:white;
 
-  font-size:28px;
+  font-size:24px;
 
-  font-weight:700;
+  font-weight:500;
 
 }
 
@@ -467,17 +610,9 @@ button:hover{
 
 }
 
-.absen-content span{
-
-  font-size:17px;
-
-  font-weight:600;
-
-  color:#0f172a;
-
-}
-
-/* NILAI */
+/* =========================
+   NILAI
+========================= */
 
 .nilai-row{
 
@@ -503,8 +638,6 @@ button:hover{
 
   font-weight:600;
 
-  font-size:17px;
-
 }
 
 .nilai-row input{
@@ -515,13 +648,17 @@ button:hover{
 
 }
 
-/* TABLE */
+/* =========================
+   TABLE
+========================= */
 
 .table-container{
 
   overflow-x:auto;
 
-  margin-top:24px;
+  margin-top:20px;
+
+  border-radius:18px;
 
 }
 
@@ -533,6 +670,8 @@ table{
 
   min-width:1000px;
 
+  overflow:hidden;
+
 }
 
 th{
@@ -541,13 +680,15 @@ th{
 
   color:white;
 
-  padding:16px;
+  padding:18px;
+
+  font-size:15px;
 
 }
 
 td{
 
-  padding:14px;
+  padding:16px;
 
   border-bottom:1px solid #e5e7eb;
 
@@ -561,7 +702,156 @@ tr:nth-child(even){
 
 }
 
-/* MOBILE */
+/* =========================
+   LOGIN
+========================= */
+
+.login-page{
+
+  min-height:100vh;
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:center;
+
+  background:#f1f5f9;
+
+}
+
+.login-container{
+
+  width:100%;
+
+  padding:20px;
+
+  display:flex;
+
+  justify-content:center;
+
+}
+
+.login-card{
+
+  width:100%;
+
+  max-width:420px;
+
+  background:white;
+
+  border-radius:28px;
+
+  padding:40px;
+
+  box-shadow:var(--shadow);
+
+}
+
+.login-logo{
+
+  width:220px;
+
+  display:block;
+
+  margin:0 auto 24px;
+
+}
+
+.login-card h1{
+
+  text-align:center;
+
+  margin-bottom:24px;
+
+}
+
+.login-btn{
+
+  width:100%;
+
+}
+
+/* =========================
+   DESKTOP
+========================= */
+
+@media(min-width:1024px){
+
+  .sidebar{
+
+    left:0;
+
+  }
+
+  .overlay{
+
+    display:none;
+  }
+
+  .menu-btn{
+
+    display:none;
+
+  }
+
+  .content-wrapper{
+
+    margin-left:280px;
+
+    width:calc(100% - 280px);
+
+  }
+
+  main{
+
+    padding:34px;
+
+  }
+
+  .card{
+
+    padding:34px;
+
+  }
+
+  .sidebar-menu button{
+
+    font-size:17px;
+
+  }
+
+  .header-title h1{
+
+    font-size:30px;
+
+  }
+
+}
+
+/* =========================
+   TABLET
+========================= */
+
+@media(max-width:1023px){
+
+  .sidebar{
+
+    left:-290px;
+
+  }
+
+  .sidebar.active{
+
+    left:0;
+
+  }
+
+}
+
+/* =========================
+   MOBILE
+========================= */
 
 @media(max-width:768px){
 
@@ -569,19 +859,27 @@ tr:nth-child(even){
 
     height:76px;
 
-    padding:0 20px;
+    padding:0 18px;
 
   }
 
-  header h1{
+  .header-title h1{
 
-    font-size:24px;
+    font-size:20px;
+
+  }
+
+  .header-title p{
+
+    font-size:12px;
 
   }
 
   main{
 
-    padding:18px;
+    padding:16px;
+
+    padding-bottom:100px;
 
   }
 
@@ -589,12 +887,44 @@ tr:nth-child(even){
 
     padding:20px;
 
+    border-radius:22px;
+
+  }
+
+  .sidebar{
+
+    width:260px;
+
+    padding:20px;
+
+  }
+
+  .sidebar-logo img{
+
+    width:120px;
+
   }
 
   .absen-modern{
 
     grid-template-columns:
       repeat(2,1fr);
+
+  }
+
+  .absen-card{
+
+    padding:16px;
+
+  }
+
+  .absen-icon{
+
+    width:50px;
+
+    height:50px;
+
+    font-size:20px;
 
   }
 
@@ -612,134 +942,886 @@ tr:nth-child(even){
 
   }
 
-}
-.login-logo {
+  input,
+  select,
+  textarea{
 
-  width: 120px;
+    padding:16px;
 
-  height: auto;
+    font-size:15px;
 
-  display: block;
+  }
 
-  margin: 0 auto 20px;
+  button{
 
-  object-fit: contain;
+    width:100%;
+
+  }
 
 }
 /* =========================
-   LOGIN PAGE
+   REKAP ABSEN MODERN
 ========================= */
 
-.login-page {
+.rekap-modern{
 
-  min-height: 100vh;
+  display:flex;
 
-  display: flex;
+  flex-direction:column;
 
-  justify-content: center;
+  gap:18px;
 
-  align-items: center;
-
-  background: #f1f5f9;
+  margin-top:24px;
 
 }
 
-.login-container {
+.rekap-card{
 
-  width: 100%;
+  background:white;
 
-  display: flex;
+  border:1px solid #e5e7eb;
 
-  justify-content: center;
+  border-radius:24px;
 
-  align-items: center;
+  padding:22px;
 
-  padding: 20px;
+  display:grid;
 
-}
+  grid-template-columns:
+    minmax(240px,1.5fr)
+    1fr
+    120px;
 
-.login-card {
+  gap:20px;
 
-  width: 100%;
+  align-items:center;
 
-  max-width: 420px;
-
-  background: white;
-
-  padding: 40px;
-
-  border-radius: 24px;
-
-  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+  transition:0.25s;
 
 }
 
-.login-card h1 {
+.rekap-card:hover{
 
-  text-align: center;
+  transform:translateY(-2px);
 
-  margin-bottom: 24px;
-
-  color: #0f172a;
-
-}
-
-.login-logo {
-
-  width: 220px;
-
-  display: block;
-
-  margin: 0 auto 24px;
+  box-shadow:
+    0 10px 30px rgba(0,0,0,0.06);
 
 }
 
-.form-group {
+.rekap-left{
 
-  margin-bottom: 18px;
+  display:flex;
 
-}
+  align-items:center;
 
-.form-group input {
+  gap:16px;
 
-  width: 100%;
-
-  padding: 16px;
-
-  border: 1px solid #dbe2ea;
-
-  border-radius: 14px;
-
-  font-size: 16px;
+  min-width:0;
 
 }
 
-.login-btn {
+.rekap-avatar{
 
-  width: 100%;
+  width:54px;
 
-  border: none;
+  height:54px;
 
-  background: #2563eb;
+  border-radius:50%;
 
-  color: white;
+  background:linear-gradient(
+    135deg,
+    #2563eb,
+    #1d4ed8
+  );
 
-  padding: 16px;
+  color:white;
 
-  border-radius: 14px;
+  display:flex;
 
-  font-size: 18px;
+  align-items:center;
 
-  font-weight: 600;
+  justify-content:center;
 
-  cursor: pointer;
+  font-weight:700;
 
-  transition: 0.2s;
+  font-size:18px;
+
+  flex-shrink:0;
 
 }
 
-.login-btn:hover {
+.rekap-user{
 
-  background: #1d4ed8;
+  min-width:0;
+
+}
+
+.rekap-user h3{
+
+  font-size:19px;
+
+  margin-bottom:4px;
+
+  color:#0f172a;
+
+  line-height:1.4;
+
+  word-break:break-word;
+
+}
+
+.rekap-user p{
+
+  color:#64748b;
+
+  font-size:14px;
+
+}
+
+.rekap-center{
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:center;
+
+  gap:12px;
+
+  flex-wrap:wrap;
+
+}
+
+.rekap-badge{
+
+  min-width:68px;
+
+  border-radius:18px;
+
+  padding:12px;
+
+  text-align:center;
+
+  border:2px solid #e5e7eb;
+
+}
+
+.rekap-badge span{
+
+  display:block;
+
+  font-size:13px;
+
+  font-weight:700;
+
+  margin-bottom:6px;
+
+}
+
+.rekap-badge strong{
+
+  font-size:18px;
+
+}
+
+.rekap-badge.hadir{
+
+  background:#f0fdf4;
+
+  border-color:#16a34a;
+
+  color:#16a34a;
+
+}
+
+.rekap-badge.sakit{
+
+  background:#fefce8;
+
+  border-color:#eab308;
+
+  color:#ca8a04;
+
+}
+
+.rekap-badge.izin{
+
+  background:#eff6ff;
+
+  border-color:#2563eb;
+
+  color:#2563eb;
+
+}
+
+.rekap-badge.alpa{
+
+  background:#fef2f2;
+
+  border-color:#ef4444;
+
+  color:#ef4444;
+
+}
+
+.rekap-right{
+
+  text-align:center;
+
+}
+
+.persen-circle{
+
+  width:82px;
+
+  height:82px;
+
+  border-radius:50%;
+
+  background:conic-gradient(
+    #16a34a 0deg,
+    #22c55e 270deg,
+    #dcfce7 270deg
+  );
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:center;
+
+  margin:0 auto 8px;
+
+  color:#0f172a;
+
+  font-size:18px;
+
+  font-weight:700;
+
+  position:relative;
+
+}
+
+.persen-circle::before{
+
+  content:'';
+
+  position:absolute;
+
+  width:64px;
+
+  height:64px;
+
+  border-radius:50%;
+
+  background:white;
+
+}
+
+.persen-circle span{
+
+  position:relative;
+
+  z-index:2;
+
+}
+.persen-circle{
+
+  isolation:isolate;
+
+}
+
+.persen-circle::after{
+
+  content:attr(data-text);
+
+}
+
+.rekap-right small{
+
+  color:#64748b;
+
+  font-size:13px;
+
+}
+
+.empty-state{
+
+  text-align:center;
+
+  padding:40px;
+
+  color:#64748b;
+
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width:768px){
+
+  .rekap-card{
+
+    grid-template-columns:1fr;
+
+    gap:18px;
+
+    padding:18px;
+
+  }
+
+  .rekap-left{
+
+    align-items:flex-start;
+
+  }
+
+  .rekap-center{
+
+    justify-content:flex-start;
+
+  }
+
+  .rekap-right{
+
+    text-align:left;
+
+  }
+
+  .persen-circle{
+
+    margin:0 0 8px;
+
+  }
+
+}
+/* =========================
+   REKAP ABSEN MINIMALIS
+========================= */
+
+.rekap-modern{
+
+  display:flex;
+
+  flex-direction:column;
+
+  gap:14px;
+
+  margin-top:20px;
+
+}
+
+/* CARD */
+
+.rekap-card{
+
+  background:white;
+
+  border:1px solid #e5e7eb;
+
+  border-radius:22px;
+
+  padding:16px 20px;
+
+  display:grid;
+
+  grid-template-columns:
+    minmax(280px,1.5fr)
+    auto
+    120px;
+
+  gap:18px;
+
+  align-items:center;
+
+  transition:0.25s;
+
+}
+
+.rekap-card:hover{
+
+  transform:translateY(-2px);
+
+  box-shadow:
+    0 8px 24px rgba(0,0,0,0.05);
+
+}
+
+/* =========================
+   LEFT
+========================= */
+
+.rekap-left{
+
+  display:flex;
+
+  align-items:center;
+
+  gap:14px;
+
+  min-width:0;
+
+}
+
+/* AVATAR */
+
+.rekap-avatar{
+
+  width:48px;
+
+  height:48px;
+
+  border-radius:50%;
+
+  background:linear-gradient(
+    135deg,
+    #2563eb,
+    #1d4ed8
+  );
+
+  color:white;
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:center;
+
+  font-weight:700;
+
+  font-size:20px;
+
+  flex-shrink:0;
+
+}
+
+/* USER */
+
+.rekap-user{
+
+  min-width:0;
+
+}
+
+.rekap-user h3{
+
+  font-size:17px;
+
+  line-height:1.35;
+
+  color:#0f172a;
+
+  margin-bottom:4px;
+
+  text-align:left;
+
+  word-break:break-word;
+
+}
+
+.rekap-user p{
+
+  color:#64748b;
+
+  font-size:14px;
+
+  text-align:left;
+
+}
+
+/* =========================
+   CENTER
+========================= */
+
+.rekap-center{
+
+  display:flex;
+
+  align-items:center;
+
+  gap:10px;
+
+}
+
+/* BADGE */
+
+.rekap-badge{
+
+  width:74px;
+
+  height:64px;
+
+  border-radius:16px;
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:center;
+
+  gap:8px;
+
+  border:1.5px solid #e5e7eb;
+
+  transition:0.25s;
+
+  padding:8px;
+
+}
+
+.rekap-badge i{
+
+  font-size:18px;
+
+}
+
+.rekap-badge-content{
+
+  display:flex;
+
+  flex-direction:column;
+
+  align-items:center;
+
+  line-height:1.1;
+
+}
+
+.rekap-badge-content span{
+
+  font-size:13px;
+
+  font-weight:700;
+
+}
+
+.rekap-badge-content strong{
+
+  font-size:16px;
+
+}
+
+/* HADIR */
+
+.rekap-badge.hadir{
+
+  background:#f0fdf4;
+
+  border-color:#22c55e;
+
+  color:#16a34a;
+
+}
+
+/* SAKIT */
+
+.rekap-badge.sakit{
+
+  background:#fefce8;
+
+  border-color:#eab308;
+
+  color:#ca8a04;
+
+}
+
+/* IZIN */
+
+.rekap-badge.izin{
+
+  background:#eff6ff;
+
+  border-color:#2563eb;
+
+  color:#2563eb;
+
+}
+
+/* ALPA */
+
+.rekap-badge.alpa{
+
+  background:#fef2f2;
+
+  border-color:#ef4444;
+
+  color:#ef4444;
+
+}
+
+/* =========================
+   RIGHT
+========================= */
+
+.rekap-right{
+
+  display:flex;
+
+  align-items:center;
+
+  gap:12px;
+
+}
+
+/* PERCENT */
+
+.persen-circle{
+
+  width:82px;
+
+  height:82px;
+
+  border-radius:50%;
+
+  position:relative;
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:center;
+
+  flex-shrink:0;
+
+}
+
+.persen-circle::before{
+
+  content:'';
+
+  position:absolute;
+
+  inset:0;
+
+  border-radius:50%;
+
+  background:
+
+    conic-gradient(
+
+      #22c55e calc(var(--percent) * 1%),
+
+      #dcfce7 0%
+
+    );
+
+}
+
+.persen-circle::after{
+
+  content:'';
+
+  position:absolute;
+
+  width:60px;
+
+  height:60px;
+
+  background:white;
+
+  border-radius:50%;
+
+}
+
+.persen-circle span{
+
+  position:relative;
+
+  z-index:2;
+
+  font-size:17px;
+
+  font-weight:700;
+
+  color:#0f172a;
+
+}
+
+.rekap-label{
+
+  font-size:13px;
+
+  color:#64748b;
+
+  line-height:1.3;
+
+}
+
+/* =========================
+   EMPTY
+========================= */
+
+.empty-state{
+
+  padding:40px;
+
+  text-align:center;
+
+  color:#64748b;
+
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width:768px){
+
+  .rekap-card{
+
+    grid-template-columns:1fr;
+
+    gap:16px;
+
+    padding:16px;
+
+  }
+
+  .rekap-left{
+
+    align-items:flex-start;
+
+  }
+
+  .rekap-avatar{
+
+    width:44px;
+
+    height:44px;
+
+    font-size:18px;
+
+  }
+
+  .rekap-user h3{
+
+    font-size:16px;
+
+  }
+
+  .rekap-center{
+
+    flex-wrap:wrap;
+
+    justify-content:flex-start;
+
+  }
+
+  .rekap-badge{
+
+    width:68px;
+
+    height:58px;
+
+  }
+
+  .rekap-badge i{
+
+    font-size:16px;
+
+  }
+
+  .persen-circle{
+
+    width:72px;
+
+    height:72px;
+
+  }
+
+  .persen-circle::after{
+
+    width:52px;
+
+    height:52px;
+
+  }
+
+}
+/* =========================
+   GURU BOX
+========================= */
+
+.guru-box{
+
+  display:flex;
+
+  align-items:center;
+
+  gap:18px;
+
+  margin-top:10px;
+
+  padding:14px 18px;
+
+  background:white;
+
+  border-radius:18px;
+
+  border:1px solid #e5e7eb;
+
+  width:fit-content;
+
+}
+
+.guru-item{
+
+  display:flex;
+
+  flex-direction:column;
+
+  gap:4px;
+
+}
+
+.guru-item span{
+
+  font-size:12px;
+
+  color:#64748b;
+
+}
+
+.guru-item strong{
+
+  font-size:16px;
+
+  color:#0f172a;
+
+}
+
+.guru-divider{
+
+  width:1px;
+
+  height:38px;
+
+  background:#e5e7eb;
+
+}
+
+/* MOBILE */
+
+@media(max-width:768px){
+
+  .guru-box{
+
+    width:100%;
+
+    justify-content:space-between;
+
+    gap:12px;
+
+    padding:12px 14px;
+
+  }
+
+  .guru-item strong{
+
+    font-size:14px;
+
+  }
 
 }
