@@ -106,27 +106,45 @@ async function loadSiswaDanNilai() {
     !jenisSelect.value
   ) return
 
-  const { data: siswa } = await supabaseClient
+  const { data: siswa, error: siswaError } =
+    await supabaseClient
 
-    .from('siswa')
+      .from('siswa')
 
-    .select('*')
+      .select('*')
 
-    .eq('kelas', kelasSelect.value)
+      .eq('kelas', kelasSelect.value)
+
+  if (siswaError) {
+
+    console.error(siswaError)
+
+    return
+
+  }
 
   siswaData = siswa
 
-  const { data: nilaiExisting } = await supabaseClient
+  const { data: nilaiExisting, error: nilaiError } =
+    await supabaseClient
 
-    .from('nilai')
+      .from('nilai')
 
-    .select('*')
+      .select('*')
 
-    .eq('user_id', user.id)
+      .eq('user_id', user.id)
 
-    .eq('kelas', kelasSelect.value)
+      .eq('kelas', kelasSelect.value)
 
-    .eq('mapel', mapelSelect.value)
+      .eq('mapel', mapelSelect.value)
+
+  if (nilaiError) {
+
+    console.error(nilaiError)
+
+    return
+
+  }
 
   siswaContainer.innerHTML = ''
 
@@ -184,7 +202,24 @@ saveBtn.addEventListener('click', async () => {
     data: { user }
   } = await supabaseClient.auth.getUser()
 
-  const jenis = jenisSelect.value
+  if (
+    !kelasSelect.value ||
+    !mapelSelect.value ||
+    !jenisSelect.value
+  ) {
+
+    alert('Lengkapi data terlebih dahulu')
+
+    return
+
+  }
+
+  saveBtn.disabled = true
+
+  saveBtn.innerHTML =
+    'Menyimpan...'
+
+  const payload = []
 
   for (const [index, item] of siswaData.entries()) {
 
@@ -196,23 +231,24 @@ saveBtn.addEventListener('click', async () => {
 
     )
 
-    const { data: existing } = await supabaseClient
+    const { data: existing } =
+      await supabaseClient
 
-      .from('nilai')
+        .from('nilai')
 
-      .select('*')
+        .select('*')
 
-      .eq('user_id', user.id)
+        .eq('user_id', user.id)
 
-      .eq('siswa', item.nama_siswa)
+        .eq('siswa', item.nama_siswa)
 
-      .eq('mapel', mapelSelect.value)
+        .eq('kelas', kelasSelect.value)
 
-      .single()
+        .eq('mapel', mapelSelect.value)
+
+        .maybeSingle()
 
     const merged = {
-
-      ...existing,
 
       user_id: user.id,
 
@@ -222,7 +258,20 @@ saveBtn.addEventListener('click', async () => {
 
       mapel: mapelSelect.value,
 
-      [jenis]: nilaiInput
+      s1: existing?.s1 || null,
+      s2: existing?.s2 || null,
+      s3: existing?.s3 || null,
+      s4: existing?.s4 || null,
+
+      f1: existing?.f1 || null,
+      f2: existing?.f2 || null,
+      f3: existing?.f3 || null,
+      f4: existing?.f4 || null,
+
+      asts: existing?.asts || null,
+      asas: existing?.asas || null,
+
+      [jenisSelect.value]: nilaiInput
 
     }
 
@@ -253,21 +302,28 @@ saveBtn.addEventListener('click', async () => {
 
     ) / 4
 
-    const { error } = await supabaseClient
+    payload.push(merged)
 
-      .from('nilai')
+  }
 
-      .upsert(merged)
+  const { error } = await supabaseClient
 
-    if (error) {
+    .from('nilai')
 
-      console.error(error)
+    .upsert(payload)
 
-      alert(error.message)
+  saveBtn.disabled = false
 
-      return
+  saveBtn.innerHTML =
+    'Simpan Nilai'
 
-    }
+  if (error) {
+
+    console.error(error)
+
+    alert(error.message)
+
+    return
 
   }
 
