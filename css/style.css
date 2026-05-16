@@ -465,6 +465,7 @@ button:hover{
   min-width:0;
 
 }
+
 /* =========================
    ABSENSI
 ========================= */
@@ -526,11 +527,11 @@ button:hover{
 
 .absen-icon{
 
-  width:35px;
+  width:58px;
 
-  height:30px;
+  height:58px;
 
-  border-radius:5px;
+  border-radius:16px;
 
   display:flex;
 
@@ -540,9 +541,9 @@ button:hover{
 
   color:white;
 
-  font-size:24px;
+  font-size:28px;
 
-  font-weight:500;
+  font-weight:700;
 
 }
 
@@ -773,6 +774,396 @@ tr:nth-child(even){
 }
 
 /* =========================
+   REKAP ABSEN
+========================= */
+
+.rekap-modern{
+
+  display:flex;
+
+  flex-direction:column;
+
+  gap:14px;
+
+  margin-top:20px;
+
+}
+
+.rekap-card{
+
+  background:white;
+
+  border:1px solid #e5e7eb;
+
+  border-radius:22px;
+
+  padding:16px 20px;
+
+  display:grid;
+
+  grid-template-columns:
+    minmax(280px,1.5fr)
+    auto
+    120px;
+
+  gap:18px;
+
+  align-items:center;
+
+  transition:0.25s;
+
+}
+
+.rekap-card:hover{
+
+  transform:translateY(-2px);
+
+  box-shadow:
+    0 8px 24px rgba(0,0,0,0.05);
+
+}
+
+.rekap-left{
+
+  display:flex;
+
+  align-items:center;
+
+  gap:14px;
+
+  min-width:0;
+
+}
+
+.rekap-avatar{
+
+  width:48px;
+
+  height:48px;
+
+  border-radius:50%;
+
+  background:linear-gradient(
+    135deg,
+    #2563eb,
+    #1d4ed8
+  );
+
+  color:white;
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:center;
+
+  font-weight:700;
+
+  font-size:20px;
+
+  flex-shrink:0;
+
+}
+
+.rekap-user{
+
+  min-width:0;
+
+}
+
+.rekap-user h3{
+
+  font-size:17px;
+
+  line-height:1.35;
+
+  color:#0f172a;
+
+  margin-bottom:4px;
+
+  text-align:left;
+
+  word-break:break-word;
+
+}
+
+.rekap-user p{
+
+  color:#64748b;
+
+  font-size:14px;
+
+  text-align:left;
+
+}
+
+.rekap-center{
+
+  display:flex;
+
+  align-items:center;
+
+  gap:10px;
+
+}
+
+.rekap-badge{
+
+  width:74px;
+
+  height:64px;
+
+  border-radius:16px;
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:center;
+
+  gap:8px;
+
+  border:1.5px solid #e5e7eb;
+
+  transition:0.25s;
+
+  padding:8px;
+
+}
+
+.rekap-badge i{
+
+  font-size:18px;
+
+}
+
+.rekap-badge-content{
+
+  display:flex;
+
+  flex-direction:column;
+
+  align-items:center;
+
+  line-height:1.1;
+
+}
+
+.rekap-badge-content span{
+
+  font-size:13px;
+
+  font-weight:700;
+
+}
+
+.rekap-badge-content strong{
+
+  font-size:16px;
+
+}
+
+.rekap-badge.hadir{
+
+  background:#f0fdf4;
+
+  border-color:#22c55e;
+
+  color:#16a34a;
+
+}
+
+.rekap-badge.sakit{
+
+  background:#fefce8;
+
+  border-color:#eab308;
+
+  color:#ca8a04;
+
+}
+
+.rekap-badge.izin{
+
+  background:#eff6ff;
+
+  border-color:#2563eb;
+
+  color:#2563eb;
+
+}
+
+.rekap-badge.alpa{
+
+  background:#fef2f2;
+
+  border-color:#ef4444;
+
+  color:#ef4444;
+
+}
+
+.rekap-right{
+
+  display:flex;
+
+  align-items:center;
+
+  gap:12px;
+
+}
+
+.persen-circle{
+
+  width:82px;
+
+  height:82px;
+
+  border-radius:50%;
+
+  position:relative;
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:center;
+
+  flex-shrink:0;
+
+}
+
+.persen-circle::before{
+
+  content:'';
+
+  position:absolute;
+
+  inset:0;
+
+  border-radius:50%;
+
+  background:
+    conic-gradient(
+      #22c55e calc(var(--percent) * 1%),
+      #dcfce7 0%
+    );
+
+}
+
+.persen-circle::after{
+
+  content:'';
+
+  position:absolute;
+
+  width:60px;
+
+  height:60px;
+
+  background:white;
+
+  border-radius:50%;
+
+}
+
+.persen-circle span{
+
+  position:relative;
+
+  z-index:2;
+
+  font-size:17px;
+
+  font-weight:700;
+
+  color:#0f172a;
+
+}
+
+.rekap-label{
+
+  font-size:13px;
+
+  color:#64748b;
+
+  line-height:1.3;
+
+}
+
+.empty-state{
+
+  padding:40px;
+
+  text-align:center;
+
+  color:#64748b;
+
+}
+
+/* =========================
+   GURU BOX
+========================= */
+
+.guru-box{
+
+  display:flex;
+
+  align-items:center;
+
+  gap:18px;
+
+  margin-top:10px;
+
+  padding:14px 18px;
+
+  background:white;
+
+  border-radius:18px;
+
+  border:1px solid #e5e7eb;
+
+  width:fit-content;
+
+}
+
+.guru-item{
+
+  display:flex;
+
+  flex-direction:column;
+
+  gap:4px;
+
+}
+
+.guru-item span{
+
+  font-size:12px;
+
+  color:#64748b;
+
+}
+
+.guru-item strong{
+
+  font-size:16px;
+
+  color:#0f172a;
+
+}
+
+.guru-divider{
+
+  width:1px;
+
+  height:38px;
+
+  background:#e5e7eb;
+
+}
+
+/* =========================
    DESKTOP
 ========================= */
 
@@ -787,6 +1178,7 @@ tr:nth-child(even){
   .overlay{
 
     display:none;
+
   }
 
   .menu-btn{
@@ -850,22 +1242,38 @@ tr:nth-child(even){
 }
 
 /* =========================
-   MOBILE
+   MOBILE FINAL
 ========================= */
 
 @media(max-width:768px){
 
   header{
 
-    height:76px;
+    height:74px;
 
-    padding:0 18px;
+    padding:0 16px;
+
+    gap:14px;
+
+  }
+
+  .menu-btn{
+
+    width:46px;
+
+    height:46px;
+
+    border-radius:14px;
+
+    font-size:20px;
 
   }
 
   .header-title h1{
 
     font-size:20px;
+
+    line-height:1.2;
 
   }
 
@@ -879,15 +1287,17 @@ tr:nth-child(even){
 
     padding:16px;
 
-    padding-bottom:100px;
+    padding-bottom:110px;
 
   }
 
   .card{
 
-    padding:20px;
+    padding:20px 16px;
 
-    border-radius:22px;
+    border-radius:24px;
+
+    margin-bottom:18px;
 
   }
 
@@ -905,74 +1315,13 @@ tr:nth-child(even){
 
   }
 
-  /* ======================
-   ABSENSI MOBILE
-====================== */
+  .sidebar-menu button{
 
-.absen-modern{
+    padding:16px;
 
-  grid-template-columns:
-    repeat(2,1fr);
+    border-radius:16px;
 
-  gap:12px;
-
-}
-
-.absen-card{
-
-  padding:14px 10px;
-
-  border-radius:18px;
-
-  min-height:110px;
-
-  display:flex;
-
-  align-items:center;
-
-  justify-content:center;
-
-}
-
-.absen-content{
-
-  gap:10px;
-
-}
-
-.absen-icon{
-
-  width:58px;
-
-  height:58px;
-
-  border-radius:14px;
-
-  font-size:28px;
-
-  font-weight:700;
-
-}
-
-.absen-content span{
-
-  font-size:15px;
-
-  font-weight:600;
-
-}
-
-  .nilai-row{
-
-    flex-direction:column;
-
-    align-items:stretch;
-
-  }
-
-  .nilai-row input{
-
-    width:100%;
+    font-size:15px;
 
   }
 
@@ -984,724 +1333,166 @@ tr:nth-child(even){
 
     font-size:15px;
 
+    border-radius:16px;
+
+  }
+
+  textarea{
+
+    min-height:120px;
+
   }
 
   button{
 
     width:100%;
 
+    border-radius:16px;
+
+    padding:16px;
+
+    font-size:15px;
+
   }
 
-}
-/* =========================
-   REKAP ABSEN MODERN
-========================= */
-
-.rekap-modern{
-
-  display:flex;
-
-  flex-direction:column;
-
-  gap:18px;
-
-  margin-top:24px;
-
-}
-
-.rekap-card{
-
-  background:white;
-
-  border:1px solid #e5e7eb;
-
-  border-radius:24px;
-
-  padding:22px;
-
-  display:grid;
-
-  grid-template-columns:
-    minmax(240px,1.5fr)
-    1fr
-    120px;
-
-  gap:20px;
-
-  align-items:center;
-
-  transition:0.25s;
-
-}
-
-.rekap-card:hover{
-
-  transform:translateY(-2px);
-
-  box-shadow:
-    0 10px 30px rgba(0,0,0,0.06);
-
-}
-
-.rekap-left{
-
-  display:flex;
-
-  align-items:center;
-
-  gap:16px;
-
-  min-width:0;
-
-}
-
-.rekap-avatar{
-
-  width:54px;
-
-  height:54px;
-
-  border-radius:50%;
-
-  background:linear-gradient(
-    135deg,
-    #2563eb,
-    #1d4ed8
-  );
-
-  color:white;
-
-  display:flex;
-
-  align-items:center;
-
-  justify-content:center;
-
-  font-weight:700;
-
-  font-size:18px;
-
-  flex-shrink:0;
-
-}
-
-.rekap-user{
-
-  min-width:0;
-
-}
-
-.rekap-user h3{
-
-  font-size:19px;
-
-  margin-bottom:4px;
-
-  color:#0f172a;
-
-  line-height:1.4;
-
-  word-break:break-word;
-
-}
-
-.rekap-user p{
-
-  color:#64748b;
-
-  font-size:14px;
-
-}
-
-.rekap-center{
-
-  display:flex;
-
-  align-items:center;
-
-  justify-content:center;
-
-  gap:12px;
-
-  flex-wrap:wrap;
-
-}
-
-.rekap-badge{
-
-  min-width:68px;
-
-  border-radius:18px;
-
-  padding:12px;
-
-  text-align:center;
-
-  border:2px solid #e5e7eb;
-
-}
-
-.rekap-badge span{
-
-  display:block;
-
-  font-size:13px;
-
-  font-weight:700;
-
-  margin-bottom:6px;
-
-}
-
-.rekap-badge strong{
-
-  font-size:18px;
-
-}
-
-.rekap-badge.hadir{
-
-  background:#f0fdf4;
-
-  border-color:#16a34a;
-
-  color:#16a34a;
-
-}
-
-.rekap-badge.sakit{
-
-  background:#fefce8;
-
-  border-color:#eab308;
-
-  color:#ca8a04;
-
-}
-
-.rekap-badge.izin{
-
-  background:#eff6ff;
-
-  border-color:#2563eb;
-
-  color:#2563eb;
-
-}
-
-.rekap-badge.alpa{
-
-  background:#fef2f2;
-
-  border-color:#ef4444;
-
-  color:#ef4444;
-
-}
-
-.rekap-right{
-
-  text-align:center;
-
-}
-
-.persen-circle{
-
-  width:82px;
-
-  height:82px;
-
-  border-radius:50%;
-
-  background:conic-gradient(
-    #16a34a 0deg,
-    #22c55e 270deg,
-    #dcfce7 270deg
-  );
-
-  display:flex;
-
-  align-items:center;
-
-  justify-content:center;
-
-  margin:0 auto 8px;
-
-  color:#0f172a;
-
-  font-size:18px;
-
-  font-weight:700;
-
-  position:relative;
-
-}
-
-.persen-circle::before{
-
-  content:'';
-
-  position:absolute;
-
-  width:64px;
-
-  height:64px;
-
-  border-radius:50%;
-
-  background:white;
-
-}
-
-.persen-circle span{
-
-  position:relative;
-
-  z-index:2;
-
-}
-.persen-circle{
-
-  isolation:isolate;
-
-}
-
-.persen-circle::after{
-
-  content:attr(data-text);
-
-}
-
-.rekap-right small{
-
-  color:#64748b;
-
-  font-size:13px;
-
-}
-
-.empty-state{
-
-  text-align:center;
-
-  padding:40px;
-
-  color:#64748b;
-
-}
-
-/* =========================
-   MOBILE
-========================= */
-
-@media(max-width:768px){
-
-  .rekap-card{
+  .siswa-card{
 
     grid-template-columns:1fr;
 
-    gap:18px;
+    gap:14px;
 
-    padding:18px;
-
-  }
-
-  .rekap-left{
-
-    align-items:flex-start;
+    padding:18px 0;
 
   }
 
-  .rekap-center{
+  .siswa-info{
 
-    justify-content:flex-start;
-
-  }
-
-  .rekap-right{
-
-    text-align:left;
+    gap:12px;
 
   }
 
-  .persen-circle{
+  .siswa-avatar{
 
-    margin:0 0 8px;
+    width:46px;
+
+    height:46px;
+
+    font-size:17px;
 
   }
 
-}
-/* =========================
-   REKAP ABSEN MINIMALIS
-========================= */
+  .siswa-card h4{
 
-.rekap-modern{
+    font-size:18px;
 
-  display:flex;
+    line-height:1.4;
 
-  flex-direction:column;
+  }
 
-  gap:14px;
+  .absen-modern{
 
-  margin-top:20px;
+    grid-template-columns:
+      repeat(2,1fr);
 
-}
+    gap:12px;
 
-/* CARD */
+  }
 
-.rekap-card{
+  .absen-card{
 
-  background:white;
+    min-height:110px;
 
-  border:1px solid #e5e7eb;
+    border-radius:20px;
 
-  border-radius:22px;
+    padding:14px;
 
-  padding:16px 20px;
+    display:flex;
 
-  display:grid;
+    align-items:center;
 
-  grid-template-columns:
-    minmax(280px,1.5fr)
-    auto
-    120px;
+    justify-content:center;
 
-  gap:18px;
+  }
 
-  align-items:center;
+  .absen-content{
 
-  transition:0.25s;
+    gap:10px;
 
-}
+  }
 
-.rekap-card:hover{
+  .absen-icon{
 
-  transform:translateY(-2px);
+    width:60px;
 
-  box-shadow:
-    0 8px 24px rgba(0,0,0,0.05);
+    height:60px;
 
-}
+    border-radius:16px;
 
-/* =========================
-   LEFT
-========================= */
+    font-size:30px;
 
-.rekap-left{
+    font-weight:700;
 
-  display:flex;
+  }
 
-  align-items:center;
+  .absen-content span{
 
-  gap:14px;
+    font-size:15px;
 
-  min-width:0;
+    font-weight:600;
 
-}
+  }
 
-/* AVATAR */
+  .nilai-row{
 
-.rekap-avatar{
+    flex-direction:column;
 
-  width:48px;
+    align-items:stretch;
 
-  height:48px;
+    gap:14px;
 
-  border-radius:50%;
+  }
 
-  background:linear-gradient(
-    135deg,
-    #2563eb,
-    #1d4ed8
-  );
+  .nilai-row input{
 
-  color:white;
+    width:100%;
 
-  display:flex;
+  }
 
-  align-items:center;
+  table{
 
-  justify-content:center;
+    min-width:850px;
 
-  font-weight:700;
+  }
 
-  font-size:20px;
+  th{
 
-  flex-shrink:0;
+    font-size:14px;
 
-}
+    padding:14px;
 
-/* USER */
+  }
 
-.rekap-user{
+  td{
 
-  min-width:0;
+    font-size:14px;
 
-}
+    padding:14px;
 
-.rekap-user h3{
+  }
 
-  font-size:17px;
+  .login-card{
 
-  line-height:1.35;
+    padding:30px 22px;
 
-  color:#0f172a;
+    border-radius:24px;
 
-  margin-bottom:4px;
+  }
 
-  text-align:left;
+  .login-logo{
 
-  word-break:break-word;
+    width:180px;
 
-}
-
-.rekap-user p{
-
-  color:#64748b;
-
-  font-size:14px;
-
-  text-align:left;
-
-}
-
-/* =========================
-   CENTER
-========================= */
-
-.rekap-center{
-
-  display:flex;
-
-  align-items:center;
-
-  gap:10px;
-
-}
-
-/* BADGE */
-
-.rekap-badge{
-
-  width:74px;
-
-  height:64px;
-
-  border-radius:16px;
-
-  display:flex;
-
-  align-items:center;
-
-  justify-content:center;
-
-  gap:8px;
-
-  border:1.5px solid #e5e7eb;
-
-  transition:0.25s;
-
-  padding:8px;
-
-}
-
-.rekap-badge i{
-
-  font-size:18px;
-
-}
-
-.rekap-badge-content{
-
-  display:flex;
-
-  flex-direction:column;
-
-  align-items:center;
-
-  line-height:1.1;
-
-}
-
-.rekap-badge-content span{
-
-  font-size:13px;
-
-  font-weight:700;
-
-}
-
-.rekap-badge-content strong{
-
-  font-size:16px;
-
-}
-
-/* HADIR */
-
-.rekap-badge.hadir{
-
-  background:#f0fdf4;
-
-  border-color:#22c55e;
-
-  color:#16a34a;
-
-}
-
-/* SAKIT */
-
-.rekap-badge.sakit{
-
-  background:#fefce8;
-
-  border-color:#eab308;
-
-  color:#ca8a04;
-
-}
-
-/* IZIN */
-
-.rekap-badge.izin{
-
-  background:#eff6ff;
-
-  border-color:#2563eb;
-
-  color:#2563eb;
-
-}
-
-/* ALPA */
-
-.rekap-badge.alpa{
-
-  background:#fef2f2;
-
-  border-color:#ef4444;
-
-  color:#ef4444;
-
-}
-
-/* =========================
-   RIGHT
-========================= */
-
-.rekap-right{
-
-  display:flex;
-
-  align-items:center;
-
-  gap:12px;
-
-}
-
-/* PERCENT */
-
-.persen-circle{
-
-  width:82px;
-
-  height:82px;
-
-  border-radius:50%;
-
-  position:relative;
-
-  display:flex;
-
-  align-items:center;
-
-  justify-content:center;
-
-  flex-shrink:0;
-
-}
-
-.persen-circle::before{
-
-  content:'';
-
-  position:absolute;
-
-  inset:0;
-
-  border-radius:50%;
-
-  background:
-
-    conic-gradient(
-
-      #22c55e calc(var(--percent) * 1%),
-
-      #dcfce7 0%
-
-    );
-
-}
-
-.persen-circle::after{
-
-  content:'';
-
-  position:absolute;
-
-  width:60px;
-
-  height:60px;
-
-  background:white;
-
-  border-radius:50%;
-
-}
-
-.persen-circle span{
-
-  position:relative;
-
-  z-index:2;
-
-  font-size:17px;
-
-  font-weight:700;
-
-  color:#0f172a;
-
-}
-
-.rekap-label{
-
-  font-size:13px;
-
-  color:#64748b;
-
-  line-height:1.3;
-
-}
-
-/* =========================
-   EMPTY
-========================= */
-
-.empty-state{
-
-  padding:40px;
-
-  text-align:center;
-
-  color:#64748b;
-
-}
-
-/* =========================
-   MOBILE
-========================= */
-
-@media(max-width:768px){
+  }
 
   .rekap-card{
 
@@ -1719,6 +1510,8 @@ tr:nth-child(even){
 
     align-items:flex-start;
 
+    gap:14px;
+
   }
 
   .rekap-avatar{
@@ -1733,9 +1526,15 @@ tr:nth-child(even){
 
   .rekap-user h3{
 
-    font-size:18px;
+    font-size:17px;
 
     line-height:1.4;
+
+  }
+
+  .rekap-user p{
+
+    font-size:13px;
 
   }
 
@@ -1771,13 +1570,19 @@ tr:nth-child(even){
 
   .rekap-badge-content span{
 
-    font-size:15px;
+    font-size:14px;
 
   }
 
   .rekap-badge-content strong{
 
     font-size:18px;
+
+  }
+
+  .rekap-right{
+
+    justify-content:flex-start;
 
   }
 
@@ -1802,135 +1607,6 @@ tr:nth-child(even){
     font-size:20px;
 
   }
-
-}
-
-  .rekap-left{
-
-    align-items:flex-start;
-
-  }
-
-  .rekap-avatar{
-
-    width:44px;
-
-    height:44px;
-
-    font-size:18px;
-
-  }
-
-  .rekap-user h3{
-
-    font-size:16px;
-
-  }
-
-  .rekap-center{
-
-    flex-wrap:wrap;
-
-    justify-content:flex-start;
-
-  }
-
-  .rekap-badge{
-
-    width:68px;
-
-    height:58px;
-
-  }
-
-  .rekap-badge i{
-
-    font-size:16px;
-
-  }
-
-  .persen-circle{
-
-    width:72px;
-
-    height:72px;
-
-  }
-
-  .persen-circle::after{
-
-    width:52px;
-
-    height:52px;
-
-  }
-
-}
-/* =========================
-   GURU BOX
-========================= */
-
-.guru-box{
-
-  display:flex;
-
-  align-items:center;
-
-  gap:18px;
-
-  margin-top:10px;
-
-  padding:14px 18px;
-
-  background:white;
-
-  border-radius:18px;
-
-  border:1px solid #e5e7eb;
-
-  width:fit-content;
-
-}
-
-.guru-item{
-
-  display:flex;
-
-  flex-direction:column;
-
-  gap:4px;
-
-}
-
-.guru-item span{
-
-  font-size:12px;
-
-  color:#64748b;
-
-}
-
-.guru-item strong{
-
-  font-size:16px;
-
-  color:#0f172a;
-
-}
-
-.guru-divider{
-
-  width:1px;
-
-  height:38px;
-
-  background:#e5e7eb;
-
-}
-
-/* MOBILE */
-
-@media(max-width:768px){
 
   .guru-box{
 
