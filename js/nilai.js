@@ -310,7 +310,12 @@ saveBtn.addEventListener('click', async () => {
 
     .from('nilai')
 
-    .upsert(payload)
+    .upsert(payload, {
+
+      onConflict:
+        'user_id,siswa,kelas,mapel'
+
+    })
 
   saveBtn.disabled = false
 
