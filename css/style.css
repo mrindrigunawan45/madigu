@@ -905,28 +905,62 @@ tr:nth-child(even){
 
   }
 
-  .absen-modern{
+  /* ======================
+   ABSENSI MOBILE
+====================== */
 
-    grid-template-columns:
-      repeat(2,1fr);
+.absen-modern{
 
-  }
+  grid-template-columns:
+    repeat(2,1fr);
 
-  .absen-card{
+  gap:12px;
 
-    padding:16px;
+}
 
-  }
+.absen-card{
 
-  .absen-icon{
+  padding:14px 10px;
 
-    width:50px;
+  border-radius:18px;
 
-    height:50px;
+  min-height:110px;
 
-    font-size:20px;
+  display:flex;
 
-  }
+  align-items:center;
+
+  justify-content:center;
+
+}
+
+.absen-content{
+
+  gap:10px;
+
+}
+
+.absen-icon{
+
+  width:58px;
+
+  height:58px;
+
+  border-radius:14px;
+
+  font-size:28px;
+
+  font-weight:700;
+
+}
+
+.absen-content span{
+
+  font-size:15px;
+
+  font-weight:600;
+
+}
 
   .nilai-row{
 
@@ -1673,11 +1707,103 @@ tr:nth-child(even){
 
     grid-template-columns:1fr;
 
-    gap:16px;
+    gap:18px;
 
-    padding:16px;
+    padding:20px 16px;
+
+    border-radius:24px;
 
   }
+
+  .rekap-left{
+
+    align-items:flex-start;
+
+  }
+
+  .rekap-avatar{
+
+    width:50px;
+
+    height:50px;
+
+    font-size:20px;
+
+  }
+
+  .rekap-user h3{
+
+    font-size:18px;
+
+    line-height:1.4;
+
+  }
+
+  .rekap-center{
+
+    flex-wrap:wrap;
+
+    justify-content:flex-start;
+
+    gap:12px;
+
+  }
+
+  .rekap-badge{
+
+    width:84px;
+
+    height:76px;
+
+    border-radius:18px;
+
+    flex-direction:column;
+
+    gap:6px;
+
+  }
+
+  .rekap-badge i{
+
+    font-size:20px;
+
+  }
+
+  .rekap-badge-content span{
+
+    font-size:15px;
+
+  }
+
+  .rekap-badge-content strong{
+
+    font-size:18px;
+
+  }
+
+  .persen-circle{
+
+    width:92px;
+
+    height:92px;
+
+  }
+
+  .persen-circle::after{
+
+    width:68px;
+
+    height:68px;
+
+  }
+
+  .persen-circle span{
+
+    font-size:20px;
+
+  }
+
+}
 
   .rekap-left{
 
