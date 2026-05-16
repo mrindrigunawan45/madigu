@@ -29,30 +29,20 @@ async function loadMapel() {
 
   }
 
-  const mapelUnik =
-    [...new Set(data.map(item => item.nama_mapel))]
-
-  console.log(
-    'MAPEL REKAP:',
-    mapelUnik
-  )
-
   mapelSelect.innerHTML = ''
 
-  mapelSelect.appendChild(
-    new Option('Pilih Mata Pelajaran', '')
-  )
+  mapelSelect.innerHTML +=
+    `<option value="">Pilih Mata Pelajaran</option>`
 
-  mapelUnik.forEach(mapel => {
+  data.forEach(item => {
 
-    mapelSelect.appendChild(
+    mapelSelect.innerHTML += `
 
-      new Option(
-        mapel,
-        mapel
-      )
+      <option value="${item.nama_mapel}">
+        ${item.nama_mapel}
+      </option>
 
-    )
+    `
 
   })
 
@@ -77,27 +67,20 @@ async function loadKelas() {
   const kelasUnik =
     [...new Set(data.map(item => item.kelas))]
 
-  console.log(
-    'KELAS REKAP:',
-    kelasUnik
-  )
-
   kelasSelect.innerHTML = ''
 
-  kelasSelect.appendChild(
-    new Option('Pilih Kelas', '')
-  )
+  kelasSelect.innerHTML +=
+    `<option value="">Pilih Kelas</option>`
 
   kelasUnik.forEach(kelas => {
 
-    kelasSelect.appendChild(
+    kelasSelect.innerHTML += `
 
-      new Option(
-        kelas,
-        kelas
-      )
+      <option value="${kelas}">
+        ${kelas}
+      </option>
 
-    )
+    `
 
   })
 
@@ -105,9 +88,13 @@ async function loadKelas() {
 
 async function loadRekap() {
 
+  console.log('LOAD REKAP JALAN')
+
   const {
     data: { user }
   } = await supabaseClient.auth.getUser()
+
+  console.log('USER LOGIN:', user)
 
   if (
     !kelasSelect.value ||
@@ -119,11 +106,6 @@ async function loadRekap() {
     return
 
   }
-
-  console.log(
-    'USER LOGIN:',
-    user.id
-  )
 
   const { data, error } = await supabaseClient
 
@@ -137,6 +119,8 @@ async function loadRekap() {
 
     .eq('mapel', mapelSelect.value)
 
+  console.log('REKAP DATA:', data)
+
   if (error) {
 
     console.error(error)
@@ -144,11 +128,6 @@ async function loadRekap() {
     return
 
   }
-
-  console.log(
-    'REKAP DATA:',
-    data
-  )
 
   rekapData = data
 
@@ -227,9 +206,7 @@ function renderTable() {
         <td>
 
           ${item.nilai_akhir
-            ? Number(
-                item.nilai_akhir
-              ).toFixed(2)
+            ? Number(item.nilai_akhir).toFixed(2)
             : '-'}
 
         </td>
