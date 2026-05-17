@@ -1,5 +1,10 @@
 import { supabaseClient } from './supabase.js'
 
+import {
+  resetForm,
+  clearElement
+} from './utils.js'
+
 const kelasSelect =
   document.getElementById('kelas-nilai')
 
@@ -333,6 +338,16 @@ saveBtn.addEventListener('click', async () => {
   }
 
   alert('Nilai berhasil disimpan')
+
+resetForm([
+  'mapel-nilai',
+  'jenis-nilai',
+  'kelas-nilai'
+])
+
+clearElement('list-siswa-nilai')
+
+siswaData = []
 
 })
 

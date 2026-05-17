@@ -11,10 +11,6 @@ const downloadBtn =
 
 let absenData = []
 
-// =========================
-// LOAD KELAS
-// =========================
-
 async function loadKelas() {
 
   const { data, error } = await supabaseClient
@@ -55,11 +51,11 @@ async function loadKelas() {
 
 }
 
-// =========================
-// LOAD REKAP
-// =========================
-
 async function loadRekapAbsen() {
+
+  const {
+    data: { user }
+  } = await supabaseClient.auth.getUser()
 
   if (!kelasSelect.value) return
 
@@ -68,6 +64,8 @@ async function loadRekapAbsen() {
     .from('jurnal')
 
     .select('*')
+
+    .eq('user_id', user.id)
 
     .eq('kelas', kelasSelect.value)
 
@@ -127,11 +125,6 @@ async function loadRekapAbsen() {
   renderTable()
 
 }
-
-// =========================
-// RENDER TABLE
-// =========================
-
 function renderTable() {
 
   if (!absenData.length) {
@@ -166,8 +159,6 @@ function renderTable() {
 
           <div class="rekap-card">
 
-            <!-- LEFT -->
-
             <div class="rekap-left">
 
               <div class="rekap-avatar">
@@ -195,77 +186,37 @@ function renderTable() {
 
             </div>
 
-            <!-- CENTER -->
-
             <div class="rekap-center">
 
-              <!-- HADIR -->
-
               <div class="rekap-badge hadir">
-
-                <i class="fa-solid fa-circle-check"></i>
-
                 <div class="rekap-badge-content">
-
                   <span>H</span>
-
                   <strong>${item.hadir}</strong>
-
                 </div>
-
               </div>
-
-              <!-- SAKIT -->
 
               <div class="rekap-badge sakit">
-
-                <i class="fa-regular fa-face-frown"></i>
-
                 <div class="rekap-badge-content">
-
                   <span>S</span>
-
                   <strong>${item.sakit}</strong>
-
                 </div>
-
               </div>
-
-              <!-- IZIN -->
 
               <div class="rekap-badge izin">
-
-                <i class="fa-solid fa-circle-info"></i>
-
                 <div class="rekap-badge-content">
-
                   <span>I</span>
-
                   <strong>${item.izin}</strong>
-
                 </div>
-
               </div>
 
-              <!-- ALPA -->
-
               <div class="rekap-badge alpa">
-
-                <i class="fa-regular fa-circle-xmark"></i>
-
                 <div class="rekap-badge-content">
-
                   <span>A</span>
-
                   <strong>${item.alpa}</strong>
-
                 </div>
-
               </div>
 
             </div>
-
-            <!-- RIGHT -->
 
             <div class="rekap-right">
 
@@ -275,12 +226,6 @@ function renderTable() {
               >
 
                 <span>${persen}%</span>
-
-              </div>
-
-              <div class="rekap-label">
-
-                Kehadiran
 
               </div>
 
@@ -298,79 +243,9 @@ function renderTable() {
 
 }
 
-// =========================
-// EVENT
-// =========================
-
 kelasSelect.addEventListener(
   'change',
   loadRekapAbsen
 )
-
-// =========================
-// DOWNLOAD EXCEL
-// =========================
-
-downloadBtn.addEventListener('click', () => {
-
-  if (!absenData.length) {
-
-    alert('Data kosong')
-
-    return
-
-  }
-
-  const exportData = absenData.map((item, index) => ({
-
-    No: index + 1,
-
-    Nama: item.nama,
-
-    Hadir: item.hadir,
-
-    Sakit: item.sakit,
-
-    Izin: item.izin,
-
-    Alpa: item.alpa,
-
-    Kehadiran:
-
-      ((item.hadir / item.total) * 100)
-
-      .toFixed(1) + '%'
-
-  }))
-
-  const worksheet =
-    XLSX.utils.json_to_sheet(exportData)
-
-  const workbook =
-    XLSX.utils.book_new()
-
-  XLSX.utils.book_append_sheet(
-
-    workbook,
-
-    worksheet,
-
-    'Rekap Absen'
-
-  )
-
-  XLSX.writeFile(
-
-    workbook,
-
-    `Rekap_Absen_${kelasSelect.value}.xlsx`
-
-  )
-
-})
-
-// =========================
-// INIT
-// =========================
 
 loadKelas()

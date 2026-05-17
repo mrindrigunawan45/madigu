@@ -52,8 +52,6 @@
 
       </div>
 
-      <h2>MaDiGU</h2>
-
     </div>
 
     <div class="sidebar-menu">
@@ -123,25 +121,28 @@
 
       <div class="header-title">
 
-        <h1>MaDiGU Dashboard</h1>
 
         <!-- USER BOX -->
 
         <div class="guru-box">
 
-          <div class="guru-item">
+  <div class="guru-item">
 
-            <span>
+    <span id="welcomeText">
 
-              Selamat Datang di Mitra Digital Guru
+      Selamat Datang
 
-            </span>
+    </span>
 
-          </div>
+    <strong id="schoolText">
 
-        </div>
+      MaDiGU
 
-      </div>
+    </strong>
+
+  </div>
+
+</div>
 
     </header>
 
@@ -396,23 +397,128 @@
 
     function showTab(tabId) {
 
-      document
-        .querySelectorAll('.tab')
-        .forEach(tab => {
+  // =========================
+  // RESET REKAP NILAI
+  // =========================
 
-          tab.classList.remove('active')
+  const rekapTable =
+    document.getElementById('rekap-table')
 
-        })
+  if (rekapTable) {
 
-      document
-        .getElementById(tabId)
-        .classList.add('active')
+    rekapTable.innerHTML = ''
 
-      sidebar.classList.remove('active')
+  }
 
-      overlay.classList.remove('active')
+  // reset select
+  const rekapMapel =
+    document.getElementById('rekap-mapel')
 
-    }
+  const rekapKelas =
+    document.getElementById('rekap-kelas')
+
+  if (rekapMapel) {
+    rekapMapel.selectedIndex = 0
+  }
+
+  if (rekapKelas) {
+    rekapKelas.selectedIndex = 0
+  }
+
+  // =========================
+  // RESET REKAP JURNAL
+  // =========================
+
+  const rekapJurnalTable =
+    document.getElementById('rekap-jurnal-table')
+
+  if (rekapJurnalTable) {
+
+    rekapJurnalTable.innerHTML = ''
+
+  }
+
+  const rekapJurnalMapel =
+    document.getElementById('rekap-jurnal-mapel')
+
+  const rekapJurnalKelas =
+    document.getElementById('rekap-jurnal-kelas')
+
+  if (rekapJurnalMapel) {
+    rekapJurnalMapel.selectedIndex = 0
+  }
+
+  if (rekapJurnalKelas) {
+    rekapJurnalKelas.selectedIndex = 0
+  }
+
+  // =========================
+  // RESET REKAP ABSEN
+  // =========================
+
+  const rekapAbsenTable =
+    document.getElementById('rekap-absen-table')
+
+  if (rekapAbsenTable) {
+
+    rekapAbsenTable.innerHTML = ''
+
+  }
+
+  const rekapAbsenKelas =
+    document.getElementById('rekap-absen-kelas')
+
+  if (rekapAbsenKelas) {
+
+    rekapAbsenKelas.selectedIndex = 0
+
+  }
+
+  // =========================
+  // TAB SWITCH
+  // =========================
+
+  document
+    .querySelectorAll('.tab')
+    .forEach(tab => {
+
+      tab.classList.remove('active')
+
+    })
+
+  document
+    .getElementById(tabId)
+    .classList.add('active')
+
+  // RESET ACTIVE MENU
+
+document
+  .querySelectorAll('.sidebar-menu button')
+  .forEach(btn => {
+
+    btn.classList.remove('active')
+
+  })
+
+// ACTIVE CURRENT MENU
+
+const activeButton =
+  document.querySelector(
+
+    `[onclick="showTab('${tabId}')"]`
+
+  )
+
+if (activeButton) {
+
+  activeButton.classList.add('active')
+
+}
+    sidebar.classList.remove('active')
+
+  overlay.classList.remove('active')
+
+}
 
   </script>
 
@@ -448,6 +554,45 @@
     type="module"
     src="js/rekapAbsen.js"
   ></script>
+
+  <script type="module">
+
+  import { supabaseClient }
+  from './js/supabase.js'
+
+  async function loadUserInfo() {
+
+    const {
+      data: { user }
+    } = await supabaseClient.auth.getUser()
+
+    if (!user) return
+
+    const fullName =
+
+      user.user_metadata.full_name ||
+      'User'
+
+    const school =
+
+      user.user_metadata.school ||
+      'Sekolah'
+
+    document.getElementById(
+      'welcomeText'
+    ).innerText =
+
+      `Selamat Datang, ${fullName}`
+
+    document.getElementById(
+      'schoolText'
+    ).innerText = school
+
+  }
+
+  loadUserInfo()
+
+</script>
 
 </body>
 

@@ -98,23 +98,57 @@ body{
 
 }
 
+/* =========================
+   SIDEBAR TOP
+========================= */
+
 .sidebar-top{
 
-  margin-bottom:32px;
+  width:100%;
+
+  display:flex;
+
+  flex-direction:column;
+
+  align-items:center;
+
+  justify-content:center;
+
+  padding:12px 20px 4px;
 
 }
+
+
+/* =========================
+   SIDEBAR LOGO
+========================= */
 
 .sidebar-logo{
 
-  text-align:center;
+  width:100%;
 
-  margin-bottom:16px;
+  display:flex;
+
+  justify-content:center;
+
+  align-items:center;
 
 }
 
+
+/* =========================
+   SIDEBAR LOGO IMAGE
+========================= */
+
 .sidebar-logo img{
 
-  width:140px;
+  width:80%;
+
+  max-width:320px;
+
+  height:auto;
+
+  object-fit:contain;
 
 }
 
@@ -172,13 +206,19 @@ body{
 
 }
 
-.sidebar-menu button:hover{
+/* ACTIVE MENU */
+
+.sidebar-menu button.active{
 
   background:var(--primary);
 
   color:white;
 
-  transform:translateX(3px);
+}
+
+.sidebar-menu button.active i{
+
+  color:white;
 
 }
 
@@ -210,7 +250,7 @@ header{
 
   gap:20px;
 
-  padding:0 24px;
+  padding:20px 24px 0;
 
   position:sticky;
 
@@ -1318,11 +1358,34 @@ tr:nth-child(even){
 
   }
 
+ /* =========================
+   SIDEBAR LOGO IMAGE
+========================= */
+
+.sidebar-logo img{
+
+  width:260px;
+
+  max-width:none;
+
+  height:auto;
+
+  object-fit:contain;
+
+}
+
+
+/* DESKTOP */
+
+@media(min-width:1024px){
+
   .sidebar-logo img{
 
-    width:120px;
+    width:360px;
 
   }
+
+}
 
   .sidebar-menu button{
 

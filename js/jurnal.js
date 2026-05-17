@@ -1,5 +1,10 @@
 import { supabaseClient } from './supabase.js'
 
+import {
+  resetForm,
+  clearElement
+} from './utils.js'
+
 const tanggal =
   document.getElementById('tanggal')
 
@@ -318,6 +323,19 @@ saveBtn.addEventListener('click', async () => {
   }
 
   alert('Jurnal berhasil disimpan')
+
+resetForm([
+  'mapel-jurnal',
+  'kelas-jurnal',
+  'materi'
+])
+
+clearElement('list-siswa-jurnal')
+
+siswaData = []
+
+tanggal.value =
+  new Date().toISOString().split('T')[0]
 
 })
 
