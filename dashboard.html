@@ -91,6 +91,7 @@
 
       </button>
 
+      
       <button id="logoutBtn">
 
         <i class="fa-solid fa-right-from-bracket"></i>
@@ -557,40 +558,62 @@ if (activeButton) {
 
   <script type="module">
 
-  import { supabaseClient }
-  from './js/supabase.js'
+import { supabaseClient }
+from './js/supabase.js'
 
-  async function loadUserInfo() {
+async function loadUserInfo() {
 
-    const {
-      data: { user }
-    } = await supabaseClient.auth.getUser()
+  // USER LOGIN
+  const {
+    data: { user }
+  } = await supabaseClient.auth.getUser()
 
-    if (!user) return
+  if (!user) return
 
-    const fullName =
+  // PROFILE
+  const {
+    data: profile,
+    error
+  } = await supabaseClient
 
-      user.user_metadata.full_name ||
-      'User'
+    .from('profiles')
 
-    const school =
+    .select('name, sekolah')
 
-      user.user_metadata.school ||
-      'Sekolah'
+    .eq('email', user.email)
 
-    document.getElementById(
-      'welcomeText'
-    ).innerText =
+    .single()
 
-      `Selamat Datang, ${fullName}`
+  if (error || !profile) {
 
-    document.getElementById(
-      'schoolText'
-    ).innerText = school
+  console.log('PROFILE ERROR:', error)
 
-  }
+  console.log('USER LOGIN:', user)
 
-  loadUserInfo()
+  console.log('PROFILE:', profile)
+
+  return
+
+}
+
+  // TAMPILKAN
+  document.getElementById(
+    'welcomeText'
+  ).innerText =
+
+    `Selamat Datang, ${profile.name}`
+
+  document.getElementById(
+    'schoolText'
+  ).innerText =
+
+    profile.sekolah
+
+}
+
+loadUserInfo()
+
+</script>
 
 </script>
 
