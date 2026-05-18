@@ -135,6 +135,35 @@ async function loadRekap() {
 
 }
 
+function hitungRerata(arr) {
+
+  const valid =
+    arr.filter(
+
+      n =>
+        n !== null &&
+        n !== '' &&
+        !isNaN(n)
+
+    )
+
+  if (!valid.length)
+    return 0
+
+  const total =
+    valid.reduce(
+
+      (a, b) =>
+        a + Number(b),
+
+      0
+
+    )
+
+  return total / valid.length
+
+}
+
 function renderTable() {
 
   table.innerHTML = `
@@ -184,6 +213,35 @@ function renderTable() {
 
   rekapData.forEach(item => {
 
+    const rerataSumatif =
+      hitungRerata([
+
+        item.s1,
+        item.s2,
+        item.s3,
+        item.s4
+
+      ])
+
+    const rerataFormatif =
+      hitungRerata([
+
+        item.f1,
+        item.f2,
+        item.f3,
+        item.f4
+
+      ])
+
+    const nilaiAkhir = (
+
+      rerataSumatif +
+      rerataFormatif +
+      Number(item.asts || 0) +
+      Number(item.asas || 0)
+
+    ) / 4
+
     table.innerHTML += `
 
       <tr>
@@ -205,9 +263,7 @@ function renderTable() {
 
         <td>
 
-          ${item.nilai_akhir
-            ? Number(item.nilai_akhir).toFixed(2)
-            : '-'}
+          ${nilaiAkhir.toFixed(2)}
 
         </td>
 

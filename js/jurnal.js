@@ -301,11 +301,45 @@ saveBtn.addEventListener('click', async () => {
 
   saveBtn.disabled = true
 
-  const { error } = await supabaseClient
+  let error = null
 
-    .from('jurnal')
+  if (window.editJurnalId) {
 
-    .insert(payload)
+    const { error: updateError } =
+      await supabaseClient
+
+        .from('jurnal')
+
+        .update({
+
+          tanggal: tanggal.value,
+
+          kelas: kelasSelect.value,
+
+          mapel: mapelSelect.value,
+
+          materi: materi
+
+        })
+
+        .eq('id', window.editJurnalId)
+
+    error = updateError
+
+    window.editJurnalId = null
+
+  } else {
+
+    const result =
+      await supabaseClient
+
+        .from('jurnal')
+
+        .insert(payload)
+
+    error = result.error
+
+  }
 
   saveBtn.innerHTML =
     'Simpan Jurnal'
@@ -324,18 +358,18 @@ saveBtn.addEventListener('click', async () => {
 
   alert('Jurnal berhasil disimpan')
 
-resetForm([
-  'mapel-jurnal',
-  'kelas-jurnal',
-  'materi'
-])
+  resetForm([
+    'mapel-jurnal',
+    'kelas-jurnal',
+    'materi'
+  ])
 
-clearElement('list-siswa-jurnal')
+  clearElement('list-siswa-jurnal')
 
-siswaData = []
+  siswaData = []
 
-tanggal.value =
-  new Date().toISOString().split('T')[0]
+  tanggal.value =
+    new Date().toISOString().split('T')[0]
 
 })
 
