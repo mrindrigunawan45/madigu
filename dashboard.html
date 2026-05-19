@@ -3,6 +3,13 @@
 
 <head>
 
+  <link rel="manifest" href="manifest.json">
+
+  <meta
+    name="theme-color"
+    content="#2563eb"
+  />
+  
   <meta charset="UTF-8" />
 
   <meta
@@ -25,6 +32,18 @@
   <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
 
 </head>
+
+<script>
+
+if ('serviceWorker' in navigator) {
+
+  navigator.serviceWorker.register(
+    '/service-worker.js'
+  )
+
+}
+
+</script>
 
 <body>
 
@@ -612,8 +631,6 @@ async function loadUserInfo() {
 }
 
 loadUserInfo()
-
-</script>
 
 </script>
 

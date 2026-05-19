@@ -1,7 +1,14 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
+  
+  <link rel="manifest" href="manifest.json">
 
+  <meta
+    name="theme-color"
+    content="#2563eb"
+  />
+  
   <meta charset="UTF-8" />
 
   <meta
@@ -81,6 +88,18 @@
     type="module"
     src="js/auth.js"
   ></script>
+
+  <script>
+
+  if ('serviceWorker' in navigator) {
+
+    navigator.serviceWorker.register(
+      '/service-worker.js'
+    )
+
+  }
+
+</script>
 
 </body>
 </html>
