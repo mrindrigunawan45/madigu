@@ -38,9 +38,7 @@ if (loginForm) {
 
           })
 
-      console.log(data)
-      console.log(error)
-
+      // ERROR LOGIN
       if (error) {
 
         alert(error.message)
@@ -49,6 +47,52 @@ if (loginForm) {
 
       }
 
+      const user = data.user
+
+      // AMBIL PROFILE
+      const { data: profile } =
+        await supabaseClient
+
+          .from('profiles')
+
+          .select('*')
+
+          .eq('id', user.id)
+
+          .single()
+
+      if (!profile) {
+
+        alert('Profile tidak ditemukan')
+
+        return
+      }
+
+      const role = profile.role
+
+      console.log('ROLE:', role)
+
+      // =========================
+      // REDIRECT BERDASARKAN ROLE
+      // =========================
+
+      if (role === 'agen') {
+
+        window.location.href =
+          'lapor.html'
+
+        return
+      }
+
+      if (role === 'bk') {
+
+        window.location.href =
+          'dashboard-bk.html'
+
+        return
+      }
+
+      // GURU / ADMIN
       window.location.href =
         'dashboard.html'
 

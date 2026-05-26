@@ -3,6 +3,9 @@ import { supabaseClient } from './supabase.js'
 const kelasSelect =
   document.getElementById('rekap-absen-kelas')
 
+const mapelSelect =
+  document.getElementById('rekap-absen-mapel')
+
 const table =
   document.getElementById('rekap-absen-table')
 
@@ -11,13 +14,17 @@ const downloadBtn =
 
 let absenData = []
 
-async function loadKelas() {
+// =======================
+// LOAD MAPEL
+// =======================
+async function loadMapel() {
 
-  const { data, error } = await supabaseClient
+  const { data, error } =
+    await supabaseClient
 
-    .from('siswa')
+      .from('mata_pelajaran')
 
-    .select('kelas')
+      .select('*')
 
   if (error) {
 
@@ -27,8 +34,75 @@ async function loadKelas() {
 
   }
 
-  const kelasUnik =
-    [...new Set(data.map(item => item.kelas))]
+  mapelSelect.innerHTML = ''
+
+  mapelSelect.appendChild(
+
+    new Option(
+      'Pilih Mata Pelajaran',
+      ''
+    )
+
+  )
+
+  data.forEach(item => {
+
+    mapelSelect.appendChild(
+
+      new Option(
+        item.nama_mapel,
+        item.nama_mapel
+      )
+
+    )
+
+  })
+
+}
+
+// =======================
+// LOAD KELAS
+// =======================
+async function loadKelas() {
+
+  const { data, error } =
+    await supabaseClient
+
+      .from('siswa')
+
+      .select('kelas')
+
+  if (error) {
+
+    console.error(error)
+
+    return
+
+  }
+
+  const kelasUnik = [
+
+    ...new Set(
+
+      data
+
+        .map(item => item.kelas)
+
+        .filter(k => k && k.trim() !== '')
+
+    )
+
+  ]
+
+  kelasUnik.sort((a, b) =>
+
+    a.localeCompare(
+      b,
+      undefined,
+      { numeric: true }
+    )
+
+  )
 
   kelasSelect.innerHTML = ''
 
@@ -51,23 +125,34 @@ async function loadKelas() {
 
 }
 
+// =======================
+// LOAD REKAP ABSEN
+// =======================
 async function loadRekapAbsen() {
 
   const {
     data: { user }
-  } = await supabaseClient.auth.getUser()
+  } = await supabaseClient
+    .auth
+    .getUser()
 
-  if (!kelasSelect.value) return
+  if (
+    !kelasSelect.value ||
+    !mapelSelect.value
+  ) return
 
-  const { data, error } = await supabaseClient
+  const { data, error } =
+    await supabaseClient
 
-    .from('jurnal')
+      .from('jurnal')
 
-    .select('*')
+      .select('*')
 
-    .eq('user_id', user.id)
+      .eq('user_id', user.id)
 
-    .eq('kelas', kelasSelect.value)
+      .eq('kelas', kelasSelect.value)
+
+      .eq('mapel', mapelSelect.value)
 
   if (error) {
 
@@ -125,6 +210,10 @@ async function loadRekapAbsen() {
   renderTable()
 
 }
+
+// =======================
+// RENDER TABLE
+// =======================
 function renderTable() {
 
   if (!absenData.length) {
@@ -189,31 +278,59 @@ function renderTable() {
             <div class="rekap-center">
 
               <div class="rekap-badge hadir">
+
                 <div class="rekap-badge-content">
+
                   <span>H</span>
-                  <strong>${item.hadir}</strong>
+
+                  <strong>
+                    ${item.hadir}
+                  </strong>
+
                 </div>
+
               </div>
 
               <div class="rekap-badge sakit">
+
                 <div class="rekap-badge-content">
+
                   <span>S</span>
-                  <strong>${item.sakit}</strong>
+
+                  <strong>
+                    ${item.sakit}
+                  </strong>
+
                 </div>
+
               </div>
 
               <div class="rekap-badge izin">
+
                 <div class="rekap-badge-content">
+
                   <span>I</span>
-                  <strong>${item.izin}</strong>
+
+                  <strong>
+                    ${item.izin}
+                  </strong>
+
                 </div>
+
               </div>
 
               <div class="rekap-badge alpa">
+
                 <div class="rekap-badge-content">
+
                   <span>A</span>
-                  <strong>${item.alpa}</strong>
+
+                  <strong>
+                    ${item.alpa}
+                  </strong>
+
                 </div>
+
               </div>
 
             </div>
@@ -225,7 +342,9 @@ function renderTable() {
                 style="--percent:${persen};"
               >
 
-                <span>${persen}%</span>
+                <span>
+                  ${persen}%
+                </span>
 
               </div>
 
@@ -243,9 +362,83 @@ function renderTable() {
 
 }
 
+// =======================
+// DOWNLOAD EXCEL
+// =======================
+downloadBtn.addEventListener(
+  'click',
+  () => {
+
+    if (!absenData.length) {
+
+      alert(
+        'Belum ada data absen'
+      )
+
+      return
+    }
+
+    const excelData =
+      absenData.map(item => ({
+
+        Nama: item.nama,
+
+        Hadir: item.hadir,
+
+        Sakit: item.sakit,
+
+        Izin: item.izin,
+
+        Alpa: item.alpa,
+
+        Total: item.total,
+
+        Persentase:
+
+          (
+            (item.hadir / item.total) * 100
+          ).toFixed(1) + '%'
+
+      }))
+
+    const ws =
+      XLSX.utils.json_to_sheet(
+        excelData
+      )
+
+    const wb =
+      XLSX.utils.book_new()
+
+    XLSX.utils.book_append_sheet(
+      wb,
+      ws,
+      'Rekap Absen'
+    )
+
+    XLSX.writeFile(
+      wb,
+      'Rekap_Absen.xlsx'
+    )
+
+  }
+)
+
+// =======================
+// EVENT
+// =======================
 kelasSelect.addEventListener(
   'change',
   loadRekapAbsen
 )
+
+mapelSelect.addEventListener(
+  'change',
+  loadRekapAbsen
+)
+
+// =======================
+// INIT
+// =======================
+loadMapel()
 
 loadKelas()

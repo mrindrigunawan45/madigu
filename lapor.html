@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+
+  <meta charset="UTF-8" />
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+
+  <title>TiTaTif - Buat Laporan</title>
+
+  <!-- CSS -->
+  <link
+    rel="stylesheet"
+    href="css/lapor.css"
+  />
+
+</head>
+
+<body>
+
+  <div class="container">
+
+    <!-- HEADER -->
+    <div class="header">
+
+      <button
+        id="logoutBtn"
+        class="logout-btn"
+      >
+        Logout
+      </button>
+
+      <img
+        src="img/titatif-logo.png"
+        alt="Logo"
+        class="logo"
+      />
+
+    </div>
+
+    <!-- PILIH SISWA -->
+    <div class="card">
+
+      <label for="siswaSelect">
+        Pilih Siswa
+      </label>
+
+      <select id="siswaSelect">
+
+        <option value="">
+          Memuat siswa...
+        </option>
+
+      </select>
+
+    </div>
+
+    <!-- KATEGORI -->
+    <div class="card">
+
+      <label for="kategoriSelect">
+        Kategori Laporan
+      </label>
+
+      <select id="kategoriSelect">
+
+        <option value="">
+          Pilih kategori
+        </option>
+
+      </select>
+
+    </div>
+
+    <!-- JENIS LAPORAN -->
+    <div class="card">
+
+      <label>
+        Jenis Laporan
+      </label>
+
+      <div id="jenisContainer"></div>
+
+      <!-- LAINNYA -->
+      <div
+        class="lainnya-box hidden"
+        id="lainnyaBox"
+      >
+
+        <textarea
+          id="laporanLainnya"
+          placeholder="Tulis laporan lainnya..."
+        ></textarea>
+
+      </div>
+
+    </div>
+
+    <!-- CATATAN -->
+    <div class="card">
+
+      <label for="catatan">
+        Catatan Tambahan
+      </label>
+
+      <textarea
+        id="catatan"
+        placeholder="Opsional"
+      ></textarea>
+
+    </div>
+
+    <!-- BUTTON -->
+    <button id="kirimBtn">
+
+      Kirim Laporan
+
+    </button>
+
+  </div>
+
+  <!-- JS -->
+  <script
+    type="module"
+    src="js/lapor.js"
+  ></script>
+
+</body>
+</html>

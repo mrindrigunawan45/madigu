@@ -64,8 +64,29 @@ async function loadKelas() {
 
   }
 
-  const kelasUnik =
-    [...new Set(data.map(item => item.kelas))]
+  const kelasUnik = [
+
+    ...new Set(
+
+      data
+
+        .map(item => item.kelas)
+
+        .filter(k => k && k.trim() !== '')
+
+    )
+
+  ]
+
+  kelasUnik.sort((a, b) =>
+
+    a.localeCompare(
+      b,
+      undefined,
+      { numeric: true }
+    )
+
+  )
 
   kelasSelect.innerHTML = ''
 

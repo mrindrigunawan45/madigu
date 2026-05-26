@@ -22,29 +22,38 @@ const saveBtn =
 
 let siswaData = []
 
+// =======================
+// DEFAULT TANGGAL
+// =======================
 tanggal.value =
   new Date().toISOString().split('T')[0]
 
+// =======================
+// LOAD MAPEL
+// =======================
 async function loadMapel() {
 
-  const { data, error } = await supabaseClient
+  const { data, error } =
+    await supabaseClient
 
-    .from('mata_pelajaran')
+      .from('mata_pelajaran')
 
-    .select('*')
+      .select('*')
 
   if (error) {
 
     console.error(error)
 
     return
-
   }
 
   mapelSelect.innerHTML = ''
 
   mapelSelect.appendChild(
-    new Option('Pilih Mata Pelajaran', '')
+    new Option(
+      'Pilih Mata Pelajaran',
+      ''
+    )
   )
 
   data.forEach(item => {
@@ -62,29 +71,51 @@ async function loadMapel() {
 
 }
 
+// =======================
+// LOAD KELAS
+// =======================
 async function loadKelas() {
 
-  const { data, error } = await supabaseClient
+  const { data, error } =
+    await supabaseClient
 
-    .from('siswa')
+      .from('siswa')
 
-    .select('kelas')
+      .select('kelas')
 
   if (error) {
 
     console.error(error)
 
     return
-
   }
 
-  const kelasUnik =
-    [...new Set(data.map(item => item.kelas))]
+  console.log(data)
+
+  // HAPUS DUPLIKAT
+  const kelasUnik = [
+
+  ...new Set(
+
+    data
+
+      .map(item => item.kelas)
+
+      .filter(Boolean)
+
+  )
+
+  ].sort()
 
   kelasSelect.innerHTML = ''
 
   kelasSelect.appendChild(
-    new Option('Pilih Kelas', '')
+
+    new Option(
+      'Pilih Kelas',
+      ''
+    )
+
   )
 
   kelasUnik.forEach(kelas => {
@@ -102,233 +133,234 @@ async function loadKelas() {
 
 }
 
-kelasSelect.addEventListener('change', async () => {
-
-  const kelas = kelasSelect.value
-
-  if (!kelas) return
-
-  const { data, error } = await supabaseClient
-
-    .from('siswa')
-
-    .select('*')
-
-    .eq('kelas', kelas)
-
-  if (error) {
-
-    console.error(error)
-
-    return
-
-  }
-
-  siswaData = data
-
-  siswaContainer.innerHTML = ''
-
-  data.forEach((item, index) => {
-
-    siswaContainer.innerHTML += `
-
-      <div class="siswa-card">
-
-        <div class="siswa-info">
-
-          <div class="siswa-avatar">
-
-            ${item.nama_siswa
-              .split(' ')
-              .map(n => n[0])
-              .slice(0,2)
-              .join('')}
-
-          </div>
-
-          <div class="siswa-name">
-
-            <h4>${item.nama_siswa}</h4>
-
-          </div>
-
-        </div>
-
-        <div class="absen-modern">
-
-          <label class="absen-card hadir">
-
-            <input
-              type="radio"
-              name="absen-${index}"
-              value="H"
-              checked
-            >
-
-            <div class="absen-content">
-
-              <div class="absen-icon">
-                H
-              </div>
-
-              <span>Hadir</span>
-
-            </div>
-
-          </label>
-
-          <label class="absen-card sakit">
-
-            <input
-              type="radio"
-              name="absen-${index}"
-              value="S"
-            >
-
-            <div class="absen-content">
-
-              <div class="absen-icon">
-                S
-              </div>
-
-              <span>Sakit</span>
-
-            </div>
-
-          </label>
-
-          <label class="absen-card izin">
-
-            <input
-              type="radio"
-              name="absen-${index}"
-              value="I"
-            >
-
-            <div class="absen-content">
-
-              <div class="absen-icon">
-                I
-              </div>
-
-              <span>Izin</span>
-
-            </div>
-
-          </label>
-
-          <label class="absen-card alpa">
-
-            <input
-              type="radio"
-              name="absen-${index}"
-              value="A"
-            >
-
-            <div class="absen-content">
-
-              <div class="absen-icon">
-                A
-              </div>
-
-              <span>Alpa</span>
-
-            </div>
-
-          </label>
-
-        </div>
-
-      </div>
-
-    `
-
-  })
-
-})
-
-saveBtn.addEventListener('click', async () => {
-
-  const {
-    data: { user }
-  } = await supabaseClient.auth.getUser()
-
-  if (
-    !tanggal.value ||
-    !kelasSelect.value ||
-    !mapelSelect.value
-  ) {
-
-    alert('Lengkapi data terlebih dahulu')
-
-    return
-
-  }
-
-  const materi =
-    document.getElementById('materi').value
-
-  const payload = siswaData.map((item, index) => {
-
-    const status = document.querySelector(
-
-      `input[name="absen-${index}"]:checked`
-
-    ).value
-
-    return {
-
-      user_id: user.id,
-
-      tanggal: tanggal.value,
-
-      kelas: kelasSelect.value,
-
-      mapel: mapelSelect.value,
-
-      materi: materi,
-
-      nama: item.nama_siswa,
-
-      status: status
-
-    }
-
-  })
-
-  saveBtn.innerHTML =
-    'Menyimpan...'
-
-  saveBtn.disabled = true
-
-  let error = null
-
-  if (window.editJurnalId) {
-
-    const { error: updateError } =
+// =======================
+// SAAT KELAS DIPILIH
+// =======================
+kelasSelect.addEventListener(
+  'change',
+  async () => {
+
+    const kelas =
+      kelasSelect.value
+
+    if (!kelas) return
+
+    const { data, error } =
       await supabaseClient
 
-        .from('jurnal')
+        .from('siswa')
 
-        .update({
+        .select('*')
 
-          tanggal: tanggal.value,
+        .eq('kelas', kelas)
 
-          kelas: kelasSelect.value,
+    if (error) {
 
-          mapel: mapelSelect.value,
+      console.error(error)
 
-          materi: materi
+      return
+    }
 
-        })
+    siswaData = data
 
-        .eq('id', window.editJurnalId)
+    siswaContainer.innerHTML = ''
 
-    error = updateError
+    data.forEach((item, index) => {
 
-    window.editJurnalId = null
+      siswaContainer.innerHTML += `
 
-  } else {
+        <div class="siswa-card">
+
+          <div class="siswa-info">
+
+            <div class="siswa-avatar">
+
+              ${item.nama_siswa
+
+                .split(' ')
+
+                .map(n => n[0])
+
+                .slice(0,2)
+
+                .join('')}
+
+            </div>
+
+            <div class="siswa-name">
+
+              <h4>
+                ${item.nama_siswa}
+              </h4>
+
+            </div>
+
+          </div>
+
+          <div class="absen-modern">
+
+            <!-- HADIR -->
+            <label class="absen-card hadir">
+
+              <input
+                type="radio"
+                name="absen-${index}"
+                value="H"
+                checked
+              >
+
+              <div class="absen-content">
+
+                <div class="absen-icon">
+                  H
+                </div>
+
+                <span>Hadir</span>
+
+              </div>
+
+            </label>
+
+            <!-- SAKIT -->
+            <label class="absen-card sakit">
+
+              <input
+                type="radio"
+                name="absen-${index}"
+                value="S"
+              >
+
+              <div class="absen-content">
+
+                <div class="absen-icon">
+                  S
+                </div>
+
+                <span>Sakit</span>
+
+              </div>
+
+            </label>
+
+            <!-- IZIN -->
+            <label class="absen-card izin">
+
+              <input
+                type="radio"
+                name="absen-${index}"
+                value="I"
+              >
+
+              <div class="absen-content">
+
+                <div class="absen-icon">
+                  I
+                </div>
+
+                <span>Izin</span>
+
+              </div>
+
+            </label>
+
+            <!-- ALPA -->
+            <label class="absen-card alpa">
+
+              <input
+                type="radio"
+                name="absen-${index}"
+                value="A"
+              >
+
+              <div class="absen-content">
+
+                <div class="absen-icon">
+                  A
+                </div>
+
+                <span>Alpa</span>
+
+              </div>
+
+            </label>
+
+          </div>
+
+        </div>
+
+      `
+    })
+
+  }
+)
+
+// =======================
+// SIMPAN JURNAL
+// =======================
+saveBtn.addEventListener(
+  'click',
+  async () => {
+
+    const {
+      data: { user }
+    } = await supabaseClient
+      .auth
+      .getUser()
+
+    if (
+      !tanggal.value ||
+      !kelasSelect.value ||
+      !mapelSelect.value
+    ) {
+
+      alert(
+        'Lengkapi data terlebih dahulu'
+      )
+
+      return
+    }
+
+    const materi =
+      document
+        .getElementById('materi')
+        .value
+
+    const payload =
+      siswaData.map(
+        (item, index) => {
+
+          const status =
+            document.querySelector(
+
+              `input[name="absen-${index}"]:checked`
+
+            ).value
+
+          return {
+
+            user_id: user.id,
+
+            tanggal: tanggal.value,
+
+            kelas: kelasSelect.value,
+
+            mapel: mapelSelect.value,
+
+            materi: materi,
+
+            nama: item.nama_siswa,
+
+            status: status
+
+          }
+
+        }
+      )
+
+    saveBtn.innerHTML =
+      'Menyimpan...'
+
+    saveBtn.disabled = true
 
     const result =
       await supabaseClient
@@ -337,42 +369,46 @@ saveBtn.addEventListener('click', async () => {
 
         .insert(payload)
 
-    error = result.error
+    saveBtn.innerHTML =
+      'Simpan Jurnal'
+
+    saveBtn.disabled = false
+
+    if (result.error) {
+
+      console.error(result.error)
+
+      alert(result.error.message)
+
+      return
+    }
+
+    alert(
+      'Jurnal berhasil disimpan'
+    )
+
+    resetForm([
+      'mapel-jurnal',
+      'kelas-jurnal',
+      'materi'
+    ])
+
+    clearElement(
+      'list-siswa-jurnal'
+    )
+
+    siswaData = []
+
+    tanggal.value =
+      new Date()
+        .toISOString()
+        .split('T')[0]
 
   }
+)
 
-  saveBtn.innerHTML =
-    'Simpan Jurnal'
-
-  saveBtn.disabled = false
-
-  if (error) {
-
-    console.error(error)
-
-    alert(error.message)
-
-    return
-
-  }
-
-  alert('Jurnal berhasil disimpan')
-
-  resetForm([
-    'mapel-jurnal',
-    'kelas-jurnal',
-    'materi'
-  ])
-
-  clearElement('list-siswa-jurnal')
-
-  siswaData = []
-
-  tanggal.value =
-    new Date().toISOString().split('T')[0]
-
-})
-
+// =======================
+// INIT
+// =======================
 loadMapel()
-
 loadKelas()
