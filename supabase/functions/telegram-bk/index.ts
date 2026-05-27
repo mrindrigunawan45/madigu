@@ -34,7 +34,7 @@ serve(async (req: Request) => {
       '8900145547:AAFqMlbZYk6-pq-0eSlXkUno9m24m2APB9g'
 
     const CHAT_ID =
-      '5504884783'
+      '-5161900055'
 
     // =========================
     // MESSAGE
