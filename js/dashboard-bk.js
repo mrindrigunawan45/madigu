@@ -58,34 +58,105 @@ document
 
 .forEach(menu=>{
 
-  menu.addEventListener('click',e=>{
+  menu.addEventListener(
+    'click',
+    e=>{
 
-    e.preventDefault()
+      e.preventDefault()
 
-    document
-    .querySelectorAll('.menu')
-    .forEach(x=>
-      x.classList.remove('active')
-    )
+      // ACTIVE MENU
+      document
+      .querySelectorAll('.menu')
+      .forEach(x=>
+        x.classList.remove('active')
+      )
 
-    menu.classList.add('active')
+      menu.classList.add('active')
 
-    document
-    .querySelectorAll('main section')
-    .forEach(x=>
-      x.classList.add('hidden')
-    )
+      // HIDE ALL PAGE
+      document
+      .querySelectorAll('main section')
+      .forEach(x=>
+        x.classList.add('hidden')
+      )
 
-    document
-    .getElementById(
-      menu.dataset.page + 'Page'
-    )
-    .classList.remove('hidden')
+      // ====================
+      // RESET REKAP TOTAL
+      // ====================
 
-    sidebar.classList.remove('show')
+      if(
+        menu.dataset.page
+        ===
+        'rekap'
+      ){
+      // RESET JURNAL
+      if(menu.dataset.page==='jurnal'){
 
-    overlay.classList.remove('show')
-  })
+        // RESET SEARCH
+        searchInput.value=''
+
+        // RESET LIMIT
+        currentLimit = 20
+
+        // RENDER ULANG
+        renderJurnal(allData)
+
+        // SCROLL KE ATAS
+        jurnalList.scrollTop = 0
+      }
+        const kelasSelect =
+          document.getElementById(
+            'kelasSelect'
+          )
+
+        const rekapBody =
+          document.getElementById(
+            'rekapBody'
+          )
+
+        // RESET DROPDOWN
+        kelasSelect.selectedIndex = 0
+
+        // RESET TABLE
+        rekapBody.innerHTML = `
+
+          <tr>
+
+            <td colspan="4">
+
+              <div class="empty-state">
+
+                <div class="empty-icon">
+                  📊
+                </div>
+
+                <h3>
+
+                  Pilih kelas terlebih dahulu
+
+                </h3>
+
+              </div>
+
+            </td>
+
+          </tr>
+        `
+      }
+
+      // SHOW PAGE
+      document
+      .getElementById(
+        menu.dataset.page + 'Page'
+      )
+      .classList.remove('hidden')
+
+      // CLOSE MOBILE
+      sidebar.classList.remove('show')
+
+      overlay.classList.remove('show')
+    }
+  )
 })
 
 // ====================
@@ -671,9 +742,19 @@ async function loadKelas(){
       .select('kelas')
 
   const unique =
-    [...new Set(
-      data.map(x=>x.kelas)
-    )]
+  [...new Set(
+    data.map(x=>x.kelas)
+  )]
+
+  .sort((a,b)=>
+    a.localeCompare(
+      b,
+      undefined,
+      {
+        numeric:true
+      }
+    )
+  )
 
   unique.forEach(kelas => {
 

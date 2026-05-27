@@ -1,29 +1,92 @@
 import { supabaseClient } from './supabase.js'
 
-const siswaSelect = document.getElementById('siswaSelect')
-const kategoriSelect = document.getElementById('kategoriSelect')
-const jenisContainer = document.getElementById('jenisContainer')
-const lainnyaBox = document.getElementById('lainnyaBox')
-const laporanLainnya = document.getElementById('laporanLainnya')
-const catatan = document.getElementById('catatan')
-const kirimBtn = document.getElementById('kirimBtn')
+// =========================
+// ELEMENT
+// =========================
+
+const siswaSelect =
+  document.getElementById('siswaSelect')
+
+const kategoriSelect =
+  document.getElementById('kategoriSelect')
+
+const jenisContainer =
+  document.getElementById('jenisContainer')
+
+const lainnyaBox =
+  document.getElementById('lainnyaBox')
+
+const laporanLainnya =
+  document.getElementById('laporanLainnya')
+
+const catatan =
+  document.getElementById('catatan')
+
+const kirimBtn =
+  document.getElementById('kirimBtn')
 
 let currentJenis = null
 
+// =========================
+// LOAD SISWA
+// =========================
+
 async function loadSiswa() {
 
-  const { data, error } = await supabaseClient
-    .from('siswa')
-    .select('*')
-    .order('nama_siswa')
+  const {
+    data: { user }
+  } =
+  await supabaseClient.auth.getUser()
 
-  if (error) {
-    console.log(error)
+  // AMBIL PROFILE AGEN
+  const {
+    data: profile,
+    error: profileError
+  } =
+  await supabaseClient
+
+    .from('profiles')
+
+    .select('class_id')
+
+    .eq('id', user.id)
+
+    .single()
+
+  if (profileError) {
+
+    console.log(profileError)
+
     return
   }
 
-  siswaSelect.innerHTML =
-    '<option value=\"\">Pilih siswa</option>'
+  // AMBIL SISWA SESUAI KELAS
+  const {
+    data,
+    error
+  } =
+  await supabaseClient
+
+    .from('siswa')
+
+    .select('*')
+
+    .eq('class_id', profile.class_id)
+
+    .order('nama_siswa')
+
+  if (error) {
+
+    console.log(error)
+
+    return
+  }
+
+  siswaSelect.innerHTML = `
+    <option value="">
+      Pilih siswa
+    </option>
+  `
 
   data.forEach(item => {
 
@@ -35,17 +98,36 @@ async function loadSiswa() {
   })
 }
 
+// =========================
+// LOAD KATEGORI
+// =========================
+
 async function loadKategori() {
 
-  const { data, error } = await supabaseClient
+  const {
+    data,
+    error
+  } =
+  await supabaseClient
+
     .from('kategori_laporan')
+
     .select('*')
+
     .order('nama')
 
   if (error) {
+
     console.log(error)
+
     return
   }
+
+  kategoriSelect.innerHTML = `
+    <option value="">
+      Pilih kategori
+    </option>
+  `
 
   data.forEach(item => {
 
@@ -57,109 +139,300 @@ async function loadKategori() {
   })
 }
 
-kategoriSelect.addEventListener('change', async () => {
+// =========================
+// LOAD JENIS LAPORAN
+// =========================
 
-  const kategoriId = kategoriSelect.value
+async function loadJenisLaporan(kategoriId) {
 
-  jenisContainer.innerHTML = ''
+  jenisContainer.innerHTML = `
+    <div class="loading-text">
+      Memuat jenis laporan...
+    </div>
+  `
 
-  const { data, error } = await supabaseClient
+  currentJenis = null
+
+  lainnyaBox.classList.add('hidden')
+
+  // QUERY
+  const {
+    data,
+    error
+  } =
+  await supabaseClient
+
     .from('jenis_laporan')
+
     .select('*')
-    .eq('kategori_id', kategoriId)
+
+    .eq(
+      'kategori_id',
+      Number(kategoriId)
+    )
+
+    .order('nama')
+
+  console.log('JENIS:', data)
 
   if (error) {
+
     console.log(error)
+
+    jenisContainer.innerHTML = `
+      <div class="error-text">
+        Gagal memuat jenis laporan
+      </div>
+    `
+
     return
   }
 
+  // KOSONG
+  if (!data || data.length === 0) {
+
+    jenisContainer.innerHTML = `
+      <div class="error-text">
+        Tidak ada jenis laporan
+      </div>
+    `
+
+    return
+  }
+
+  // RESET
+  jenisContainer.innerHTML = ''
+
+  // RENDER
   data.forEach(item => {
 
     jenisContainer.innerHTML += `
+
       <label class="radio-item">
+
         <input
           type="radio"
           name="jenis"
           value="${item.id}"
-        />
-        ${item.nama}
+        >
+
+        <span>
+          ${item.nama}
+        </span>
+
       </label>
     `
   })
 
+  // LAINNYA
   jenisContainer.innerHTML += `
+
     <label class="radio-item">
+
       <input
         type="radio"
         name="jenis"
         value="lainnya"
-      />
-      Lainnya
+      >
+
+      <span>
+        Lainnya
+      </span>
+
     </label>
   `
 
+  // EVENT RADIO
   document
-    .querySelectorAll('input[name="jenis"]')
+
+    .querySelectorAll(
+      'input[name="jenis"]'
+    )
+
     .forEach(radio => {
 
-      radio.addEventListener('change', () => {
+      radio.addEventListener(
+        'change',
+        () => {
 
-        currentJenis = radio.value
+          currentJenis =
+            radio.value
 
-        if (radio.value === 'lainnya') {
-          lainnyaBox.classList.remove('hidden')
-        } else {
-          lainnyaBox.classList.add('hidden')
+          if (
+            radio.value === 'lainnya'
+          ) {
+
+            lainnyaBox.classList.remove(
+              'hidden'
+            )
+
+          } else {
+
+            lainnyaBox.classList.add(
+              'hidden'
+            )
+          }
         }
-      })
+      )
     })
-})
-
-kirimBtn.addEventListener('click', async () => {
-
-  const siswaId = siswaSelect.value
-  const kategoriId = kategoriSelect.value
-
-  if (!siswaId || !kategoriId || !currentJenis) {
-    alert('Lengkapi laporan terlebih dahulu')
-    return
-  }
-
-  const {
-    data: { user }
-  } = await supabaseClient.auth.getUser()
-
-  const payload = {
-  siswa_id: siswaId,
-  agen_id: user.id,
-  kategori_id: kategoriId,
-  catatan: catatan.value
 }
 
-  if (currentJenis === 'lainnya') {
+// =========================
+// EVENT KATEGORI
+// =========================
 
-    payload.laporan_lainnya =
-      laporanLainnya.value
+kategoriSelect.addEventListener(
+  'change',
+  async () => {
 
-  } else {
+    const kategoriId =
+      kategoriSelect.value
 
-    payload.jenis_laporan_id =
-      currentJenis
+    console.log(
+      'KATEGORI:',
+      kategoriId
+    )
+
+    if (!kategoriId) {
+
+      jenisContainer.innerHTML = ''
+
+      return
+    }
+
+    await loadJenisLaporan(
+      kategoriId
+    )
   }
+)
 
-  const { error } = await supabaseClient
-    .from('laporan')
-    .insert(payload)
+// =========================
+// KIRIM LAPORAN
+// =========================
 
-  if (error) {
-    alert(error.message)
-    return
+kirimBtn.addEventListener(
+  'click',
+  async () => {
+
+    const siswaId =
+      siswaSelect.value
+
+    const kategoriId =
+      kategoriSelect.value
+
+    if (
+      !siswaId ||
+      !kategoriId ||
+      !currentJenis
+    ) {
+
+      alert(
+        'Lengkapi laporan terlebih dahulu'
+      )
+
+      return
+    }
+
+    const {
+      data: { user }
+    } =
+    await supabaseClient.auth.getUser()
+
+    const payload = {
+
+      siswa_id:
+        siswaId,
+
+      agen_id:
+        user.id,
+
+      kategori_id:
+        kategoriId,
+
+      catatan:
+        catatan.value
+    }
+
+    // JENIS
+    if (
+      currentJenis === 'lainnya'
+    ) {
+
+      payload.laporan_lainnya =
+        laporanLainnya.value
+
+    } else {
+
+      payload.jenis_laporan_id =
+        currentJenis
+    }
+
+    // INSERT
+    const { error } =
+      await supabaseClient
+
+        .from('laporan')
+
+        .insert(payload)
+
+    if (error) {
+
+      console.log(error)
+
+      alert(error.message)
+
+      return
+    }
+
+    alert(
+      'Laporan berhasil dikirim'
+    )
+
+    location.reload()
   }
+)
 
-  alert('Laporan berhasil dikirim')
+// =========================
+// INIT
+// =========================
 
-  location.reload()
-})
+window.addEventListener(
+  'DOMContentLoaded',
+  async () => {
 
-loadSiswa()
-loadKategori()
+    console.log(
+      'LAPOR ACTIVE'
+    )
+
+    await loadSiswa()
+
+    await loadKategori()
+  }
+)
+
+// =========================
+// LOGOUT
+// =========================
+
+const logoutBtn =
+  document.getElementById(
+    'logoutBtn'
+  )
+
+logoutBtn.addEventListener(
+  'click',
+  async () => {
+
+    const confirmLogout =
+      confirm(
+        'Yakin ingin logout?'
+      )
+
+    if (!confirmLogout) return
+
+    await supabaseClient.auth.signOut()
+
+    window.location.href =
+      'index.html'
+  }
+)

@@ -169,3 +169,47 @@ button {
 
   opacity: 0.9;
 }
+
+.loading-text,
+.error-text {
+
+  padding: 14px;
+
+  border-radius: 12px;
+
+  font-size: 14px;
+
+  text-align: center;
+}
+
+.loading-text {
+
+  background: #eff6ff;
+
+  color: #2563eb;
+}
+
+.error-text {
+
+  background: #fef2f2;
+
+  color: #dc2626;
+}
+
+.radio-item {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  cursor: pointer;
+
+  transition: 0.2s;
+}
+
+.radio-item:hover {
+
+  background: #f8fafc;
+}
