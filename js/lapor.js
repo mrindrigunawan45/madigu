@@ -384,6 +384,105 @@ kirimBtn.addEventListener(
       return
     }
 
+    // =========================
+    // TELEGRAM NOTIFICATION
+    // =========================
+
+    try {
+
+      // AMBIL DATA SISWA
+      const {
+        data:siswaData
+      } =
+      await supabaseClient
+
+        .from('siswa')
+
+        .select('*')
+
+        .eq('id', siswaId)
+
+        .single()
+
+      // AMBIL KATEGORI
+      const {
+        data:kategoriData
+      } =
+      await supabaseClient
+
+        .from('kategori_laporan')
+
+        .select('*')
+
+        .eq('id', kategoriId)
+
+        .single()
+
+      // AMBIL JENIS
+      let jenisNama = 'Lainnya'
+
+      if(currentJenis !== 'lainnya'){
+
+        const {
+          data:jenisData
+        } =
+        await supabaseClient
+
+          .from('jenis_laporan')
+
+          .select('*')
+
+          .eq('id', currentJenis)
+
+          .single()
+
+        jenisNama =
+          jenisData?.nama || '-'
+      }
+
+      // HIT EDGE FUNCTION
+      await fetch(
+
+    'https://ocakjidyndcojeapdsop.functions.supabase.co/telegram-bk',
+
+        {
+
+          method:'POST',
+
+          headers:{
+            'Content-Type':
+            'application/json'
+          },
+
+          body:JSON.stringify({
+
+            nama_siswa:
+              siswaData?.nama_siswa,
+
+            kelas:
+              siswaData?.kelas,
+
+            kategori:
+              kategoriData?.nama,
+
+            jenis:
+              jenisNama,
+
+            catatan:
+              catatan.value
+          })
+        }
+      )
+
+    }catch(err){
+
+      console.log(
+        'Telegram Error:',
+        err
+      )
+    }
+
+    // SUCCESS
     alert(
       'Laporan berhasil dikirim'
     )
