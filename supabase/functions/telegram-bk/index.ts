@@ -1,11 +1,10 @@
 import { serve }
 from "https://deno.land/std@0.168.0/http/server.ts";
 
-serve(async (req: Request) => {
+import { createClient }
+from "https://esm.sh/@supabase/supabase-js@2";
 
-  // =========================
-  // CORS
-  // =========================
+serve(async (req: Request) => {
 
   if (req.method === 'OPTIONS') {
 
@@ -18,23 +17,87 @@ serve(async (req: Request) => {
         'Access-Control-Allow-Headers':
           'authorization, x-client-info, apikey, content-type'
       }
-    })
+    });
   }
 
   try {
 
     const body =
-      await req.json()
+      await req.json();
 
     // =========================
-    // BOT
+    // SUPABASE
     // =========================
+
+    const supabase =
+      createClient(
+
+        Deno.env.get('SUPABASE_URL')!,
+
+        Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
+      );
+
+    // =========================
+    // SCHOOL CONFIG
+    // =========================
+
+    const {
+      data: school,
+      error: schoolError
+    } =
+    await supabase
+
+      .from('schools')
+
+      .select('*')
+
+      .eq(
+        'id',
+        body.school_id
+      )
+
+      .single();
+
+    if (
+      schoolError ||
+      !school
+    ) {
+
+      throw new Error(
+        'School tidak ditemukan'
+      );
+    }
 
     const BOT_TOKEN =
-      '8900145547:AAFqMlbZYk6-pq-0eSlXkUno9m24m2APB9g'
+      school.telegram_bot_token;
 
     const CHAT_ID =
-      '-5161900055'
+      school.telegram_chat_id;
+
+    // =========================
+    // WIB
+    // =========================
+
+    const waktuWIB =
+
+      new Date()
+
+      .toLocaleString(
+
+        'id-ID',
+
+        {
+
+          timeZone:
+            'Asia/Jakarta',
+
+          dateStyle:
+            'full',
+
+          timeStyle:
+            'medium'
+        }
+      );
 
     // =========================
     // MESSAGE
@@ -43,6 +106,9 @@ serve(async (req: Request) => {
     const text = `
 
 🚨 LAPORAN BARU TITATIF
+
+🏫 Sekolah:
+${school.nama_sekolah}
 
 👤 Siswa:
 ${body.nama_siswa}
@@ -59,28 +125,31 @@ ${body.jenis}
 📝 Catatan:
 ${body.catatan || '-'}
 
-🕒 ${new Date().toLocaleString('id-ID')}
+🕒 ${waktuWIB}
 
-`
+`;
 
     // =========================
-    // SEND TELEGRAM
+    // TELEGRAM
     // =========================
 
     const telegramUrl =
 
-`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`
+      `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
 
     const telegramResponse =
       await fetch(
+
         telegramUrl,
+
         {
 
           method:'POST',
 
           headers:{
+
             'Content-Type':
-            'application/json'
+              'application/json'
           },
 
           body:JSON.stringify({
@@ -92,14 +161,10 @@ ${body.catatan || '-'}
               text
           })
         }
-      )
+      );
 
     const telegramResult =
-      await telegramResponse.json()
-
-    // =========================
-    // SUCCESS
-    // =========================
+      await telegramResponse.json();
 
     return new Response(
 
@@ -124,7 +189,7 @@ ${body.catatan || '-'}
 
         status:200
       }
-    )
+    );
 
   } catch (error:any) {
 
@@ -150,6 +215,6 @@ ${body.catatan || '-'}
 
         status:500
       }
-    )
+    );
   }
-})
+});

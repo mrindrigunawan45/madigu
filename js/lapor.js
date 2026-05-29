@@ -390,97 +390,114 @@ kirimBtn.addEventListener(
 
     try {
 
-      // AMBIL DATA SISWA
-      const {
-        data:siswaData
-      } =
-      await supabaseClient
+  // AMBIL DATA SISWA
+  const {
+    data:siswaData
+  } =
+  await supabaseClient
 
-        .from('siswa')
+    .from('siswa')
 
-        .select('*')
+    .select('*')
 
-        .eq('id', siswaId)
+    .eq('id', siswaId)
 
-        .single()
+    .single()
 
-      // AMBIL KATEGORI
-      const {
-        data:kategoriData
-      } =
-      await supabaseClient
+  // AMBIL KATEGORI
+  const {
+    data:kategoriData
+  } =
+  await supabaseClient
 
-        .from('kategori_laporan')
+    .from('kategori_laporan')
 
-        .select('*')
+    .select('*')
 
-        .eq('id', kategoriId)
+    .eq('id', kategoriId)
 
-        .single()
+    .single()
 
-      // AMBIL JENIS
-      let jenisNama = 'Lainnya'
+  // AMBIL JENIS
+  let jenisNama = 'Lainnya'
 
-      if(currentJenis !== 'lainnya'){
+  if(currentJenis !== 'lainnya'){
 
-        const {
-          data:jenisData
-        } =
-        await supabaseClient
+    const {
+      data:jenisData
+    } =
+    await supabaseClient
 
-          .from('jenis_laporan')
+      .from('jenis_laporan')
 
-          .select('*')
+      .select('*')
 
-          .eq('id', currentJenis)
+      .eq('id', currentJenis)
 
-          .single()
+      .single()
 
-        jenisNama =
-          jenisData?.nama || '-'
-      }
+    jenisNama =
+      jenisData?.nama || '-'
+  }
 
-      // HIT EDGE FUNCTION
-      await fetch(
+  // AMBIL SCHOOL ID
+  const {
+    data:profileData
+  } =
+  await supabaseClient
+
+    .from('profiles')
+
+    .select('school_id')
+
+    .eq('id', user.id)
+
+    .single()
+
+  // HIT EDGE FUNCTION
+  await fetch(
 
     'https://ocakjidyndcojeapdsop.functions.supabase.co/telegram-bk',
 
-        {
+    {
 
-          method:'POST',
+      method:'POST',
 
-          headers:{
-            'Content-Type':
-            'application/json'
-          },
+      headers:{
+        'Content-Type':
+        'application/json'
+      },
 
-          body:JSON.stringify({
+      body:JSON.stringify({
 
-            nama_siswa:
-              siswaData?.nama_siswa,
+        school_id:
+          profileData?.school_id,
 
-            kelas:
-              siswaData?.kelas,
+        nama_siswa:
+          siswaData?.nama_siswa,
 
-            kategori:
-              kategoriData?.nama,
+        kelas:
+          siswaData?.kelas,
 
-            jenis:
-              jenisNama,
+        kategori:
+          kategoriData?.nama,
 
-            catatan:
-              catatan.value
-          })
-        }
-      )
+        jenis:
+          jenisNama,
 
-    }catch(err){
-
-      console.log(
-        'Telegram Error:',
-        err
-      )
+        catatan:
+          catatan.value
+      })
     }
+  )
+
+}catch(err){
+
+  console.log(
+    'Telegram Error:',
+    err
+  )
+}
 
     // SUCCESS
     alert(
