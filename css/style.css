@@ -1480,7 +1480,7 @@ tr:nth-child(even){
   .absen-modern{
 
     grid-template-columns:
-      repeat(2,1fr);
+      repeat(4,1fr);
 
     gap:12px;
 
@@ -1751,7 +1751,7 @@ tr:nth-child(even){
     display:grid;
 
     grid-template-columns:
-      repeat(2,1fr);
+      repeat(4,1fr);
 
     gap:12px;
 
