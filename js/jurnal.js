@@ -5,6 +5,42 @@ import {
   clearElement
 } from './utils.js'
 
+// =======================
+// GET SCHOOL ID
+// =======================
+async function getSchoolId() {
+
+  const {
+    data: { user }
+  } = await supabaseClient.auth.getUser()
+
+  if (!user) return null
+
+  const {
+    data: profile,
+    error
+  } = await supabaseClient
+
+    .from('profiles')
+
+    .select('school_id')
+
+    .eq('id', user.id)
+
+    .single()
+
+  if (error) {
+
+    console.error(error)
+
+    return null
+
+  }
+
+  return profile.school_id
+
+}
+
 const tanggal =
   document.getElementById('tanggal')
 
@@ -76,34 +112,37 @@ async function loadMapel() {
 // =======================
 async function loadKelas() {
 
-  const { data, error } =
-    await supabaseClient
+  const schoolId =
+    await getSchoolId()
+  
+const { data, error } =
+  await supabaseClient
 
-      .from('siswa')
+    .from('siswa')
 
-      .select('kelas')
+    .select('kelas')
 
-  if (error) {
+    .eq('school_id', schoolId)
 
-    console.error(error)
+if (error) {
 
-    return
-  }
+  console.error(error)
 
-  console.log(data)
+  return
 
-  // HAPUS DUPLIKAT
+}
+
+console.table(data)
+
   const kelasUnik = [
 
-  ...new Set(
+    ...new Set(
 
-    data
+      data
+        .map(item => item.kelas)
+        .filter(Boolean)
 
-      .map(item => item.kelas)
-
-      .filter(Boolean)
-
-  )
+    )
 
   ].sort()
 
@@ -145,20 +184,30 @@ kelasSelect.addEventListener(
 
     if (!kelas) return
 
+    const schoolId =
+      await getSchoolId()
+
     const { data, error } =
-      await supabaseClient
+    await supabaseClient
 
-        .from('siswa')
+    .from('siswa')
 
-        .select('*')
+    .select('*')
 
-        .eq('kelas', kelas)
+    .eq('kelas', kelas)
+
+    .eq('school_id', schoolId)
+
+    .order('nama_siswa', {
+      ascending: true
+    })
 
     if (error) {
 
       console.error(error)
 
       return
+
     }
 
     siswaData = data
@@ -167,133 +216,121 @@ kelasSelect.addEventListener(
 
     data.forEach((item, index) => {
 
-      siswaContainer.innerHTML += `
+  siswaContainer.innerHTML += `
 
-        <div class="siswa-card">
+    <div class="siswa-card">
 
-          <div class="siswa-info">
+      <div class="siswa-info">
 
-            <div class="siswa-avatar">
+        <div class="siswa-avatar">
 
-              ${item.nama_siswa
-
-                .split(' ')
-
-                .map(n => n[0])
-
-                .slice(0,2)
-
-                .join('')}
-
-            </div>
-
-            <div class="siswa-name">
-
-              <h4>
-                ${item.nama_siswa}
-              </h4>
-
-            </div>
-
-          </div>
-
-          <div class="absen-modern">
-
-            <!-- HADIR -->
-            <label class="absen-card hadir">
-
-              <input
-                type="radio"
-                name="absen-${index}"
-                value="H"
-                checked
-              >
-
-              <div class="absen-content">
-
-                <div class="absen-icon">
-                  H
-                </div>
-
-                <span>Hadir</span>
-
-              </div>
-
-            </label>
-
-            <!-- SAKIT -->
-            <label class="absen-card sakit">
-
-              <input
-                type="radio"
-                name="absen-${index}"
-                value="S"
-              >
-
-              <div class="absen-content">
-
-                <div class="absen-icon">
-                  S
-                </div>
-
-                <span>Sakit</span>
-
-              </div>
-
-            </label>
-
-            <!-- IZIN -->
-            <label class="absen-card izin">
-
-              <input
-                type="radio"
-                name="absen-${index}"
-                value="I"
-              >
-
-              <div class="absen-content">
-
-                <div class="absen-icon">
-                  I
-                </div>
-
-                <span>Izin</span>
-
-              </div>
-
-            </label>
-
-            <!-- ALPA -->
-            <label class="absen-card alpa">
-
-              <input
-                type="radio"
-                name="absen-${index}"
-                value="A"
-              >
-
-              <div class="absen-content">
-
-                <div class="absen-icon">
-                  A
-                </div>
-
-                <span>Alpa</span>
-
-              </div>
-
-            </label>
-
-          </div>
+          ${item.nama_siswa
+            .split(' ')
+            .map(n => n[0])
+            .slice(0,2)
+            .join('')}
 
         </div>
 
-      `
-    })
+        <div class="siswa-name">
+
+          <h4>${item.nama_siswa}</h4>
+
+        </div>
+
+      </div>
+
+      <div class="absen-modern">
+
+  <label class="absen-card hadir">
+
+    <input
+      type="radio"
+      name="absen-${index}"
+      value="H"
+      checked
+    >
+
+    <div class="absen-content">
+
+      <div class="absen-icon">
+        H
+      </div>
+
+      <span>Hadir</span>
+
+    </div>
+
+  </label>
+
+  <label class="absen-card sakit">
+
+    <input
+      type="radio"
+      name="absen-${index}"
+      value="S"
+    >
+
+    <div class="absen-content">
+
+      <div class="absen-icon">
+        S
+      </div>
+
+      <span>Sakit</span>
+
+    </div>
+
+  </label>
+
+  <label class="absen-card izin">
+
+    <input
+      type="radio"
+      name="absen-${index}"
+      value="I"
+    >
+
+    <div class="absen-content">
+
+      <div class="absen-icon">
+        I
+      </div>
+
+      <span>Izin</span>
+
+    </div>
+
+  </label>
+
+  <label class="absen-card alpa">
+
+    <input
+      type="radio"
+      name="absen-${index}"
+      value="A"
+    >
+
+    <div class="absen-content">
+
+      <div class="absen-icon">
+        A
+      </div>
+
+      <span>Alpa</span>
+
+    </div>
+
+  </label>
+
+</div>
+
+  `
+
+})
 
   }
 )
-
 // =======================
 // SIMPAN JURNAL
 // =======================

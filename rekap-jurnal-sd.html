@@ -1,0 +1,107 @@
+<section id="rekapJurnalPage" class="hidden">
+
+  <div class="page-header">
+    <h2>📖 Rekap Jurnal Kelas</h2>
+    <p id="rekapJurnalInfo">
+      Memuat informasi kelas...
+    </p>
+  </div>
+
+  <div class="rekap-jurnal-filter">
+
+    <div class="filter-group">
+      <label>Tanggal Awal</label>
+      <input
+        type="date"
+        id="filterTanggalAwal"
+      >
+    </div>
+
+    <div class="filter-group">
+      <label>Tanggal Akhir</label>
+      <input
+        type="date"
+        id="filterTanggalAkhir"
+      >
+    </div>
+
+    <button id="btnLoadRekapJurnal">
+      Tampilkan
+    </button>
+
+  </div>
+
+    <div class="student-search-card">
+
+  <h3>
+  🔍 Riwayat Catatan Siswa
+  </h3>
+
+  <p style="color:red;font-size:24px;">
+  TEST SEARCH SISWA
+  </p>
+
+  <div class="student-search-row">
+
+    <select id="searchSiswa">
+
+      <option value="">
+        Pilih Siswa...
+      </option>
+
+    </select>
+
+    <button
+      id="btnCariSiswa"
+      type="button"
+    >
+      Tampilkan Riwayat
+    </button>
+
+  </div>
+
+</div>
+
+<div
+  id="riwayatSiswaContainer"
+></div>
+
+<div
+  class="rekap-jurnal-stats"
+  id="rekapJurnalStats"
+></div>
+
+  <div
+    id="rekapJurnalContainer"
+  ></div>
+
+</section>
+
+<!-- MODAL DETAIL -->
+
+<div
+  id="modalDetailJurnal"
+  class="modal hidden"
+>
+
+  <div class="modal-content">
+
+    <div class="modal-header">
+
+      <h3>Detail Jurnal</h3>
+
+      <button
+        id="closeModalJurnal"
+      >
+        ✖
+      </button>
+
+    </div>
+
+    <div
+      id="detailJurnalBody"
+    ></div>
+
+  </div>
+
+</div>

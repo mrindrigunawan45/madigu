@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Dashboard Kepsek SD</title>
+
+<link
+  rel="stylesheet"
+  href="css/dashboard-kepsek-sd.css"
+>
+
+</head>
+
+<body>
+
+<header class="mobile-topbar">
+
+<button id="menuBtn">
+☰
+</button>
+
+<h1>
+MaDiGU Kepsek SD
+</h1>
+
+</header>
+
+<div id="overlay"></div>
+
+<aside id="sidebar">
+
+<div class="sidebar-header">
+
+<h2>
+MaDiGU SD
+</h2>
+
+</div>
+
+<nav>
+
+<a
+href="#"
+class="menu active"
+data-page="dashboard"
+>
+🏠 Dashboard
+</a>
+
+<a
+href="#"
+class="menu"
+data-page="kelas"
+>
+🏫 Monitoring Kelas
+</a>
+
+<a
+href="#"
+class="menu"
+data-page="jurnal"
+>
+📝 Monitoring Jurnal
+</a>
+
+<a
+href="#"
+class="menu"
+data-page="catatan"
+>
+👨‍🎓 Catatan Siswa
+</a>
+
+<a
+href="#"
+id="logoutBtn"
+>
+🚪 Logout
+</a>
+
+</nav>
+
+</aside>
+
+<main>
+
+<section id="dashboardPage">
+
+  <div class="page-header">
+
+    <h1>Dashboard Kepala Sekolah SD</h1>
+
+    <p>
+      Monitoring seluruh aktivitas sekolah
+    </p>
+
+  </div>
+
+  <div class="stats-grid">
+
+    ...
+    4 card statistik
+    ...
+
+  </div>
+
+  <div id="monitoringKelas"></div>
+
+  <div id="monitoringJurnal"></div>
+
+  <div id="catatanTerbaru"></div>
+
+</section>
+
+<div class="summary-card">
+<h4>Total Guru</h4>
+<h2 id="totalGuru">0</h2>
+</div>
+
+<div class="summary-card">
+<h4>Total Kelas</h4>
+<h2 id="totalKelas">0</h2>
+</div>
+
+<div class="summary-card">
+<h4>Kehadiran Hari Ini</h4>
+<h2 id="persenHadir">0%</h2>
+</div>
+
+</div>
+
+</section>
+
+<section
+id="kelasPage"
+class="hidden"
+>
+
+<div id="kelasContainer"></div>
+
+</section>
+
+<section
+id="jurnalPage"
+class="hidden"
+>
+
+<div id="jurnalContainer"></div>
+
+</section>
+
+<section
+id="catatanPage"
+class="hidden"
+>
+
+<div id="catatanContainer"></div>
+
+</section>
+
+</main>
+
+<script
+type="module"
+src="js/dashboard-kepsek-sd.js"
+></script>
+
+</body>
+</html>

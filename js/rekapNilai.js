@@ -1,5 +1,38 @@
 import { supabaseClient } from './supabase.js'
 
+async function getSchoolId() {
+
+  const {
+    data: { user }
+  } = await supabaseClient.auth.getUser()
+
+  if (!user) return null
+
+  const {
+    data: profile,
+    error
+  } = await supabaseClient
+
+    .from('profiles')
+
+    .select('school_id')
+
+    .eq('id', user.id)
+
+    .single()
+
+  if (error) {
+
+    console.error(error)
+
+    return null
+
+  }
+
+  return profile.school_id
+
+}
+
 console.log('REKAP AKTIF')
 
 const table =
@@ -50,11 +83,17 @@ async function loadMapel() {
 
 async function loadKelas() {
 
-  const { data, error } = await supabaseClient
+  const schoolId =
+    await getSchoolId()
 
-    .from('siswa')
+  const { data, error } =
+    await supabaseClient
 
-    .select('kelas')
+      .from('siswa')
+
+      .select('kelas')
+
+      .eq('school_id', schoolId)
 
   if (error) {
 
@@ -69,9 +108,7 @@ async function loadKelas() {
     ...new Set(
 
       data
-
         .map(item => item.kelas)
-
         .filter(k => k && k.trim() !== '')
 
     )
@@ -88,10 +125,8 @@ async function loadKelas() {
 
   )
 
-  kelasSelect.innerHTML = ''
-
-  kelasSelect.innerHTML +=
-    `<option value="">Pilih Kelas</option>`
+  kelasSelect.innerHTML =
+    '<option value="">Pilih Kelas</option>'
 
   kelasUnik.forEach(kelas => {
 

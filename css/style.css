@@ -709,9 +709,25 @@ table{
 
   border-collapse:collapse;
 
-  min-width:1000px;
+  table-layout:fixed;
 
-  overflow:hidden;
+}
+th,
+td{
+
+  padding:10px 6px;
+
+  font-size:13px;
+
+  text-align:center;
+
+}
+
+th:first-child,
+td:first-child{
+
+  width:260px;
+  text-align:left;
 
 }
 

@@ -423,34 +423,58 @@ if ('serviceWorker' in navigator) {
     }
 
     function showTab(tabId) {
+    
+      if (tabId === 'nilaiTab') {
 
+  document.getElementById(
+    'mapel-nilai'
+  ).selectedIndex = 0
+
+  document.getElementById(
+    'jenis-nilai'
+  ).selectedIndex = 0
+
+  document.getElementById(
+    'kelas-nilai'
+  ).selectedIndex = 0
+
+  document.getElementById(
+    'list-siswa-nilai'
+  ).innerHTML = ''
+
+}
   // =========================
-  // RESET REKAP NILAI
-  // =========================
+// RESET INPUT NILAI
+// =========================
 
-  const rekapTable =
-    document.getElementById('rekap-table')
+const mapelNilai =
+  document.getElementById('mapel-nilai')
 
-  if (rekapTable) {
+const jenisNilai =
+  document.getElementById('jenis-nilai')
 
-    rekapTable.innerHTML = ''
+const kelasNilai =
+  document.getElementById('kelas-nilai')
 
-  }
+const listSiswaNilai =
+  document.getElementById('list-siswa-nilai')
 
-  // reset select
-  const rekapMapel =
-    document.getElementById('rekap-mapel')
+if (
+  mapelNilai &&
+  jenisNilai &&
+  kelasNilai &&
+  listSiswaNilai
+) {
 
-  const rekapKelas =
-    document.getElementById('rekap-kelas')
+  mapelNilai.selectedIndex = 0
 
-  if (rekapMapel) {
-    rekapMapel.selectedIndex = 0
-  }
+  jenisNilai.selectedIndex = 0
 
-  if (rekapKelas) {
-    rekapKelas.selectedIndex = 0
-  }
+  kelasNilai.selectedIndex = 0
+
+  listSiswaNilai.innerHTML = ''
+
+}
 
   // =========================
   // RESET REKAP JURNAL

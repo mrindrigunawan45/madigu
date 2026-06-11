@@ -337,8 +337,34 @@ kirimBtn.addEventListener(
       data: { user }
     } =
     await supabaseClient.auth.getUser()
+    
+    const {
+      data: profileData
+    } =
+    await supabaseClient
 
-    const payload = {
+      .from('profiles')
+
+      .select('school_id')
+
+      .eq('id', user.id)
+
+      .single()
+
+    const {
+      data: profileData
+    } =
+    await supabaseClient
+
+      .from('profiles')
+
+      .select('school_id')
+
+      .eq('id', user.id)
+
+      .single()
+        
+      const payload = {
 
       siswa_id:
         siswaId,
@@ -348,6 +374,9 @@ kirimBtn.addEventListener(
 
       kategori_id:
         kategoriId,
+
+      school_id:
+        profileData?.school_id,
 
       catatan:
         catatan.value

@@ -1,3 +1,4 @@
+console.log('UI.JS LOADED')
 const sidebar = document.getElementById('sidebar')
 const overlay = document.getElementById('overlay')
 const menuBtn = document.getElementById('menuBtn')
@@ -31,6 +32,36 @@ menuItems.forEach(item => {
 
     const target = item.dataset.tab
 
+    console.log('TARGET TAB:', target)
+
+    // RESET INPUT NILAI
+    const mapelNilai =
+      document.getElementById('mapel-nilai')
+
+    const jenisNilai =
+      document.getElementById('jenis-nilai')
+
+    const kelasNilai =
+      document.getElementById('kelas-nilai')
+
+    const listSiswaNilai =
+      document.getElementById('list-siswa-nilai')
+
+    if (
+      mapelNilai &&
+      jenisNilai &&
+      kelasNilai &&
+      listSiswaNilai
+    ) {
+
+      mapelNilai.selectedIndex = 0
+      jenisNilai.selectedIndex = 0
+      kelasNilai.selectedIndex = 0
+
+      listSiswaNilai.innerHTML = ''
+
+    }
+
     tabs.forEach(tab => {
       tab.classList.remove('active')
     })
@@ -39,8 +70,15 @@ menuItems.forEach(item => {
       .getElementById(target)
       .classList.add('active')
 
-    document.getElementById('header-title').innerText =
-      item.innerText
+    const headerTitle =
+      document.getElementById('header-title')
+
+    if (headerTitle) {
+
+      headerTitle.innerText =
+        item.innerText
+
+    }
 
     sidebar.classList.remove('active')
     overlay.classList.remove('active')
@@ -49,12 +87,14 @@ menuItems.forEach(item => {
 
 })
 
-const logoutBtn = document.getElementById('logoutBtn')
+const logoutBtn =
+  document.getElementById('logoutBtn')
 
 logoutBtn.addEventListener('click', () => {
 
   localStorage.clear()
 
-  window.location.href = 'index.html'
+  window.location.href =
+    'index.html'
 
 })

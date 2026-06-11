@@ -1,5 +1,41 @@
 import { supabaseClient } from './supabase.js'
 
+// =======================
+// GET SCHOOL ID
+// =======================
+async function getSchoolId() {
+
+  const {
+    data: { user }
+  } = await supabaseClient.auth.getUser()
+
+  if (!user) return null
+
+  const {
+    data: profile,
+    error
+  } = await supabaseClient
+
+    .from('profiles')
+
+    .select('school_id')
+
+    .eq('id', user.id)
+
+    .single()
+
+  if (error) {
+
+    console.error(error)
+
+    return null
+
+  }
+
+  return profile.school_id
+
+}
+
 const kelasSelect =
   document.getElementById('rekap-absen-kelas')
 
@@ -65,12 +101,19 @@ async function loadMapel() {
 // =======================
 async function loadKelas() {
 
+  const schoolId =
+    await getSchoolId()
+
+  if (!schoolId) return
+
   const { data, error } =
     await supabaseClient
 
       .from('siswa')
 
       .select('kelas')
+
+      .eq('school_id', schoolId)
 
   if (error) {
 

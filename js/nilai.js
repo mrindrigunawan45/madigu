@@ -5,6 +5,42 @@ import {
   clearElement
 } from './utils.js'
 
+// =======================
+// GET SCHOOL ID
+// =======================
+async function getSchoolId() {
+
+  const {
+    data: { user }
+  } = await supabaseClient.auth.getUser()
+
+  if (!user) return null
+
+  const {
+    data: profile,
+    error
+  } = await supabaseClient
+
+    .from('profiles')
+
+    .select('school_id')
+
+    .eq('id', user.id)
+
+    .single()
+
+  if (error) {
+
+    console.error(error)
+
+    return null
+
+  }
+
+  return profile.school_id
+
+}
+
 const kelasSelect =
   document.getElementById('kelas-nilai')
 
@@ -61,11 +97,17 @@ async function loadMapel() {
 
 async function loadKelas() {
 
-  const { data, error } = await supabaseClient
+  const schoolId =
+    await getSchoolId()
 
-    .from('siswa')
+  const { data, error } =
+    await supabaseClient
 
-    .select('kelas')
+      .from('siswa')
+
+      .select('kelas')
+
+      .eq('school_id', schoolId)
 
   if (error) {
 
@@ -75,8 +117,17 @@ async function loadKelas() {
 
   }
 
-  const kelasUnik =
-    [...new Set(data.map(item => item.kelas))]
+  const kelasUnik = [
+
+    ...new Set(
+
+      data
+        .map(item => item.kelas)
+        .filter(Boolean)
+
+    )
+
+  ].sort()
 
   kelasSelect.innerHTML = ''
 
@@ -87,12 +138,7 @@ async function loadKelas() {
   kelasUnik.forEach(kelas => {
 
     kelasSelect.appendChild(
-
-      new Option(
-        kelas,
-        kelas
-      )
-
+      new Option(kelas, kelas)
     )
 
   })
@@ -100,6 +146,9 @@ async function loadKelas() {
 }
 
 async function loadSiswaDanNilai() {
+
+  const schoolId =
+    await getSchoolId()
 
   const {
     data: { user }
@@ -114,11 +163,10 @@ async function loadSiswaDanNilai() {
   const { data: siswa, error: siswaError } =
     await supabaseClient
 
-      .from('siswa')
-
-      .select('*')
-
-      .eq('kelas', kelasSelect.value)
+    .from('siswa')
+    .select('*')
+    .eq('kelas', kelasSelect.value)
+    .eq('school_id', schoolId)
 
   if (siswaError) {
 

@@ -1,0 +1,929 @@
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+body{
+  font-family:Arial,sans-serif;
+  background:#f3f4f6;
+  color:#111827;
+}
+
+.hidden{
+  display:none !important;
+}
+
+/* SIDEBAR */
+
+#sidebar{
+  width:260px;
+  height:100vh;
+  position:fixed;
+  left:0;
+  top:0;
+  background:#0f766e;
+  color:white;
+  padding:24px;
+  z-index:100;
+  transition:.3s;
+}
+
+.sidebar-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:40px;
+}
+
+.sidebar-logo{
+  width:60px;
+  height:60px;
+  object-fit:contain;
+}
+
+#sidebar nav{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+#sidebar nav a{
+  color:white;
+  text-decoration:none;
+  padding:14px 16px;
+  border-radius:14px;
+}
+
+#sidebar nav a:hover,
+#sidebar nav a.active{
+  background:rgba(255,255,255,.15);
+}
+
+/* MAIN */
+
+main{
+  margin-left:260px;
+  padding:40px;
+}
+
+/* HERO */
+
+.dashboard-hero{
+  background:linear-gradient(
+    135deg,
+    #0f766e,
+    #2563eb
+  );
+
+  color:rgb(255, 255, 255);
+
+  border-radius:24px;
+
+  padding:32px;
+
+  display:flex;
+
+  justify-content:space-between;
+
+  align-items:center;
+
+  margin-bottom:30px;
+}
+
+.hero-text h1{
+  font-size:48px;
+  margin-bottom:10px;
+}
+
+.hero-text p{
+  font-size:18px;
+}
+
+.hero-icon{
+  font-size:64px;
+}
+
+/* STATS */
+
+.stats-grid{
+  display:grid;
+  grid-template-columns:
+  repeat(auto-fit,minmax(220px,1fr));
+  gap:20px;
+}
+
+.summary-card{
+  border-radius:20px;
+  padding:25px;
+  color:rgb(29, 8, 122);
+}
+
+.summary-card.primary{
+  background:#2563eb;
+}
+
+.summary-card.secondary{
+  background:#0f766e;
+}
+
+.card-top{
+  display:flex;
+  justify-content:space-between;
+  margin-bottom:20px;
+}
+
+.summary-card h2{
+  font-size:48px;
+}
+
+.icon-circle{
+  width:50px;
+  height:50px;
+  border-radius:50%;
+  background:rgba(255,255,255,.2);
+
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+/* PAGE */
+
+.page-header{
+  margin-bottom:20px;
+}
+
+.page-header h2{
+
+  font-size:38px;
+
+  font-weight:700;
+
+  margin-bottom:12px;
+}
+
+/* EMPTY */
+
+.empty-state{
+  background:white;
+  border-radius:20px;
+  padding:80px 20px;
+  text-align:center;
+}
+
+.empty-icon{
+  font-size:60px;
+  margin-bottom:15px;
+}
+
+/* MOBILE */
+
+.mobile-topbar{
+  display:none;
+}
+
+#overlay{
+  display:none;
+}
+
+@media(max-width:768px){
+
+  .mobile-topbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    background:#0f766e;
+    color:white;
+    padding:15px;
+  }
+
+  .mobile-topbar button{
+    background:none;
+    border:none;
+    color:white;
+    font-size:26px;
+  }
+
+  #sidebar{
+    left:-100%;
+  }
+
+  #sidebar.show{
+    left:0;
+  }
+
+  #overlay.show{
+    display:block;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.4);
+  }
+
+  #main{
+    margin-left:0px;
+    padding:20px;
+    }
+  }
+
+  .stats-grid{
+    grid-template-columns:1fr;
+  }
+
+  .hero-text h1{
+    font-size:32px;
+  }
+
+  .hero-icon{
+    font-size:42px;
+  }
+
+
+/* =======================
+   ABSENSI SD
+======================= */
+
+.absensi-list{
+  display:flex;
+  flex-direction:column;
+  gap:20px;
+}
+
+.siswa-card{
+
+  background:white;
+
+  border-radius:24px;
+
+  padding:18px 24px;
+
+  display:flex;
+
+  justify-content:space-between;
+
+  align-items:center;
+
+  border:1px solid #e5e7eb;
+
+  min-height:100px;
+
+  transition:.3s;
+}
+
+.siswa-info{
+  display:flex;
+  align-items:center;
+  gap:16px;
+}
+
+.siswa-avatar{
+
+  width:48px;
+  height:48px;
+
+  border-radius:50%;
+
+  background:#2563eb;
+
+  color:white;
+
+  display:flex;
+
+  justify-content:center;
+
+  align-items:center;
+
+  font-weight:700;
+
+  font-size:20px;
+}
+
+.siswa-name{
+
+  min-width:360px;
+}
+
+.siswa-name h4{
+
+  font-size:28px;
+
+  line-height:1.2;
+
+  margin:0;
+
+  font-weight:700;
+}
+
+.absen-modern{
+  display:flex;
+  gap:16px;
+}
+
+.absen-card input{
+  display:none;
+}
+
+.absen-card{
+  cursor:pointer;
+}
+
+.absen-content{
+
+  width:90px;
+
+  height:90px;
+
+  border:2px solid #e5e7eb;
+
+  border-radius:20px;
+
+  display:flex;
+
+  flex-direction:column;
+
+  justify-content:center;
+
+  align-items:center;
+
+  gap:4px;
+
+  transition:.3s;
+}
+
+.absen-icon{
+
+  width:42px;
+
+  height:42px;
+
+  border-radius:12px;
+
+  display:flex;
+
+  justify-content:center;
+
+  align-items:center;
+
+  color:white;
+
+  font-size:22px;
+
+  font-weight:700;
+}
+
+
+.hadir .absen-icon{
+  background:#16a34a;
+}
+
+.sakit .absen-icon{
+  background:#eab308;
+}
+
+.izin .absen-icon{
+  background:#2563eb;
+}
+
+.alpa .absen-icon{
+  background:#ef4444;
+}
+
+.absen-card input:checked
++ .absen-content{
+
+  border-color:#16a34a;
+
+  background:#ecfdf5;
+}
+
+.save-wrap{
+
+  position:sticky;
+
+  bottom:20px;
+
+  display:flex;
+
+  justify-content:flex-end;
+
+  margin-top:30px;
+
+  z-index:50;
+}
+
+#saveAbsensiBtn{
+
+  background:#16a34a;
+
+  color:white;
+
+  border:none;
+
+  padding:16px 28px;
+
+  border-radius:14px;
+
+  cursor:pointer;
+
+  font-size:18px;
+
+  font-weight:600;
+
+  box-shadow:
+    0 8px 20px
+    rgba(22,163,74,.25);
+}
+
+#saveAbsensiBtn:hover{
+
+  background:#15803d;
+}
+
+.tanggal-wrap{
+
+  margin-bottom:24px;
+}
+
+#tanggalAbsensi{
+
+  padding:12px 16px;
+
+  border-radius:12px;
+
+  border:1px solid #d1d5db;
+
+  font-size:18px;
+
+  font-weight:600;
+}
+.siswa-card.status-hadir{
+  border-left:6px solid #16a34a;
+}
+
+.siswa-card.status-sakit{
+  border-left:6px solid #eab308;
+}
+
+.siswa-card.status-izin{
+  border-left:6px solid #2563eb;
+}
+
+.siswa-card.status-alpa{
+  border-left:6px solid #ef4444;
+}
+.absen-content span{
+
+  font-size:15px;
+
+  font-weight:600;
+}
+.siswa-card:hover{
+
+  transform:translateY(-2px);
+
+  box-shadow:
+    0 10px 25px
+    rgba(0,0,0,.08);
+}
+/* ======================
+   REKAP ABSENSI
+====================== */
+
+.rekap-card{
+  background:#fff;
+  padding:20px;
+  border-radius:16px;
+  box-shadow:0 4px 12px rgba(0,0,0,.08);
+}
+
+.rekap-filter{
+  display:flex;
+  flex-wrap:wrap;
+  gap:16px;
+  align-items:flex-end;
+  margin-bottom:24px;
+}
+
+.filter-item{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+
+.filter-item label{
+  font-weight:600;
+  color:#374151;
+}
+
+.mode-wrap{
+  display:flex;
+  gap:16px;
+}
+
+.mode-wrap label{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  cursor:pointer;
+}
+
+.rekap-filter select,
+.rekap-filter input{
+  height:42px;
+  padding:0 12px;
+  border:1px solid #d1d5db;
+  border-radius:10px;
+  font-size:14px;
+}
+
+#btnLoadRekap{
+  height:42px;
+  padding:0 20px;
+  border:none;
+  border-radius:10px;
+  background:#2563eb;
+  color:white;
+  font-weight:600;
+  cursor:pointer;
+}
+
+#btnLoadRekap:hover{
+  opacity:.9;
+}
+
+.table-responsive{
+  overflow-x:auto;
+}
+
+.rekap-table{
+  width:100%;
+  border-collapse:collapse;
+  background:white;
+}
+
+.rekap-table thead{
+  background:#f3f4f6;
+}
+
+.rekap-table th{
+  padding:14px;
+  text-align:left;
+  font-size:14px;
+}
+
+.rekap-table td{
+  padding:14px;
+  border-top:1px solid #e5e7eb;
+}
+
+.rekap-table tbody tr:hover{
+  background:#f9fafb;
+}
+
+.empty-state{
+  text-align:center;
+  padding:40px;
+  color:#6b7280;
+}
+
+.rekap-table{
+
+  min-width:800px;
+}
+
+.rekap-table th{
+
+  white-space:nowrap;
+}
+
+.rekap-table td{
+
+  white-space:nowrap;
+}
+
+.rekap-table td:last-child{
+
+  font-weight:700;
+  color:#16a34a;
+}
+
+#jurnalPage textarea{
+
+  width:100%;
+  padding:12px;
+  border:1px solid #d1d5db;
+  border-radius:10px;
+  resize:vertical;
+
+}
+
+#jurnalPage select,
+#jurnalPage input{
+
+  height:42px;
+  border:1px solid #d1d5db;
+  border-radius:10px;
+  padding:0 12px;
+
+}
+
+.catatan-siswa-card{
+
+  border:1px solid #e5e7eb;
+  border-radius:12px;
+  padding:16px;
+  margin-bottom:12px;
+
+}
+
+.catatan-siswa-card textarea{
+
+  margin-top:10px;
+
+}
+
+.remove-catatan{
+
+  background:#ef4444;
+  color:white;
+  border:none;
+  border-radius:8px;
+  padding:8px 12px;
+  cursor:pointer;
+
+}
+
+.jurnal-item{
+
+  padding:16px;
+  border-bottom:1px solid #e5e7eb;
+
+}
+
+.jurnal-item:last-child{
+
+  border-bottom:none;
+
+}
+.nilai-table{
+
+  width:100%;
+  border-collapse:collapse;
+
+}
+
+.nilai-table th,
+.nilai-table td{
+
+  border:1px solid #e5e7eb;
+  padding:8px;
+  text-align:center;
+
+}
+
+.nilai-table input{
+
+  width:70px;
+  padding:6px;
+  text-align:center;
+
+}
+
+.nilai-save-wrap{
+
+  margin-top:20px;
+  text-align:right;
+
+}
+.ledger-table{
+  width:100%;
+  border-collapse:collapse;
+}
+
+.ledger-table th,
+.ledger-table td{
+  border:1px solid #ddd;
+  padding:8px;
+  text-align:center;
+}
+
+.ledger-table th{
+  background:#f5f5f5;
+}
+
+.table-responsive{
+  overflow-x:auto;
+}
+/* =====================
+   LEDGER FINAL
+===================== */
+
+.ledger-header{
+  background:white;
+  border-radius:20px;
+  padding:24px;
+  margin-bottom:20px;
+  text-align:center;
+  box-shadow:0 4px 12px rgba(0,0,0,.08);
+}
+
+.ledger-header h2{
+  font-size:38px;
+  margin-bottom:8px;
+  color:#111827;
+}
+
+.ledger-header .kelas-info{
+  font-size:20px;
+  font-weight:700;
+  color:#2563eb;
+  margin-bottom:6px;
+}
+
+.ledger-header .semester-info{
+  color:#6b7280;
+  font-size:16px;
+}
+
+.ledger-stats{
+  display:grid;
+  grid-template-columns:
+    repeat(auto-fit,minmax(220px,1fr));
+  gap:20px;
+  margin-bottom:24px;
+}
+
+.ledger-stat-card{
+  background:white;
+  border-radius:20px;
+  padding:24px;
+  text-align:center;
+  box-shadow:0 4px 12px rgba(0,0,0,.08);
+}
+
+.ledger-stat-card h4{
+  color:#374151;
+  font-size:18px;
+  margin-bottom:12px;
+}
+
+.ledger-stat-card h2{
+  font-size:54px;
+  color:#1d087a;
+}
+
+.ledger-action{
+  display:flex;
+  justify-content:flex-end;
+  gap:12px;
+  margin-bottom:20px;
+}
+
+.ledger-action button{
+  border:none;
+  border-radius:12px;
+  padding:12px 20px;
+  cursor:pointer;
+  font-weight:600;
+  color:white;
+}
+
+#exportLedgerBtn{
+  background:#16a34a;
+}
+
+#printLedgerBtn{
+  background:#2563eb;
+}
+
+.table-responsive{
+  overflow-x:auto;
+  background:white;
+  border-radius:20px;
+  padding:10px;
+  box-shadow:0 4px 12px rgba(0,0,0,.08);
+}
+
+.ledger-table{
+  width:100%;
+  min-width:1400px;
+  border-collapse:collapse;
+}
+
+.ledger-table th{
+  background:#f3f4f6;
+  padding:14px;
+  border:1px solid #e5e7eb;
+  white-space:nowrap;
+  font-weight:700;
+}
+
+.ledger-table td{
+  padding:12px;
+  border:1px solid #e5e7eb;
+  white-space:nowrap;
+  text-align:center;
+}
+
+.ledger-table tbody tr:hover{
+  background:#f9fafb;
+}
+
+/* sticky nomor */
+
+.ledger-table th:first-child,
+.ledger-table td:first-child{
+  position:sticky;
+  left:0;
+  background:white;
+  z-index:2;
+  min-width:60px;
+}
+
+/* sticky nama */
+
+.ledger-table th:nth-child(2),
+.ledger-table td:nth-child(2){
+  position:sticky;
+  left:60px;
+  background:white;
+  z-index:2;
+  text-align:left;
+  min-width:220px;
+}
+
+/* nilai rendah */
+
+.nilai-rendah{
+  background:#fee2e2;
+  color:#991b1b;
+  font-weight:700;
+}
+
+/* nilai tinggi */
+
+.nilai-tinggi{
+  background:#dcfce7;
+  color:#166534;
+  font-weight:700;
+}
+
+.rekap-mapel-card{
+  background:white;
+  margin-top:24px;
+  border-radius:20px;
+  padding:20px;
+  box-shadow:0 4px 12px rgba(0,0,0,.08);
+}
+
+.rekap-mapel-card h3{
+  margin-bottom:20px;
+}
+
+@media print{
+
+  body *{
+    visibility:hidden;
+  }
+
+  #ledgerPage,
+  #ledgerPage *{
+    visibility:visible;
+  }
+
+  #ledgerPage{
+    position:absolute;
+    left:0;
+    top:0;
+    width:100%;
+  }
+
+  .ledger-action{
+    display:none;
+  }
+
+  aside,
+  header,
+  nav{
+    display:none !important;
+  }
+
+}
+.btn-edit-jurnal{
+  background:#2563eb;
+  color:white;
+  border:none;
+  padding:8px 14px;
+  border-radius:8px;
+  cursor:pointer;
+  margin-right:8px;
+}
+
+.btn-hapus-jurnal{
+  background:#ef4444;
+  color:white;
+  border:none;
+  padding:8px 14px;
+  border-radius:8px;
+  cursor:pointer;
+}

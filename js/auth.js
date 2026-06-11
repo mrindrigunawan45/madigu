@@ -73,29 +73,52 @@ if (loginForm) {
       console.log('ROLE:', role)
 
       // =========================
-      // REDIRECT BERDASARKAN ROLE
-      // =========================
+// REDIRECT BERDASARKAN ROLE
+// =========================
 
-      if (role === 'agen') {
+if (role === 'agen') {
 
-        window.location.href =
-          'lapor.html'
+  window.location.href =
+    'lapor.html'
 
-        return
-      }
+  return
 
-      if (role === 'bk') {
+} else if (role === 'bk') {
 
-        window.location.href =
-          'dashboard-bk.html'
+  window.location.href =
+    'dashboard-bk.html'
 
-        return
-      }
+  return
 
-      // GURU / ADMIN
-      window.location.href =
-        'dashboard.html'
+} else if (role === 'guru_sd') {
 
+  window.location.href =
+    'dashboard-sd.html'
+
+  return
+
+} else if (role === 'kepsek_sd') {
+
+  window.location.href =
+    'dashboard-kepsek-sd.html'
+
+  return
+
+} else if (role === 'kepsek_smp') {
+
+  window.location.href =
+    'dashboard-kepsek-smp.html'
+
+  return
+
+} else {
+
+  window.location.href =
+    'dashboard.html'
+
+  return
+
+}
     }
   )
 

@@ -1,0 +1,141 @@
+.rekap-jurnal-filter{
+  display:flex;
+  gap:15px;
+  align-items:end;
+  margin-bottom:20px;
+  flex-wrap:wrap;
+}
+
+.filter-group{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+
+.filter-group input{
+  height:42px;
+  padding:0 12px;
+  border:1px solid #d1d5db;
+  border-radius:10px;
+}
+
+#btnLoadRekapJurnal{
+  height:42px;
+  padding:0 18px;
+  border:none;
+  border-radius:10px;
+  background:#2563eb;
+  color:white;
+  cursor:pointer;
+}
+
+.rekap-jurnal-stats{
+  display:grid;
+  grid-template-columns:
+  repeat(auto-fit,minmax(200px,1fr));
+  gap:16px;
+  margin-bottom:24px;
+}
+
+.rekap-jurnal-card{
+  background:white;
+  border-radius:16px;
+  padding:20px;
+  text-align:center;
+  box-shadow:0 4px 12px rgba(0,0,0,.08);
+}
+
+.rekap-jurnal-table{
+  width:100%;
+  border-collapse:collapse;
+  background:white;
+}
+
+.rekap-jurnal-table th,
+.rekap-jurnal-table td{
+  border:1px solid #e5e7eb;
+  padding:12px;
+}
+
+.rekap-jurnal-table th{
+  background:#f3f4f6;
+}
+
+.badge-catatan{
+  background:#fef3c7;
+  color:#92400e;
+  padding:4px 10px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:600;
+}
+
+.modal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.5);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  z-index:999;
+}
+
+.modal-content{
+  background:white;
+  width:90%;
+  max-width:800px;
+  border-radius:20px;
+  padding:24px;
+  max-height:85vh;
+  overflow:auto;
+}
+
+.modal-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:20px;
+}
+
+.student-search-card{
+  background:#fff;
+  padding:20px;
+  border-radius:16px;
+  margin-bottom:20px;
+}
+
+.student-search-row{
+  display:flex;
+  gap:12px;
+  align-items:center;
+}
+
+.student-search-row select{
+  min-width:300px;
+}
+
+.riwayat-siswa-card{
+  background:#fff;
+  border-radius:16px;
+  padding:20px;
+  margin-bottom:20px;
+}
+
+.stat-catatan{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:12px;
+  margin:15px 0;
+}
+
+.stat-item{
+  background:#f5f7fb;
+  padding:12px;
+  border-radius:10px;
+  text-align:center;
+}
+
+.stat-item h3{
+  margin:0;
+  color:#1e40af;
+}
