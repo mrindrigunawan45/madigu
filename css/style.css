@@ -1734,7 +1734,7 @@ tr:nth-child(even){
 
     align-items:stretch;
 
-    gap:16px;
+    gap:10px;
 
   }
 
@@ -1751,9 +1751,9 @@ tr:nth-child(even){
     display:grid;
 
     grid-template-columns:
-      repeat(4,1fr);
+      repeat(4,minmax(60px,1fr));
 
-    gap:12px;
+    gap:4px;
 
   }
 
@@ -1761,7 +1761,37 @@ tr:nth-child(even){
 
     width:100%;
 
-    min-height:110px;
+    min-height:78px;
+
+    padding:6px;
+
+    border-radius:14px;
+
+  }
+
+  .absen-content{
+
+    gap:4px;
+
+  }
+
+  .absen-icon{
+
+    width:42px;
+
+    height:42px;
+
+    font-size:22px;
+
+    border-radius:12px;
+
+  }
+
+  .absen-content span{
+
+    font-size:11px;
+
+    font-weight:600;
 
   }
 
