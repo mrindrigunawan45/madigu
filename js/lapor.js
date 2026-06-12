@@ -486,26 +486,27 @@ kirimBtn.addEventListener(
 
       body:JSON.stringify({
 
-        school_id:
-          profileData?.school_id,
+      school_id:
+        profileData?.school_id,
 
-        nama_siswa:
-          siswaData?.nama_siswa,
+      nama_siswa:
+        siswaData?.nama_siswa,
 
-        kelas:
-          siswaData?.kelas,
+      kelas:
+        siswaData?.kelas,
 
-        kategori:
-          kategoriData?.nama,
+      kategori:
+        kategoriData?.nama,
 
-        jenis:
-          jenisNama,
+      jenis:
+        jenisNama,
 
-        catatan:
-          catatan.value
-      })
-    }
-  )
+      laporan_lainnya:
+        laporanLainnya.value,
+
+      catatan:
+        catatan.value
+    })
 
 }catch(err){
 
