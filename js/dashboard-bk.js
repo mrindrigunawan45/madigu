@@ -1,5 +1,23 @@
 import { supabase } from './config.js'
 
+async function getSchoolId(){
+
+  const {
+    data:{session}
+  } = await supabase.auth.getSession()
+
+  if(!session) return null
+
+  const { data } =
+    await supabase
+      .from('profiles')
+      .select('school_id')
+      .eq('id', session.user.id)
+      .single()
+
+  return data?.school_id || null
+}
+
 const jurnalList =
   document.getElementById('jurnalList')
 
@@ -72,7 +90,64 @@ document
       )
 
       menu.classList.add('active')
+      // ====================
+// RESET JURNAL
+// ====================
 
+if(menu.dataset.page === 'jurnal'){
+
+  searchInput.value = ''
+
+  currentLimit = 20
+
+  renderJurnal(allData)
+
+  jurnalList.scrollTop = 0
+}
+
+// ====================
+// RESET REKAP
+// ====================
+
+if(menu.dataset.page === 'rekap'){
+
+  const kelasSelect =
+    document.getElementById(
+      'kelasSelect'
+    )
+
+  const rekapBody =
+    document.getElementById(
+      'rekapBody'
+    )
+
+  kelasSelect.selectedIndex = 0
+
+  rekapBody.innerHTML = `
+
+    <tr>
+
+      <td colspan="4">
+
+        <div class="empty-state">
+
+          <div class="empty-icon">
+            📊
+          </div>
+
+          <h3>
+
+            Pilih kelas terlebih dahulu
+
+          </h3>
+
+        </div>
+
+      </td>
+
+    </tr>
+  `
+}
       // HIDE ALL PAGE
       document
       .querySelectorAll('main section')
@@ -80,70 +155,7 @@ document
         x.classList.add('hidden')
       )
 
-      // ====================
-      // RESET REKAP TOTAL
-      // ====================
-
-      if(
-        menu.dataset.page
-        ===
-        'rekap'
-      ){
-      // RESET JURNAL
-      if(menu.dataset.page==='jurnal'){
-
-        // RESET SEARCH
-        searchInput.value=''
-
-        // RESET LIMIT
-        currentLimit = 20
-
-        // RENDER ULANG
-        renderJurnal(allData)
-
-        // SCROLL KE ATAS
-        jurnalList.scrollTop = 0
-      }
-        const kelasSelect =
-          document.getElementById(
-            'kelasSelect'
-          )
-
-        const rekapBody =
-          document.getElementById(
-            'rekapBody'
-          )
-
-        // RESET DROPDOWN
-        kelasSelect.selectedIndex = 0
-
-        // RESET TABLE
-        rekapBody.innerHTML = `
-
-          <tr>
-
-            <td colspan="4">
-
-              <div class="empty-state">
-
-                <div class="empty-icon">
-                  📊
-                </div>
-
-                <h3>
-
-                  Pilih kelas terlebih dahulu
-
-                </h3>
-
-              </div>
-
-            </td>
-
-          </tr>
-        `
-      }
-
+      
       // SHOW PAGE
       document
       .getElementById(
@@ -187,10 +199,19 @@ checkAuth()
 
 async function loadData(){
 
+  const schoolId =
+      await getSchoolId()
+  
+  console.log(
+    'BK SCHOOL ID:',
+    schoolId
+  )
+  
   const laporanRes =
     await supabase
     .from('laporan')
     .select('*')
+    .eq('school_id', schoolId)
     .order(
       'created_at',
       {
@@ -198,10 +219,11 @@ async function loadData(){
       }
     )
 
-  const siswaRes =
-    await supabase
-    .from('siswa')
-    .select('*')
+    const siswaRes =
+      await supabase
+        .from('siswa')
+        .select('*')
+        .eq('school_id', schoolId)
 
   const kategoriRes =
     await supabase
@@ -736,10 +758,19 @@ async function loadKelas(){
     </option>
   `
 
-  const { data } =
-    await supabase
-      .from('siswa')
-      .select('kelas')
+  const schoolId =
+  await getSchoolId()
+
+console.log(
+  'BK SCHOOL ID:',
+  schoolId
+)
+
+const { data } =
+  await supabase
+    .from('siswa')
+    .select('kelas')
+    .eq('school_id', schoolId)
 
   const unique =
   [...new Set(
@@ -807,14 +838,15 @@ document
     // AMBIL SEMUA SISWA
     // ====================
 
+    const schoolId =
+      await getSchoolId()
+
     const { data:siswaData } =
       await supabase
-
         .from('siswa')
-
         .select('*')
-
-        .eq('kelas',kelas)
+        .eq('school_id', schoolId)
+        .eq('kelas', kelas)
 
         .order(
           'nama_siswa',

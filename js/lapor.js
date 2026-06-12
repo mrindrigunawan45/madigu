@@ -350,19 +350,6 @@ kirimBtn.addEventListener(
       .eq('id', user.id)
 
       .single()
-
-    const {
-      data: profileData
-    } =
-    await supabaseClient
-
-      .from('profiles')
-
-      .select('school_id')
-
-      .eq('id', user.id)
-
-      .single()
         
       const payload = {
 
