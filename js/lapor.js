@@ -507,6 +507,9 @@ kirimBtn.addEventListener(
       catatan:
         catatan.value
     })
+    
+  }
+)
 
 }catch(err){
 
