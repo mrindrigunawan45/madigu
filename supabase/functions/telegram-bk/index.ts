@@ -122,6 +122,11 @@ ${body.kategori}
 ⚠️ Jenis:
 ${body.jenis}
 
+${body.laporan_lainnya
+  ? `📝 Laporan:
+${body.laporan_lainnya}`
+  : ''}
+
 📝 Catatan:
 ${body.catatan || '-'}
 

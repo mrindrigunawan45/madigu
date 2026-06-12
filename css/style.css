@@ -1796,3 +1796,70 @@ tr:nth-child(even){
   }
 
 }
+/* tanggal */
+#rekap-jurnal-table th:nth-child(1),
+#rekap-jurnal-table td:nth-child(1){
+  width:90px;
+  white-space:nowrap;
+}
+
+/* kelas */
+#rekap-jurnal-table th:nth-child(2),
+#rekap-jurnal-table td:nth-child(2){
+  width:70px;
+}
+
+/* mapel */
+#rekap-jurnal-table th:nth-child(3),
+#rekap-jurnal-table td:nth-child(3){
+  width:130px;
+}
+
+/* materi */
+#rekap-jurnal-table th:nth-child(4),
+#rekap-jurnal-table td:nth-child(4){
+  min-width:220px;
+}
+
+/* catatan kejadian */
+#rekap-jurnal-table th:nth-child(5),
+#rekap-jurnal-table td:nth-child(5){
+  min-width:220px;
+}
+
+/* tidak hadir */
+#rekap-jurnal-table th:nth-child(6),
+#rekap-jurnal-table td:nth-child(6){
+  min-width:180px;
+}
+
+/* aksi */
+#rekap-jurnal-table th:nth-child(7),
+#rekap-jurnal-table td:nth-child(7){
+  width:90px;
+}
+
+.aksi-jurnal{
+
+  display:flex;
+
+  gap:8px;
+
+  justify-content:center;
+
+  align-items:center;
+
+}
+
+.aksi-jurnal .edit-btn,
+.aksi-jurnal .delete-btn{
+
+  width:42px;
+
+  height:42px;
+
+  padding:0;
+
+  border-radius:12px;
+
+}

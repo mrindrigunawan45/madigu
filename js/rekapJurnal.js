@@ -212,10 +212,12 @@ async function loadRekapJurnal() {
 
         materi: item.materi,
 
+        catatan_kejadian:
+          item.catatan_kejadian || '',
+
         tidakHadir: []
 
       }
-
     }
 
     if (item.status !== 'H') {
@@ -247,6 +249,7 @@ function renderTable() {
       <th>Kelas</th>
       <th>Mapel</th>
       <th>Materi</th>
+      <th>Catatan Kejadian</th>
       <th>Tidak Hadir</th>
       <th>Aksi</th>
 
@@ -280,48 +283,82 @@ function renderTable() {
 
       <tr>
 
-        <td>${item.tanggal}</td>
+        <td>
+
+          ${new Date(item.tanggal)
+            .toLocaleDateString(
+              'id-ID',
+              {
+                day:'2-digit',
+                month:'short',
+                year:'2-digit'
+              }
+            )}
+
+        </td>
 
         <td>${item.kelas}</td>
 
         <td>${item.mapel}</td>
 
         <td>${item.materi}</td>
+        <td>
+        ${item.catatan_kejadian || '-'}
+        </td>
+        <td>
+
+  ${
+    item.tidakHadir.length
+
+      ? `<button
+           class="lihat-absen-btn"
+           onclick='lihatTidakHadir(
+             ${JSON.stringify(
+               item.tidakHadir
+             )}
+           )'
+         >
+           ${item.tidakHadir.length}
+           siswa
+         </button>`
+
+      : '-'
+  }
+
+</td>
 
         <td>
 
-          ${item.tidakHadir.length
-            ? item.tidakHadir.join(', ')
-            : '-'}
+  <div class="aksi-jurnal">
 
-        </td>
+    <button
+      class="edit-btn"
+      title="Edit"
+      onclick="editJurnal('${item.id}')"
+    >
 
-        <td>
+      ✏️
 
-          <button
-            class="edit-btn"
-            onclick="editJurnal('${item.id}')"
-          >
+    </button>
 
-            Edit
+    <button
+      class="delete-btn"
+      title="Hapus"
+      onclick='hapusJurnal(
+        "${item.tanggal}",
+        "${item.kelas}",
+        "${item.mapel}",
+        ${JSON.stringify(item.materi)}
+      )'
+    >
 
-          </button>
+      🗑️
 
-          <button
-            class="delete-btn"
-            onclick='hapusJurnal(
-              "${item.tanggal}",
-              "${item.kelas}",
-              "${item.mapel}",
-              ${JSON.stringify(item.materi)}
-            )'
-          >
+    </button>
 
-            Hapus
+  </div>
 
-          </button>
-
-        </td>
+</td>
 
       </tr>
 
@@ -364,6 +401,11 @@ async function(id) {
 
   document.getElementById('materi').value =
     data.materi
+  
+    document.getElementById(
+    'catatan-kejadian'
+    ).value =
+      data.catatan_kejadian || ''
 
   window.editJurnalId = id
 
@@ -453,6 +495,9 @@ document
       Mapel: item.mapel,
 
       Materi: item.materi,
+
+      'Catatan Kejadian':
+        item.catatan_kejadian || '-',
 
       'Tidak Hadir':
 

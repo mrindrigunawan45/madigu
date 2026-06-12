@@ -361,6 +361,12 @@ saveBtn.addEventListener(
       document
         .getElementById('materi')
         .value
+    const catatanKejadian =
+      document
+        .getElementById(
+          'catatan-kejadian'
+        )
+        .value
 
     const payload =
       siswaData.map(
@@ -384,6 +390,9 @@ saveBtn.addEventListener(
             mapel: mapelSelect.value,
 
             materi: materi,
+
+            catatan_kejadian:
+              catatanKejadian,
 
             nama: item.nama_siswa,
 
@@ -427,7 +436,8 @@ saveBtn.addEventListener(
     resetForm([
       'mapel-jurnal',
       'kelas-jurnal',
-      'materi'
+      'materi',
+      'catatan-kejadian'
     ])
 
     clearElement(
