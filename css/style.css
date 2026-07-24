@@ -2003,3 +2003,53 @@ tr:nth-child(even){
   background-color: #1d4ed8;
   transform: scale(1.03);
 }
+/* ==========================================
+   RESPONSIVE MODAL UNTUK TAMPILAN HP / MOBILE
+   ========================================== */
+@media (max-width: 600px) {
+  /* Membuat modal pas di layar HP dengan sedikit padding */
+  .modal-content {
+    width: 90% !important;
+    max-width: 100% !important;
+    margin: 15px auto !important;
+    padding: 16px !important;
+    border-radius: 12px !important;
+    max-height: 85vh; /* Batasi tinggi agar tidak melimpah dari layar */
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Header modal disesuaikan agar tombol 'X' mudah ditap */
+  .modal-header {
+    padding-bottom: 10px;
+  }
+
+  .modal-header h3 {
+    font-size: 1.1rem !important; /* Ukuran judul lebih pas di HP */
+  }
+
+  .close-modal {
+    font-size: 1.8rem !important;
+    padding: 4px 8px; /* Area sentuh lebih besar */
+    cursor: pointer;
+  }
+
+  /* Supaya daftar siswa bisa di-scroll jika namanya banyak */
+  .modal-body {
+    overflow-y: auto;
+    max-height: 60vh;
+    padding-right: 4px;
+  }
+
+  /* Menyesuaikan baris item siswa */
+  .list-tidak-hadir li {
+    font-size: 0.9rem !important;
+    padding: 10px 0 !important;
+  }
+
+  /* Badge status (Sakit/Izin/Alpa) di HP */
+  .status-badge {
+    padding: 4px 8px !important;
+    font-size: 0.75rem !important;
+  }
+}
