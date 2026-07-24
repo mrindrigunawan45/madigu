@@ -209,7 +209,7 @@ if ('serviceWorker' in navigator) {
             id="catatan-kejadian"
             placeholder="Catatan Kejadian"
           ></textarea>
-          
+
           <div id="list-siswa-jurnal"></div>
 
           <button id="saveJurnalBtn">
@@ -462,6 +462,17 @@ if (tabId === 'jurnalTab') {
     'materi'
   ).value = ''
 
+  const catatanKejadian =
+  document.getElementById(
+    'catatan-kejadian'
+  )
+
+  if(catatanKejadian){
+
+    catatanKejadian.value = ''
+
+  }
+
   document.getElementById(
     'list-siswa-jurnal'
   ).innerHTML = ''
@@ -688,6 +699,19 @@ async function loadUserInfo() {
 loadUserInfo()
 
 </script>
+
+<!-- MODAL DETAIL SISWA TIDAK HADIR -->
+<div id="modalAbsen" class="modal" style="display: none;">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>Daftar Siswa Tidak Hadir</h3>
+      <span class="close-modal" onclick="closeModalAbsen()">&times;</span>
+    </div>
+    <div class="modal-body">
+      <ul id="listTidakHadir" class="list-tidak-hadir"></ul>
+    </div>
+  </div>
+</div>
 
 </body>
 

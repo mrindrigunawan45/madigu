@@ -49,11 +49,18 @@ let jurnalData = []
 
 async function loadMapel() {
 
+  const schoolId =
+    await getSchoolId()
+
+  if (!schoolId) return
+
   const { data, error } = await supabaseClient
 
     .from('mata_pelajaran')
 
     .select('*')
+
+    .eq('school_id', schoolId)
 
   if (error) {
 
@@ -263,7 +270,7 @@ function renderTable() {
 
       <tr>
 
-        <td colspan="6">
+        <td colspan="7">
 
           Belum ada data
 
@@ -277,7 +284,7 @@ function renderTable() {
 
   }
 
-  jurnalData.forEach(item => {
+  jurnalData.forEach((item, index) => { // Tambahkan parameter 'index'
 
     table.innerHTML += `
 
@@ -311,15 +318,11 @@ function renderTable() {
     item.tidakHadir.length
 
       ? `<button
+           type="button"
            class="lihat-absen-btn"
-           onclick='lihatTidakHadir(
-             ${JSON.stringify(
-               item.tidakHadir
-             )}
-           )'
+           onclick="lihatTidakHadir(${index})"
          >
-           ${item.tidakHadir.length}
-           siswa
+           ${item.tidakHadir.length} siswa
          </button>`
 
       : '-'
@@ -535,3 +538,62 @@ document
 loadMapel()
 
 loadKelas()
+// =======================
+// MODAL DETAIL TIDAK HADIR
+// =======================
+window.lihatTidakHadir = function(index) {
+  const item = jurnalData[index];
+  if (!item) return;
+
+  const daftarSiswa = item.tidakHadir;
+  const modal = document.getElementById('modalAbsen');
+  const listContainer = document.getElementById('listTidakHadir');
+  
+  if (!modal || !listContainer) return;
+
+  listContainer.innerHTML = '';
+
+  const statusMap = {
+    'S': 'Sakit',
+    'I': 'Izin',
+    'A': 'Alpa'
+  };
+
+  daftarSiswa.forEach(siswa => {
+    const match = siswa.match(/(.+) \(([SIA])\)/);
+    
+    if (match) {
+      const nama = match[1];
+      const kode = match[2];
+      const ket = statusMap[kode] || kode;
+
+      listContainer.innerHTML += `
+        <li>
+          <span><strong>${nama}</strong></span>
+          <span class="status-badge ${kode}">${ket}</span>
+        </li>
+      `;
+    } else {
+      listContainer.innerHTML += `<li>${siswa}</li>`;
+    }
+  });
+
+  // Tampilkan Modal
+  modal.style.display = 'flex';
+};
+
+// Fungsi Tutup Modal (Dipasang di window)
+window.closeModalAbsen = function() {
+  const modal = document.getElementById('modalAbsen');
+  if (modal) {
+    modal.style.display = 'none';
+  }
+};
+
+// Menutup modal jika area luar (overlay) diklik
+window.addEventListener('click', function(event) {
+  const modal = document.getElementById('modalAbsen');
+  if (modal && event.target === modal) {
+    modal.style.display = 'none';
+  }
+});

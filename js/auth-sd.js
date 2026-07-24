@@ -99,3 +99,30 @@ export async function getCurrentClass() {
   return data?.[0] || null
 
 }
+// =====================
+// USER CONTEXT
+// =====================
+
+export async function getCurrentUserContext() {
+
+  const profile =
+    await getCurrentProfile()
+
+  if (!profile) {
+
+    return null
+
+  }
+
+  const kelas =
+    await getCurrentClass()
+
+  return {
+
+    profile,
+
+    kelas
+
+  }
+
+}

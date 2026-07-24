@@ -72,11 +72,16 @@ async function loadHeaderInfo(){
     .select('*')
 
     .eq(
+      'school_id',
+      currentClass.school_id
+    )
+
+    .eq(
       'is_active',
       true
     )
 
-    .single();
+    .limit(1);
 
   info.innerHTML = `
 
@@ -86,12 +91,13 @@ async function loadHeaderInfo(){
     &nbsp; | &nbsp;
 
     <strong>Semester:</strong>
-    ${semester?.nama_semester || '-'}
+    ${semester?.[0]?.nama_semester || '-'}
+
 
     &nbsp; | &nbsp;
 
     <strong>Tahun:</strong>
-    ${semester?.tahun_ajaran || '-'}
+    ${semester?.[0]?.tahun_ajaran || '-'}
 
   `;
 

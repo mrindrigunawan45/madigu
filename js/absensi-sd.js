@@ -1,5 +1,9 @@
 import { supabase } from './config.js'
-import { getCurrentClass } from './auth-sd.js'
+
+import {
+  loadCurrentUser,
+  getCurrentUser
+} from './session.js'
 
 // ======================
 // ELEMENT
@@ -85,9 +89,22 @@ async function loadSiswa() {
 
   try {
 
-    currentClass =
-      await getCurrentClass()
+    await loadCurrentUser()
 
+    const currentUser =
+      getCurrentUser()
+
+    if (!currentUser) {
+
+      alert('Session tidak ditemukan')
+
+      return
+
+    }
+
+    currentClass =
+      currentUser.kelas
+    
     if (!currentClass) {
 
       alert(
@@ -99,7 +116,7 @@ async function loadSiswa() {
     }
 
     console.log(
-      'KELAS GURU:',
+      'CURRENT CLASS:',
       currentClass
     )
 

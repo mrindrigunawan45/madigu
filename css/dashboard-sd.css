@@ -49,15 +49,54 @@ body{
 }
 
 #sidebar nav a{
-  color:white;
-  text-decoration:none;
-  padding:14px 16px;
-  border-radius:14px;
+
+    display:flex;
+    align-items:center;
+    gap:14px;
+
+    color:white;
+    text-decoration:none;
+
+    padding:14px 18px;
+
+    border-radius:14px;
+
+    transition:.25s;
+
+    position:relative;
+
+    font-size:17px;
+
+    font-weight:500;
+
 }
 
-#sidebar nav a:hover,
 #sidebar nav a.active{
-  background:rgba(255,255,255,.15);
+
+    background:rgba(255,255,255,.18);
+
+    font-weight:600;
+
+}
+
+#sidebar nav a.active::before{
+
+    content:"";
+
+    position:absolute;
+
+    left:-24px;
+
+    top:8px;
+
+    bottom:8px;
+
+    width:5px;
+
+    border-radius:10px;
+
+    background:#fbbf24;
+
 }
 
 /* MAIN */
@@ -67,86 +106,7 @@ main{
   padding:40px;
 }
 
-/* HERO */
 
-.dashboard-hero{
-  background:linear-gradient(
-    135deg,
-    #0f766e,
-    #2563eb
-  );
-
-  color:rgb(255, 255, 255);
-
-  border-radius:24px;
-
-  padding:32px;
-
-  display:flex;
-
-  justify-content:space-between;
-
-  align-items:center;
-
-  margin-bottom:30px;
-}
-
-.hero-text h1{
-  font-size:48px;
-  margin-bottom:10px;
-}
-
-.hero-text p{
-  font-size:18px;
-}
-
-.hero-icon{
-  font-size:64px;
-}
-
-/* STATS */
-
-.stats-grid{
-  display:grid;
-  grid-template-columns:
-  repeat(auto-fit,minmax(220px,1fr));
-  gap:20px;
-}
-
-.summary-card{
-  border-radius:20px;
-  padding:25px;
-  color:rgb(29, 8, 122);
-}
-
-.summary-card.primary{
-  background:#2563eb;
-}
-
-.summary-card.secondary{
-  background:#0f766e;
-}
-
-.card-top{
-  display:flex;
-  justify-content:space-between;
-  margin-bottom:20px;
-}
-
-.summary-card h2{
-  font-size:48px;
-}
-
-.icon-circle{
-  width:50px;
-  height:50px;
-  border-radius:50%;
-  background:rgba(255,255,255,.2);
-
-  display:flex;
-  justify-content:center;
-  align-items:center;
-}
 
 /* PAGE */
 
@@ -225,21 +185,9 @@ main{
     padding:20px;
     }
   }
-
-  .stats-grid{
-    grid-template-columns:1fr;
-  }
-
-  .hero-text h1{
-    font-size:32px;
-  }
-
-  .hero-icon{
-    font-size:42px;
-  }
-
-
-/* =======================
+  
+  
+  /* =======================
    ABSENSI SD
 ======================= */
 
@@ -926,4 +874,283 @@ main{
   padding:8px 14px;
   border-radius:8px;
   cursor:pointer;
+}
+
+/* ======================================
+   DASHBOARD V4
+====================================== */
+
+.mdg-hero{
+
+display:flex;
+justify-content:space-between;
+align-items:center;
+
+padding:20px 28px;
+
+background:linear-gradient(135deg,#0f766e,#14b8a6);
+
+border-radius:20px;
+
+margin-bottom:20px;
+
+box-shadow:0 10px 30px rgba(15,118,110,.18);
+
+color:#fff;
+
+}
+
+.mdg-hero-left{
+
+display:flex;
+
+flex-direction:column;
+
+gap:10px;
+
+}
+
+.mdg-badge{
+
+display:inline-flex;
+
+padding:6px 14px;
+
+border-radius:999px;
+
+background:rgba(255,255,255,.15);
+
+font-size:13px;
+
+font-weight:600;
+
+width:max-content;
+
+}
+
+.mdg-hero-left h1{
+
+font-size:34px;
+
+line-height:1.1;
+
+margin:0;
+
+}
+
+.mdg-hero-info{
+
+font-size:15px;
+
+opacity:.9;
+
+}
+
+.mdg-attendance{
+
+width:120px;
+
+height:120px;
+
+border-radius:24px;
+
+background:rgba(255,255,255,.15);
+
+display:flex;
+
+flex-direction:column;
+
+justify-content:center;
+
+align-items:center;
+
+backdrop-filter:blur(8px);
+
+}
+
+.mdg-attendance h2{
+
+font-size:48px;
+
+margin:0;
+
+}
+
+.mdg-attendance p{
+
+margin-top:8px;
+
+font-size:15px;
+
+}
+
+.mdg-stats{
+
+display:grid;
+
+grid-template-columns:repeat(3,1fr);
+
+gap:24px;
+
+}
+
+.mdg-stat-card{
+
+background:#fff;
+
+border-radius:10px;
+
+padding:16px;
+
+border-top:5px solid #0f766e;
+
+box-shadow:0 10px 25px rgba(0,0,0,.08);
+
+transition:.25s;
+
+.mdg-stat-card{
+    min-height:170px;
+}
+}
+
+.mdg-stat-card:hover{
+
+transform:translateY(-5px);
+
+}
+
+.mdg-stat-header{
+
+display:flex;
+
+align-items:center;
+
+gap:14px;
+
+margin-bottom:24px;
+
+}
+
+.mdg-stat-icon{
+
+width:42px;
+
+height:42px;
+
+border-radius:10px;
+
+background:#eef8f6;
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+font-size:22px;
+
+}
+
+.mdg-stat-header h4{
+
+margin:0;
+
+font-size:16px;
+
+}
+
+.mdg-stat-header small{
+
+color:#64748b;
+
+}
+
+.mdg-stat-number{
+
+font-size:32px;
+
+font-weight:700;
+
+color:#0f766e;
+
+}
+
+.success{
+
+border-top-color:#16a34a;
+
+}
+
+.warning{
+
+border-top-color:#f59e0b;
+
+}
+
+.danger{
+
+border-top-color:#ef4444;
+
+}
+
+.mdg-status-list{
+
+display:flex;
+
+flex-direction:column;
+
+gap:12px;
+
+}
+
+.status-item{
+
+display:flex;
+
+justify-content:space-between;
+
+padding:10px 14px;
+
+border-radius:12px;
+
+font-weight:600;
+
+}
+
+.sakit{
+
+background:#FEF3C7;
+
+}
+
+.izin{
+
+background:#DBEAFE;
+
+}
+
+.alfa{
+
+background:#FEE2E2;
+
+}
+
+@media(max-width:992px){
+
+.mdg-stats{
+
+grid-template-columns:1fr;
+
+}
+
+.mdg-hero{
+
+flex-direction:column;
+
+align-items:flex-start;
+
+gap:24px;
+
+}
+
 }

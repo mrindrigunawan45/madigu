@@ -56,7 +56,6 @@
 
     <nav>
 
-      </a>
       <a
         href="#"
         class="menu active"
@@ -97,7 +96,8 @@
         data-page="rekapJurnal"
       >
         📖 Rekap Jurnal
-        
+      </a>
+
       <a
         href="#"
         class="menu"
@@ -131,83 +131,176 @@
 
     <!-- DASHBOARD -->
 
-    <section id="dashboardPage">
+    <section id="dashboardPage" class="page">
 
-      <div class="dashboard-hero">
+      <div class="mdg-hero">
 
-        <div>
+  <div class="mdg-hero-left">
 
-          <h1>
-            Dashboard Guru SD
-          </h1>
+    <span class="mdg-badge">
+      👋 Selamat Datang
+    </span>
 
-          <p>
-            Kelola Absensi, Jurnal Kelas, dan Nilai Siswa
-          </p>
+    <h1 id="namaGuru">
+      -
+    </h1>
 
-        </div>
+    <p class="mdg-hero-info">
+
+      <span id="kelasInfo">
+        Kelas -
+      </span>
+
+      •
+
+      <span id="semesterAktifInfo">
+        Semester -
+      </span>
+
+      •
+
+      <span id="tahunAjaranInfo">
+        Tahun Ajaran -
+      </span>
+
+    </p>
+
+  </div>
+
+  <div class="mdg-hero-right">
+
+    <div class="mdg-attendance">
+
+      <h2 id="hadirHariIni">
+        0
+      </h2>
+
+      <p>Hadir Hari Ini</p>
+
+    </div>
+
+  </div>
+
+</div>
+
+      
+<!-- ==========================
+     DASHBOARD CONTENT
+========================== -->
+
+<div class="mdg-stats">
+
+  <!-- Jumlah Siswa -->
+
+  <div class="mdg-stat-card">
+
+    <div class="mdg-stat-header">
+
+      <div class="mdg-stat-icon">🎓</div>
+
+      <div>
+
+        <h4>Jumlah Siswa</h4>
+
+        <small>Siswa Aktif</small>
 
       </div>
 
-      <div class="stats-grid">
+    </div>
 
-        <div class="summary-card">
+    <div
+      class="mdg-stat-number"
+      id="jumlahSiswa"
+    >
+      0
+    </div>
 
-          <h4>
-            Jumlah Siswa
-          </h4>
+  </div>
 
-          <h2 id="jumlahSiswa">
-            0
-          </h2>
+  <!-- Hadir -->
 
-        </div>
+  <div class="mdg-stat-card success">
 
-        <div class="summary-card">
+    <div class="mdg-stat-header">
 
-          <h4>
-            Hadir Hari Ini
-          </h4>
+      <div class="mdg-stat-icon">✅</div>
 
-          <h2 id="hadirHariIni">
-            0
-          </h2>
+      <div>
 
-        </div>
+        <h4>Hadir Hari Ini</h4>
 
-        <div class="summary-card">
-
-          <h4>
-            Catatan Hari Ini
-          </h4>
-
-          <h2 id="catatanHariIni">
-            0
-          </h2>
-
-        </div>
-
-        <div class="summary-card">
-
-          <h4>
-            Semester Aktif
-          </h4>
-
-          <h2 id="semesterAktif">
-            -
-          </h2>
-
-        </div>
+        <small>Kehadiran</small>
 
       </div>
 
-    </section>
+    </div>
+
+    <div
+      class="mdg-stat-number"
+      id="hadirHariIni"
+    >
+      0
+    </div>
+
+  </div>
+
+  <!-- Catatan -->
+
+  <div class="mdg-stat-card">
+
+    <div class="mdg-stat-header">
+
+      <div class="mdg-stat-icon">📝</div>
+
+      <div>
+
+        <h4>Catatan Hari Ini</h4>
+
+        <small>Status Siswa</small>
+
+      </div>
+
+    </div>
+
+    <div class="mdg-status-list">
+
+      <div class="status-item sakit">
+
+        <span>Sakit</span>
+
+        <strong id="totalSakit">0</strong>
+
+      </div>
+
+      <div class="status-item izin">
+
+        <span>Izin</span>
+
+        <strong id="totalIzin">0</strong>
+
+      </div>
+
+      <div class="status-item alfa">
+
+        <span>Alfa</span>
+
+        <strong id="totalAlfa">0</strong>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
 
     <!-- ABSENSI -->
 
     <section
       id="absensiPage"
-      class="hidden"
+      class="page hidden"
     >
 
       <div class="page-header">
@@ -255,7 +348,7 @@
 
     <section
       id="rekapAbsensiPage"
-      class="hidden"
+      class="page hidden"
     >
 
       <div class="page-header">
@@ -274,7 +367,7 @@
 
     <!-- JURNAL -->
 
-   <section id="jurnalPage" class="hidden">
+   <section id="jurnalPage" class="page hidden">
 
   <div class="page-header">
     <h2>📚 Jurnal Kelas SD</h2>
@@ -368,7 +461,7 @@
 </section>
 
     <!-- NILAI -->
-<section id="rekapJurnalPage" class="hidden">
+<section id="rekapJurnalPage" class="page hidden">
 
   <div class="page-header">
     <h2>📖 Rekap Jurnal Kelas</h2>
@@ -461,8 +554,8 @@
 </div>
 
     <section
-  id="nilaiPage"
-  class="hidden"
+      id="nilaiPage"
+      class="page hidden"
     >
 
       <div class="page-header">
@@ -538,9 +631,9 @@
     <!-- LEDGER -->
 
     <section
-  id="ledgerPage"
-  class="hidden"
->
+      id="ledgerPage"
+      class="page hidden"
+    >
 
   <div class="ledger-header">
 

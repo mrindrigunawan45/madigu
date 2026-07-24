@@ -355,12 +355,20 @@ async function loadRekap() {
       } = await supabase
 
         .from('semester')
+
         .select('*')
+
         .eq(
-          'id',
-          semesterId
+          'school_id',
+          CURRENT_CLASS.school_id
         )
-        .single()
+
+        .eq(
+          'is_active',
+          true
+        )
+
+        .limit(1);
 
       startDate =
         semester.tanggal_mulai

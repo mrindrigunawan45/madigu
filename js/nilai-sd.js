@@ -2,28 +2,41 @@ import { supabase }
 from './config.js';
 
 import {
-  getCurrentClass
+  loadCurrentUser,
+  getCurrentUser
 }
-from './auth-sd.js';
+from './session.js';
 
 console.log(
   'Nilai SD Loaded'
 );
 
-const SCHOOL_ID =
-  'SDNHB01';
+  let currentUser = null;
   let currentClass = null;
 
 // =====================
 // INIT
 // =====================
 
-window.addEventListener(
-  'load',
+document.addEventListener(
+  'DOMContentLoaded',
   async () => {
 
+    await loadCurrentUser();
+
+    currentUser =
+        getCurrentUser();
+
+    if (!currentUser) {
+
+        alert("Session tidak ditemukan");
+
+        return;
+
+    }
+
     currentClass =
-      await getCurrentClass();
+        currentUser.kelas;
 
     console.log(
       'CURRENT CLASS',
@@ -63,15 +76,23 @@ async function loadSemesterNilai() {
   } = await supabase
 
     .from('semester')
-.select('*')
-.eq('school_id', SCHOOL_ID)
-.eq('is_active', true);
+    .select('*')
+    .eq(
+        'school_id',
+        currentUser.profile.school_id
+    )
+    .eq('is_active', true);
+
+  console.log(
+    'ERROR SEMESTER',
+    error
+  );
 
   console.log(
     'SEMUA SEMESTER',
     data
   );
-
+  
   if (error) {
 
     console.error(error);
@@ -116,7 +137,10 @@ async function loadMapelNilai() {
 
     .from('mata_pelajaran')
     .select('*')
-    .eq('school_id', SCHOOL_ID)
+    .eq(
+        'school_id',
+        currentUser.profile.school_id
+    )
     .order('nama_mapel');
 
   console.log(
@@ -231,8 +255,8 @@ async function loadNilaiSiswa() {
     .select('*')
 
     .eq(
-      'school_id',
-      SCHOOL_ID
+        'school_id',
+        currentUser.profile.school_id
     )
 
     .eq(
@@ -559,7 +583,7 @@ async function saveNilai() {
     payload.push({
 
       school_id:
-        SCHOOL_ID,
+        currentUser.profile.school_id,
 
       class_id:
         currentClass.id,

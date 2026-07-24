@@ -1,8 +1,9 @@
 import { supabase } from './config.js'
 
 import {
-  getCurrentClass
-} from './auth-sd.js'
+  loadCurrentUser,
+  getCurrentUser
+} from './session.js'
 
 // =====================
 // ELEMENT
@@ -23,12 +24,10 @@ const jumlahSiswa =
 const hadirHariIni =
   document.getElementById('hadirHariIni')
 
-const catatanHariIni =
-  document.getElementById('catatanHariIni')
+const namaGuru =
+  document.getElementById('namaGuru')
 
-const semesterAktif =
-  document.getElementById('semesterAktif')
-
+let currentUser = null
 let currentClass = null
 
 // =====================
@@ -69,9 +68,12 @@ overlay?.addEventListener(
 // NAVIGATION
 // =====================
 
-document
-  .querySelectorAll('.menu')
-  .forEach(menu => {
+function initNavigation() {
+
+  const menus =
+    document.querySelectorAll('.menu')
+
+  menus.forEach(menu => {
 
     menu.addEventListener(
       'click',
@@ -79,49 +81,30 @@ document
 
         e.preventDefault()
 
-        document
-          .querySelectorAll('.menu')
-          .forEach(item =>
-            item.classList.remove(
-              'active'
-            )
-          )
-
-        menu.classList.add(
-          'active'
+        menus.forEach(item =>
+          item.classList.remove('active')
         )
 
+        menu.classList.add('active')
+
         document
-          .querySelectorAll(
-            'main section'
-          )
-          .forEach(section =>
-            section.classList.add(
-              'hidden'
-            )
+          .querySelectorAll('.page')
+          .forEach(page =>
+            page.classList.add('hidden')
           )
 
-        const page =
+        const targetPage =
           document.getElementById(
-            menu.dataset.page +
-            'Page'
+            menu.dataset.page + 'Page'
           )
 
-        if (
-            menu.dataset.page !==
-            'absensi'
-            ) {
+        if (targetPage) {
 
-            window.resetAbsensiPage?.()
+          targetPage.classList.remove(
+            'hidden'
+          )
 
-            }
-
-            if (page) {
-
-            page.classList.remove(
-                'hidden'
-            )
-            }
+        }
 
         sidebar?.classList.remove(
           'show'
@@ -135,6 +118,8 @@ document
     )
 
   })
+
+}
 
 // =====================
 // DASHBOARD
@@ -226,52 +211,52 @@ async function loadDashboard() {
           x.status === 'Alpa'
       ).length || 0
 
-    hadirHariIni.textContent =
-      hadir
+    hadirHariIni.textContent = hadir;
 
-    catatanHariIni.textContent =
-      `S:${sakit} | I:${izin} | A:${alpa}`
+    document.getElementById("totalSakit").textContent = sakit;
+    document.getElementById("totalIzin").textContent = izin;
+    document.getElementById("totalAlfa").textContent = alpa;
 
     // =====================
-    // SEMESTER AKTIF
-    // =====================
+// SEMESTER AKTIF
+// =====================
 
-   const {
-    data: semester,
-    error: semesterError
-  } = await supabase
+const {
+  data: semester,
+  error: semesterError
+} = await supabase
 
-    .from('semester')
-    .select('*')
-    .eq('school_id', 'SDNHB01')
-    .eq('is_active', true)
-    .limit(1)
+  .from('semester')
+  .select('*')
+  .eq('school_id', currentClass.school_id)
+  .eq('is_active', true)
+  .limit(1)
 
-    if (
-      semesterError ||
-      !semester
-    ) {
+if (semesterError) {
 
-      semesterAktif.textContent =
-        '-'
+  console.error(semesterError)
 
-    } else {
+} else {
 
-      semesterAktif.textContent =
-        semester?.[0]?.nama_semester || '-'
+  const semesterAktif =
+    semester?.[0]?.nama_semester || '-'
 
-    }
+  console.log(
+    'Semester Aktif:',
+    semesterAktif
+  )
 
-  }
+}
 
-  catch (err) {
+}
 
-    console.error(
-      'Dashboard Error',
-      err
-    )
+catch (err) {
 
-  }
+  console.error(
+    'Dashboard Error',
+    err
+  )
+}
 
 }
 
@@ -313,16 +298,30 @@ document
 
 async function initDashboard() {
 
+  await loadCurrentUser()
+
+  currentUser =
+    getCurrentUser()
+
+  console.log(
+    'CURRENT USER',
+    currentUser
+  )
+
   currentClass =
-    await getCurrentClass()
+    currentUser.kelas
 
   console.log(
     'CURRENT CLASS',
     currentClass
   )
 
+  namaGuru.textContent =
+    currentUser.profile.name
+
   await loadDashboard()
 
 }
 
+initNavigation()
 initDashboard()

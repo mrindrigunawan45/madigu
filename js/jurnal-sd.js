@@ -1,20 +1,15 @@
-import { supabase }
-from './config.js';
+import { supabase } from './config.js';
 
 import {
-  getCurrentClass
+  loadCurrentUser,
+  getCurrentUser
 }
-from './auth-sd.js';
-
-console.log(
-  "Jurnal SD Loaded"
-);
+from './session.js';
 
 console.log("Jurnal SD Loaded");
 
-const SCHOOL_ID = "SDNHB01";
-
 let currentClass = null;
+let currentUser = null;
 
 const kategoriList = [
   "Akademik",
@@ -29,9 +24,27 @@ document.addEventListener(
   "DOMContentLoaded",
   async () => {
 
+    await loadCurrentUser();
+
+    currentUser =
+      getCurrentUser();
+
+    if (!currentUser) {
+
+      alert("Session tidak ditemukan");
+
+      return;
+
+    }
+
     currentClass =
-      await getCurrentClass();
-    
+      currentUser.kelas;
+
+    console.log(
+      "CURRENT USER:",
+      currentUser
+    );
+
     console.log(
       "CURRENT CLASS:",
       currentClass
@@ -113,7 +126,7 @@ async function loadMapelJurnal() {
     .select("*")
     .eq(
       "school_id",
-      SCHOOL_ID
+      currentUser.profile.school_id
     )
     .order("nama_mapel");
 

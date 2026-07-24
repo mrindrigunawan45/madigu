@@ -48,11 +48,17 @@ let rekapData = []
 
 async function loadMapel() {
 
-  const { data, error } = await supabaseClient
+  const schoolId =
+    await getSchoolId()
 
-    .from('mata_pelajaran')
+  const { data, error } =
+    await supabaseClient
 
-    .select('*')
+      .from('mata_pelajaran')
+
+      .select('*')
+
+      .eq('school_id', schoolId)
 
   if (error) {
 

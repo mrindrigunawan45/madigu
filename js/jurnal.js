@@ -69,12 +69,17 @@ tanggal.value =
 // =======================
 async function loadMapel() {
 
+  const schoolId =
+    await getSchoolId()
+
   const { data, error } =
     await supabaseClient
 
       .from('mata_pelajaran')
 
       .select('*')
+
+      .eq('school_id', schoolId)
 
   if (error) {
 

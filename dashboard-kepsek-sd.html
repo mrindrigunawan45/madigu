@@ -53,14 +53,6 @@ data-page="dashboard"
 <a
 href="#"
 class="menu"
-data-page="kelas"
->
-🏫 Monitoring Kelas
-</a>
-
-<a
-href="#"
-class="menu"
 data-page="jurnal"
 >
 📝 Monitoring Jurnal
@@ -69,9 +61,17 @@ data-page="jurnal"
 <a
 href="#"
 class="menu"
-data-page="catatan"
+data-page="nilai"
 >
-👨‍🎓 Catatan Siswa
+📊 Nilai
+</a>
+
+<a
+href="#"
+class="menu"
+data-page="ledger"
+>
+📚 Ledger
 </a>
 
 <a
@@ -91,7 +91,9 @@ id="logoutBtn"
 
   <div class="page-header">
 
-    <h1>Dashboard Kepala Sekolah SD</h1>
+    <h1>
+      Dashboard Kepala Sekolah
+    </h1>
 
     <p>
       Monitoring seluruh aktivitas sekolah
@@ -101,54 +103,97 @@ id="logoutBtn"
 
   <div class="stats-grid">
 
-    ...
-    4 card statistik
-    ...
+    <div class="summary-card">
+
+      <h4>Total Siswa</h4>
+
+      <h2 id="totalSiswa">0</h2>
+
+    </div>
+
+    <div class="summary-card">
+
+      <h4>Total Guru</h4>
+
+      <h2 id="totalGuru">0</h2>
+
+    </div>
+
+    <div class="summary-card">
+
+      <h4>Total Kelas</h4>
+
+      <h2 id="totalKelas">0</h2>
+
+    </div>
+
+    <div class="summary-card">
+
+      <h4>Kehadiran Hari Ini</h4>
+
+      <h2 id="persenHadir">0%</h2>
+
+    </div>
 
   </div>
 
-  <div id="monitoringKelas"></div>
+  <div
+    id="monitoringKelas"
+    class="content-card"
+  ></div>
 
-  <div id="monitoringJurnal"></div>
+  <div
+    id="monitoringJurnal"
+    class="content-card"
+  ></div>
 
-  <div id="catatanTerbaru"></div>
-
-</section>
-
-<div class="summary-card">
-<h4>Total Guru</h4>
-<h2 id="totalGuru">0</h2>
-</div>
-
-<div class="summary-card">
-<h4>Total Kelas</h4>
-<h2 id="totalKelas">0</h2>
-</div>
-
-<div class="summary-card">
-<h4>Kehadiran Hari Ini</h4>
-<h2 id="persenHadir">0%</h2>
-</div>
-
-</div>
+  <div
+    id="catatanTerbaru"
+    class="content-card"
+  ></div>
 
 </section>
 
-<section
-id="kelasPage"
-class="hidden"
->
-
-<div id="kelasContainer"></div>
-
-</section>
 
 <section
 id="jurnalPage"
 class="hidden"
 >
 
-<div id="jurnalContainer"></div>
+<div class="page-header">
+
+<h1>
+Monitoring Jurnal Guru
+</h1>
+
+<p>
+Pantau aktivitas pembelajaran seluruh guru kelas
+</p>
+
+</div>
+
+<div
+id="jurnalContainer"
+class="content-card"
+></div>
+
+</section>
+
+<section
+id="nilaiPage"
+class="hidden"
+>
+
+<div id="nilaiContainer"></div>
+
+</section>
+
+<section
+id="ledgerPage"
+class="hidden"
+>
+
+<div id="ledgerContainer"></div>
 
 </section>
 
@@ -168,5 +213,142 @@ type="module"
 src="js/dashboard-kepsek-sd.js"
 ></script>
 
+<script
+type="module"
+src="js/monitoring-jurnal-sd.js"
+></script>
+
+<script
+type="module"
+src="js/nilai-sd-kepsek.js"
+></script>
+
+<script
+type="module"
+src="js/ledger-sd-kepsek.js"
+></script>
+
+<div
+  id="modalTidakHadir"
+  class="modal hidden"
+>
+
+  <div class="modal-content">
+
+    <div class="modal-header">
+
+      <h3>
+        Siswa Tidak Hadir
+      </h3>
+
+      <button id="closeTidakHadir">
+        ✕
+      </button>
+
+    </div>
+
+    <div id="detailTidakHadir"></div>
+
+  </div>
+
+</div>
+
+<div
+id="modalJurnal"
+class="modal hidden"
+>
+
+<div class="modal-content">
+
+<div class="modal-header">
+
+<h3>Daftar Jurnal</h3>
+
+<button onclick="tutupModalJurnal()">
+✕
+</button>
+
+</div>
+
+<div id="detailJurnal"></div>
+
+</div>
+
+</div>
+
+<div
+id="modalCatatanUmum"
+class="modal hidden"
+>
+
+<div class="modal-content">
+
+<div class="modal-header">
+
+<h3>Catatan Umum Guru</h3>
+
+<button onclick="tutupModalCatatanUmum()">
+✕
+</button>
+
+</div>
+
+<div id="detailCatatanUmum"></div>
+
+</div>
+
+</div>
+
+<div
+id="modalCatatanSiswa"
+class="modal hidden"
+>
+
+<div class="modal-content">
+
+<div class="modal-header">
+
+<h3>Catatan Siswa</h3>
+
+<button onclick="tutupModalCatatanSiswa()">
+✕
+</button>
+
+</div>
+
+<div id="detailCatatanSiswa"></div>
+
+</div>
+
+</div>
+<!-- MODAL DETAIL MONITORING JURNAL -->
+
+<div
+id="detailModal"
+class="modal"
+style="display:none;"
+>
+
+  <div class="modal-content">
+
+    <div class="modal-header">
+
+      <h3 id="modalTitle">
+        Detail
+      </h3>
+
+      <button
+      onclick="closeDetailModal()"
+      >
+        ✕
+      </button>
+
+    </div>
+
+    <div id="modalBody"></div>
+
+  </div>
+
+</div>
 </body>
 </html>

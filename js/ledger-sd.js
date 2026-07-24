@@ -2,13 +2,18 @@ import { supabase }
 from './config.js';
 
 import {
-  getCurrentClass
+  loadCurrentUser,
+  getCurrentUser
 }
-from './auth-sd.js';
+from './session.js';
+
+let currentUser = null
+let currentClass = null
 
 let currentLedgerData = []
 let currentMapel = []
 let currentSemester = null
+
 // =====================
 // ELEMENT
 // =====================
@@ -36,6 +41,24 @@ async function loadLedger() {
 
   try {
 
+    await loadCurrentUser()
+
+    currentUser =
+      getCurrentUser()
+
+    if (!currentUser) {
+
+      alert(
+        'Session tidak ditemukan'
+      )
+
+      return
+
+    }
+
+    currentClass =
+      currentUser.kelas
+      
     container.innerHTML =
       'Memuat Ledger...'
 
@@ -51,8 +74,8 @@ async function loadLedger() {
       .from('semester')
       .select('*')
       .eq(
-        'school_id',
-        'SDNHB01'
+          'school_id',
+          currentUser.profile.school_id
       )
       .eq(
         'is_active',
@@ -82,9 +105,7 @@ async function loadLedger() {
     // SISWA
     // =====================
 
-   const currentClass =
-  await getCurrentClass()
-
+   
 const {
   data: siswa,
   error: siswaError
@@ -126,9 +147,10 @@ if (siswaError) {
         'id,nama_mapel'
       )
       .eq(
-        'school_id',
-        'SDNHB01'
+          'school_id',
+          currentUser.profile.school_id
       )
+
       .order(
         'id'
       )
@@ -143,6 +165,10 @@ if (siswaError) {
 
       .from('nilai_sd')
       .select('*')
+      .eq(
+        'school_id',
+        currentUser.profile.school_id
+      )
       .eq(
         'semester_id',
         semester.id
@@ -507,11 +533,7 @@ exportBtn?.addEventListener(
     // =====================
     // HEADER
     // =====================
-
-    data.push([
-      'SD NEGERI HARAPAN BANGSA'
-    ])
-
+        
     data.push([
       'LEDGER NILAI SISWA'
     ])
