@@ -2,716 +2,300 @@
 <html lang="id">
 
 <head>
-
   <meta charset="UTF-8">
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard Guru SD</title>
 
-  <link
-    rel="stylesheet"
-    href="css/dashboard-sd.css"
-  >
-  <link
-    rel="stylesheet"
-    href="css/rekap-jurnal-sd.css"
-  />
+  <link rel="stylesheet" href="css/dashboard-sd.css">
+  <link rel="stylesheet" href="css/rekap-jurnal-sd.css" />
 </head>
 
 <body>
 
   <!-- MOBILE TOPBAR -->
-
   <header class="mobile-topbar">
-
-    <button id="menuBtn">
-      ☰
-    </button>
-
-    <h1>
-      MaDiGU SD
-    </h1>
-
+    <button id="menuBtn">☰</button>
+    <h1>MaDiGU SD</h1>
   </header>
 
   <!-- OVERLAY -->
-
   <div id="overlay"></div>
 
   <!-- SIDEBAR -->
-
   <aside id="sidebar">
-
     <div class="sidebar-header">
-
-      <h2>
-        MaDiGU SD
-      </h2>
-
+      <h2>MaDiGU SD</h2>
     </div>
 
     <nav>
-
-      <a
-        href="#"
-        class="menu active"
-        data-page="dashboard"
-      >
-        🏠 Dashboard
-      </a>
-
-      <a
-        href="#"
-        class="menu"
-        data-page="absensi"
-      >
-        📋 Absensi
-      </a>
-
-      <!-- REKAP ABSENSI -->
-
-      <a
-        href="#"
-        class="menu"
-        data-page="rekapAbsensi"
-      >
-        📊 Rekap Absensi
-      </a>
-
-      <a
-        href="#"
-        class="menu"
-        data-page="jurnal"
-      >
-        📝 Jurnal Kelas
-      </a>
-
-      <a
-        href="#"
-        class="menu"
-        data-page="rekapJurnal"
-      >
-        📖 Rekap Jurnal
-      </a>
-
-      <a
-        href="#"
-        class="menu"
-        data-page="nilai"
-      >
-        📊 Nilai
-      </a>
-
-      <a
-        href="#"
-        class="menu"
-        data-page="ledger"
-      >
-        📚 Ledger
-      </a>
-
-      <a
-        href="#"
-        id="logoutBtn"
-      >
-        🚪 Logout
-      </a>
-
+      <a href="#" class="menu active" data-page="dashboard">🏠 Dashboard</a>
+      <a href="#" class="menu" data-page="absensi">📋 Absensi</a>
+      <a href="#" class="menu" data-page="rekapAbsensi">📊 Rekap Absensi</a>
+      <a href="#" class="menu" data-page="jurnal">📝 Jurnal Kelas</a>
+      <a href="#" class="menu" data-page="rekapJurnal">📖 Rekap Jurnal</a>
+      <a href="#" class="menu" data-page="nilai">📊 Nilai</a>
+      <a href="#" class="menu" data-page="ledger">📚 Ledger</a>
+      <a href="#" id="logoutBtn">🚪 Logout</a>
     </nav>
-
   </aside>
 
   <!-- MAIN -->
-
   <main>
 
     <!-- DASHBOARD -->
-
     <section id="dashboardPage" class="page">
-
       <div class="mdg-hero">
-
-  <div class="mdg-hero-left">
-
-    <span class="mdg-badge">
-      👋 Selamat Datang
-    </span>
-
-    <h1 id="namaGuru">
-      -
-    </h1>
-
-    <p class="mdg-hero-info">
-
-      <span id="kelasInfo">
-        Kelas -
-      </span>
-
-      •
-
-      <span id="semesterAktifInfo">
-        Semester -
-      </span>
-
-      •
-
-      <span id="tahunAjaranInfo">
-        Tahun Ajaran -
-      </span>
-
-    </p>
-
-  </div>
-
-  <div class="mdg-hero-right">
-
-    <div class="mdg-attendance">
-
-      <h2 id="hadirHariIni">
-        0
-      </h2>
-
-      <p>Hadir Hari Ini</p>
-
-    </div>
-
-  </div>
-
-</div>
-
-      
-<!-- ==========================
-     DASHBOARD CONTENT
-========================== -->
-
-<div class="mdg-stats">
-
-  <!-- Jumlah Siswa -->
-
-  <div class="mdg-stat-card">
-
-    <div class="mdg-stat-header">
-
-      <div class="mdg-stat-icon">🎓</div>
-
-      <div>
-
-        <h4>Jumlah Siswa</h4>
-
-        <small>Siswa Aktif</small>
-
+        <div class="mdg-hero-left">
+          <span class="mdg-badge">👋 Selamat Datang</span>
+          <h1 id="namaGuru">-</h1>
+          <p class="mdg-hero-info">
+            <span id="kelasInfo">Kelas -</span> •
+            <span id="semesterAktifInfo">Semester -</span> •
+            <span id="tahunAjaranInfo">Tahun Ajaran -</span>
+          </p>
+        </div>
+        <div class="mdg-hero-right">
+          <div class="mdg-attendance">
+            <h2 id="hadirHariIni">-</h2>
+            <p>Hadir Hari Ini</p>
+          </div>
+        </div>
       </div>
 
-    </div>
-
-    <div
-      class="mdg-stat-number"
-      id="jumlahSiswa"
-    >
-      0
-    </div>
-
-  </div>
-
-  <!-- Hadir -->
-
-  <div class="mdg-stat-card success">
-
-    <div class="mdg-stat-header">
-
-      <div class="mdg-stat-icon">✅</div>
-
-      <div>
-
-        <h4>Hadir Hari Ini</h4>
-
-        <small>Kehadiran</small>
-
-      </div>
-
-    </div>
-
-    <div
-      class="mdg-stat-number"
-      id="hadirHariIni"
-    >
-      0
-    </div>
-
-  </div>
-
-  <!-- Catatan -->
-
-  <div class="mdg-stat-card">
-
-    <div class="mdg-stat-header">
-
-      <div class="mdg-stat-icon">📝</div>
-
-      <div>
-
-        <h4>Catatan Hari Ini</h4>
-
-        <small>Status Siswa</small>
-
-      </div>
-
-    </div>
-
-    <div class="mdg-status-list">
-
-      <div class="status-item sakit">
-
-        <span>Sakit</span>
-
-        <strong id="totalSakit">0</strong>
-
-      </div>
-
-      <div class="status-item izin">
-
-        <span>Izin</span>
-
-        <strong id="totalIzin">0</strong>
-
-      </div>
-
-      <div class="status-item alfa">
-
-        <span>Alfa</span>
-
-        <strong id="totalAlfa">0</strong>
-
-      </div>
-
-    </div>
-
-  </div>
-
-</div>
-
-
-
-    <!-- ABSENSI -->
-
-    <section
-      id="absensiPage"
-      class="page hidden"
-    >
-
-      <div class="page-header">
-
-        <h2>
-          Absensi Harian
-        </h2>
-
-      </div>
-
-      <div class="tanggal-wrap">
-
-        <input
-          type="date"
-          id="tanggalAbsensi"
-        >
-
-      </div>
-
-      <div
-        id="absensiContent"
-        style="display:none;"
-      >
-
-        <div
-          id="absensiList"
-          class="absensi-list"
-        ></div>
-
-        <div class="save-wrap">
-
-          <button id="saveAbsensiBtn">
-
-            Simpan Absensi
-
-          </button>
-
+      <div class="mdg-stats">
+        <!-- Jumlah Siswa -->
+        <div class="mdg-stat-card">
+          <div class="mdg-stat-header">
+            <div class="mdg-stat-icon">🎓</div>
+            <div>
+              <h4>Jumlah Siswa</h4>
+              <small>Siswa Aktif</small>
+            </div>
+          </div>
+          <div class="mdg-stat-number" id="jumlahSiswa">0</div>
         </div>
 
-      </div>
+        <!-- Hadir -->
+        <div class="mdg-stat-card success">
+          <div class="mdg-stat-header">
+            <div class="mdg-stat-icon">✅</div>
+            <div>
+              <h4>Hadir Hari Ini</h4>
+              <small>Kehadiran</small>
+            </div>
+          </div>
+          <div class="mdg-stat-number" id="hadirHariIniStat">0</div>
+        </div>
 
+        <!-- Catatan -->
+        <div class="mdg-stat-card">
+          <div class="mdg-stat-header">
+            <div class="mdg-stat-icon">📝</div>
+            <div>
+              <h4>Catatan Hari Ini</h4>
+              <small>Status Siswa</small>
+            </div>
+          </div>
+          <div class="mdg-status-list">
+            <div class="status-item sakit">
+              <span>Sakit</span>
+              <strong id="totalSakit">0</strong>
+            </div>
+            <div class="status-item izin">
+              <span>Izin</span>
+              <strong id="totalIzin">0</strong>
+            </div>
+            <div class="status-item alfa">
+              <span>Alfa</span>
+              <strong id="totalAlfa">0</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABSENSI -->
+    <section id="absensiPage" class="page hidden">
+      <div class="page-header">
+        <h2>Absensi Harian</h2>
+      </div>
+      <div class="tanggal-wrap">
+        <input type="date" id="tanggalAbsensi">
+      </div>
+      <div id="absensiContent">
+        <div id="absensiList" class="absensi-list"></div>
+        <div class="save-wrap">
+          <button id="saveAbsensiBtn">Simpan Absensi</button>
+        </div>
+      </div>
     </section>
 
     <!-- REKAP ABSENSI -->
-
-    <section
-      id="rekapAbsensiPage"
-      class="page hidden"
-    >
-
+    <section id="rekapAbsensiPage" class="page hidden">
       <div class="page-header">
-
-        <h2>
-          Rekap Absensi
-        </h2>
-
+        <h2>Rekap Absensi</h2>
       </div>
-
-      <div id="rekapAbsensiContainer">
-
-      </div>
-
+      <div id="rekapAbsensiContainer"></div>
     </section>
 
-    <!-- JURNAL -->
-
-   <section id="jurnalPage" class="page hidden">
-
-  <div class="page-header">
-    <h2>📚 Jurnal Kelas SD</h2>
-  </div>
-
-  <div class="rekap-card">
-
-    <div class="rekap-filter">
-
-      <div class="filter-item">
-        <label>Tanggal</label>
-        <input
-          type="date"
-          id="jurnalTanggal"
-        >
-      </div>
-
-      <div class="filter-item">
-        <label>Kelas</label>
-        <select id="jurnalKelas"></select>
-      </div>
-
-      <div class="filter-item">
-        <label>Mata Pelajaran</label>
-        <select id="jurnalMapel"></select>
-      </div>
-
-    </div>
-
-    <div class="filter-item">
-      <label>Materi</label>
-      <textarea
-        id="jurnalMateri"
-        rows="3"
-      ></textarea>
-    </div>
-
-    <br>
-
-    <div class="filter-item">
-      <label>Kegiatan Pembelajaran</label>
-      <textarea
-        id="jurnalKegiatan"
-        rows="4"
-      ></textarea>
-    </div>
-
-    <br>
-
-    <div class="filter-item">
-      <label>Catatan Umum Guru</label>
-      <textarea
-        id="jurnalCatatan"
-        rows="3"
-      ></textarea>
-    </div>
-
-    <hr style="margin:20px 0">
-
-    <h3>Catatan Per Siswa</h3>
-
-    <div id="catatanSiswaContainer"></div>
-
-    <br>
-
-    <button
-      id="addCatatanSiswaBtn"
-      class="btn-secondary"
-    >
-      + Tambah Catatan Siswa
-    </button>
-
-    <br><br>
-
-    <button
-      id="saveJurnalBtn"
-      class="btn-primary"
-    >
-      Simpan Jurnal
-    </button>
-
-  </div>
-
-  <br>
-
-  <div
-    id="jurnalList"
-    class="rekap-card"
-  ></div>
-
-</section>
-
-    <!-- NILAI -->
-<section id="rekapJurnalPage" class="page hidden">
-
-  <div class="page-header">
-    <h2>📖 Rekap Jurnal Kelas</h2>
-    <p id="rekapJurnalInfo">
-      Memuat informasi kelas...
-    </p>
-  </div>
-
-  <div class="rekap-jurnal-filter">
-
-    <div class="filter-group">
-      <label>Tanggal Awal</label>
-      <input type="date" id="filterTanggalAwal">
-    </div>
-
-    <div class="filter-group">
-      <label>Tanggal Akhir</label>
-      <input type="date" id="filterTanggalAkhir">
-    </div>
-
-    <button id="btnLoadRekapJurnal">
-      Tampilkan
-    </button>
-
-  </div>
-
-  <div class="student-search-card">
-
-  <h3>
-    🔍 Riwayat Catatan Siswa
-  </h3>
-
-  <div class="student-search-row">
-
-    <select id="searchSiswa">
-
-      <option value="">
-        Pilih Siswa...
-      </option>
-
-    </select>
-
-    <button
-      id="btnCariSiswa"
-      type="button"
-    >
-      Tampilkan Riwayat
-    </button>
-
-  </div>
-
-</div>
-
-<div
-  id="riwayatSiswaContainer"
-></div>
-
-<div
-  class="rekap-jurnal-stats"
-  id="rekapJurnalStats"
-></div>
-
-  <div
-    id="rekapJurnalContainer"
-  ></div>
-
-</section>
-
-<div
-  id="modalDetailJurnal"
-  class="modal hidden"
->
-
-  <div class="modal-content">
-
-    <div class="modal-header">
-
-      <h3>Detail Jurnal</h3>
-
-      <button id="closeModalJurnal">
-        ✖
-      </button>
-
-    </div>
-
-    <div id="detailJurnalBody"></div>
-
-  </div>
-
-</div>
-
-    <section
-      id="nilaiPage"
-      class="page hidden"
-    >
-
+    <!-- JURNAL KELAS -->
+    <section id="jurnalPage" class="page hidden">
       <div class="page-header">
-
-        <h2>
-          📊 Nilai SD
-        </h2>
-
+        <h2>📚 Jurnal Kelas SD</h2>
       </div>
 
-      <div class="rekap-card">
-
-        <div class="rekap-filter">
-
-          <div class="filter-item">
-
-            <label>
-              Semester
-            </label>
-
-            <select id="semesterNilai">
-
-              <option value="">
-                Pilih Semester
-              </option>
-
-            </select>
-
+      <div class="rekap-card jurnal-form-card">
+        <!-- Form Filter & Input Utama -->
+        <div class="jurnal-grid-3">
+          <div class="form-group">
+            <label for="jurnalTanggal">Tanggal</label>
+            <input type="date" id="jurnalTanggal" class="form-input">
           </div>
-
-          <div class="filter-item">
-
-            <label>
-              Mata Pelajaran
-            </label>
-
-            <select id="mapelNilai">
-
-              <option value="">
-                Pilih Mata Pelajaran
-              </option>
-
-            </select>
-
+          <div class="form-group">
+            <label for="jurnalKelas">Kelas</label>
+            <select id="jurnalKelas" class="form-select"></select>
           </div>
-
-          <div class="filter-item">
-
-            <button
-              id="loadNilaiBtn"
-              style="margin-top:24px;"
-            >
-              Tampilkan Nilai
-            </button>
-
+          <div class="form-group">
+            <label for="jurnalMapel">Mata Pelajaran</label>
+            <select id="jurnalMapel" class="form-select"></select>
           </div>
-
         </div>
 
+        <div class="form-group">
+          <label for="jurnalMateri">Materi Pembelajaran</label>
+          <textarea id="jurnalMateri" rows="3" class="form-textarea" placeholder="Tuliskan materi yang diajarkan hari ini..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="jurnalKegiatan">Kegiatan Pembelajaran</label>
+          <textarea id="jurnalKegiatan" rows="4" class="form-textarea" placeholder="Tuliskan ringkasan kegiatan pembelajaran..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="jurnalCatatan">Catatan Umum Guru</label>
+          <textarea id="jurnalCatatan" rows="3" class="form-textarea" placeholder="Catatan atau evaluasi umum kelas hari ini..."></textarea>
+        </div>
+
+        <hr class="jurnal-divider">
+
+        <!-- Catatan Per Siswa Section -->
+        <div class="catatan-siswa-section">
+          <div class="catatan-siswa-header">
+            <h3>📝 Catatan Per Siswa (Khusus)</h3>
+            <button type="button" id="addCatatanSiswaBtn" class="btn-secondary">
+              ➕ Tambah Catatan Siswa
+            </button>
+          </div>
+          <p class="section-desc">Tambahkan catatan individu untuk siswa tertentu (misal: prestasi, kedisiplinan, dll.)</p>
+          
+          <div id="catatanSiswaContainer" class="catatan-siswa-list"></div>
+        </div>
+
+        <div class="jurnal-action-footer">
+          <button type="button" id="saveJurnalBtn" class="btn-primary-lg">
+            💾 Simpan Jurnal Kelas
+          </button>
+        </div>
       </div>
 
       <br>
-
-      <div
-        id="nilaiContainer"
-        class="rekap-card"
-      >
-
+      <!-- Riwayat Jurnal -->
+      <div class="rekap-card">
+        <h3>📜 Riwayat Jurnal Terakhir</h3>
+        <br>
+        <div id="jurnalList"></div>
       </div>
+    </section>
 
+    <!-- REKAP JURNAL -->
+    <section id="rekapJurnalPage" class="page hidden">
+      <div class="page-header">
+        <h2>📖 Rekap Jurnal Kelas</h2>
+        <p id="rekapJurnalInfo">Memuat informasi kelas...</p>
+      </div>
+      <div class="rekap-jurnal-filter">
+        <div class="filter-group">
+          <label>Tanggal Awal</label>
+          <input type="date" id="filterTanggalAwal">
+        </div>
+        <div class="filter-group">
+          <label>Tanggal Akhir</label>
+          <input type="date" id="filterTanggalAkhir">
+        </div>
+        <button id="btnLoadRekapJurnal">Tampilkan</button>
+      </div>
+      <div class="student-search-card">
+        <h3>🔍 Riwayat Catatan Siswa</h3>
+        <div class="student-search-row">
+          <select id="searchSiswa">
+            <option value="">Pilih Siswa...</option>
+          </select>
+          <button id="btnCariSiswa" type="button">Tampilkan Riwayat</button>
+        </div>
+      </div>
+      <div id="riwayatSiswaContainer"></div>
+      <div class="rekap-jurnal-stats" id="rekapJurnalStats"></div>
+      <div id="rekapJurnalContainer"></div>
+    </section>
+
+    <!-- NILAI -->
+    <section id="nilaiPage" class="page hidden">
+      <div class="page-header">
+        <h2>📊 Nilai SD</h2>
+      </div>
+      <div class="rekap-card">
+        <div class="rekap-filter">
+          <div class="filter-item">
+            <label>Semester</label>
+            <select id="semesterNilai">
+              <option value="">Pilih Semester</option>
+            </select>
+          </div>
+          <div class="filter-item">
+            <label>Mata Pelajaran</label>
+            <select id="mapelNilai">
+              <option value="">Pilih Mata Pelajaran</option>
+            </select>
+          </div>
+          <div class="filter-item">
+            <button id="loadNilaiBtn" style="margin-top:24px;">Tampilkan Nilai</button>
+          </div>
+        </div>
+      </div>
+      <br>
+      <div id="nilaiContainer" class="rekap-card"></div>
     </section>
 
     <!-- LEDGER -->
+    <section id="ledgerPage" class="page hidden">
+      <div class="ledger-header">
+        <h2>📚 Ledger Nilai SD</h2>
+        <div id="ledgerKelasInfo" class="kelas-info">Kelas -</div>
+        <div id="ledgerSemesterInfo" class="semester-info">-</div>
+      </div>
+      <br>
+      <div class="ledger-action">
+        <button id="exportLedgerBtn">📊 Export Excel</button>
+      </div>
+      <br>
+      <div id="ledgerContainer" class="rekap-card"></div>
+    </section>
 
-    <section
-      id="ledgerPage"
-      class="page hidden"
-    >
+  </main>
 
-  <div class="ledger-header">
-
-  <h2>📚 Ledger Nilai SD</h2>
-
-  <div
-    id="ledgerKelasInfo"
-    class="kelas-info"
-  >
-    Kelas 1A
+  <!-- MODAL DETAIL JURNAL -->
+  <div id="modalDetailJurnal" class="modal hidden">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Detail Jurnal</h3>
+        <button id="closeModalJurnal">✖</button>
+      </div>
+      <div id="detailJurnalBody"></div>
+    </div>
   </div>
 
-  <div
-    id="ledgerSemesterInfo"
-    class="semester-info"
-  >
-    Semester 1 • Tahun Ajaran 2025/2026
-  </div>
-
-</div>
-
-  <br>
-
-  <div class="ledger-action">
-
-  <button id="exportLedgerBtn">
-    📊 Export Excel
-  </button>
-
-</div>
-
-<br>
-
-<div
-  id="ledgerContainer"
-  class="rekap-card"
-></div>
-</section>
-
-  <!-- MODULES -->
-
-  <script
-    type="module"
-    src="js/dashboard-sd.js"
-  ></script>
-
-  <script
-    type="module"
-    src="js/absensi-sd.js"
-  ></script>
-
-  <script
-    type="module"
-    src="js/rekap-absensi-sd.js"
-  ></script>
-
-  <script
-    type="module"
-    src="js/jurnal-sd.js"
-  ></script>
-
-  <script
-    type="module"
-    src="js/rekap-jurnal-sd.js"
-  ></script>
-
-  <script
-    type="module"
-    src="js/nilai-sd.js"
-  ></script>
-
-  <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
-
-  <script
-    type="module"
-    src="js/ledger-sd.js"
-  ></script>
-
+  <!-- SAMBUNGKAN JS KAMU DI SINI (CONTOH: js/dashboard-sd.js) -->
+  <script type="module" src="js/dashboard-sd.js"></script>
 </body>
 
 </html>
