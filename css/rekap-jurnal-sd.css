@@ -1,141 +1,306 @@
-.rekap-jurnal-filter{
-  display:flex;
-  gap:15px;
-  align-items:end;
-  margin-bottom:20px;
-  flex-wrap:wrap;
+/* ==========================================
+   STYLING REKAP JURNAL MODERN & CLEAN
+   ========================================== */
+
+.info-badge-text {
+  font-size: 0.95rem;
+  color: #334155;
+  background-color: #f1f5f9;
+  padding: 10px 16px;
+  border-radius: 10px;
+  display: inline-block;
+  margin-bottom: 20px;
+  border-left: 4px solid #0f766e;
 }
 
-.filter-group{
-  display:flex;
-  flex-direction:column;
-  gap:6px;
+/* Filter Section */
+.rekap-jurnal-filter {
+  display: flex;
+  gap: 16px;
+  align-items: flex-end;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
 }
 
-.filter-group input{
-  height:42px;
-  padding:0 12px;
-  border:1px solid #d1d5db;
-  border-radius:10px;
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
-#btnLoadRekapJurnal{
-  height:42px;
-  padding:0 18px;
-  border:none;
-  border-radius:10px;
-  background:#2563eb;
-  color:white;
-  cursor:pointer;
+.filter-group label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #475569;
 }
 
-.rekap-jurnal-stats{
-  display:grid;
-  grid-template-columns:
-  repeat(auto-fit,minmax(200px,1fr));
-  gap:16px;
-  margin-bottom:24px;
+.filter-group.flex-grow {
+  flex: 1;
+  min-width: 220px;
 }
 
-.rekap-jurnal-card{
-  background:white;
-  border-radius:16px;
-  padding:20px;
-  text-align:center;
-  box-shadow:0 4px 12px rgba(0,0,0,.08);
+.form-input,
+.form-select {
+  height: 42px;
+  padding: 0 14px;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  outline: none;
+  background-color: #fff;
+  transition: border-color 0.2s;
 }
 
-.rekap-jurnal-table{
-  width:100%;
-  border-collapse:collapse;
-  background:white;
+.form-input:focus,
+.form-select:focus {
+  border-color: #0f766e;
+}
+
+/* Buttons */
+.btn-primary-md {
+  height: 42px;
+  padding: 0 20px;
+  border: none;
+  border-radius: 10px;
+  background: #0f766e;
+  color: white;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-primary-md:hover {
+  background: #0d655e;
+  transform: translateY(-1px);
+}
+
+.btn-secondary-md {
+  height: 42px;
+  padding: 0 20px;
+  border: 1px solid #99f6e4;
+  border-radius: 10px;
+  background: #ccfbf1;
+  color: #0f766e;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-secondary-md:hover {
+  background: #99f6e4;
+}
+
+.btn-detail {
+  background-color: #0f766e;
+  color: white;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-detail:hover {
+  background-color: #0d655e;
+}
+
+/* Stat Cards */
+.rekap-jurnal-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.rekap-jurnal-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 16px;
+  text-align: center;
+}
+
+.rekap-jurnal-card h3 {
+  font-size: 1.8rem;
+  color: #0f766e;
+  margin: 0;
+}
+
+.rekap-jurnal-card p {
+  font-size: 0.85rem;
+  color: #64748b;
+  margin-top: 4px;
+}
+
+/* Student Search Card */
+.student-search-card {
+  margin-bottom: 16px;
+}
+
+.student-search-header h3 {
+  font-size: 1.15rem;
+  color: #0f766e;
+  margin-bottom: 4px;
+}
+
+.student-search-header .section-desc {
+  font-size: 0.85rem;
+  color: #64748b;
+  margin-bottom: 16px;
+}
+
+.student-search-row {
+  display: flex;
+  gap: 12px;
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+
+/* Tabel Rekap */
+.table-responsive {
+  overflow-x: auto;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+}
+
+.rekap-jurnal-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  font-size: 0.9rem;
 }
 
 .rekap-jurnal-table th,
-.rekap-jurnal-table td{
-  border:1px solid #e5e7eb;
-  padding:12px;
+.rekap-jurnal-table td {
+  border-bottom: 1px solid #e2e8f0;
+  padding: 12px 16px;
+  text-align: left;
 }
 
-.rekap-jurnal-table th{
-  background:#f3f4f6;
+.rekap-jurnal-table th {
+  background: #f8fafc;
+  color: #334155;
+  font-weight: 600;
 }
 
-.badge-catatan{
-  background:#fef3c7;
-  color:#92400e;
-  padding:4px 10px;
-  border-radius:999px;
-  font-size:12px;
-  font-weight:600;
+.rekap-jurnal-table tr:hover {
+  background-color: #f8fafc;
 }
 
-.modal{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.5);
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  z-index:999;
+.badge-catatan {
+  background: #fef3c7;
+  color: #92400e;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  display: inline-block;
 }
 
-.modal-content{
-  background:white;
-  width:90%;
-  max-width:800px;
-  border-radius:20px;
-  padding:24px;
-  max-height:85vh;
-  overflow:auto;
+/* Riwayat Catatan Siswa */
+.riwayat-siswa-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 20px;
+  margin-top: 20px;
 }
 
-.modal-header{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:20px;
+.riwayat-siswa-card h3 {
+  font-size: 1.1rem;
+  color: #1e293b;
+  margin-bottom: 16px;
 }
 
-.student-search-card{
-  background:#fff;
-  padding:20px;
-  border-radius:16px;
-  margin-bottom:20px;
+.stat-catatan {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 12px;
+  margin-bottom: 20px;
 }
 
-.student-search-row{
-  display:flex;
-  gap:12px;
-  align-items:center;
+.stat-item {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  padding: 12px;
+  border-radius: 10px;
+  text-align: center;
 }
 
-.student-search-row select{
-  min-width:300px;
+.stat-item small {
+  color: #64748b;
+  font-size: 0.75rem;
 }
 
-.riwayat-siswa-card{
-  background:#fff;
-  border-radius:16px;
-  padding:20px;
-  margin-bottom:20px;
+.stat-item h3 {
+  margin: 4px 0 0 0;
+  color: #0f766e;
+  font-size: 1.3rem;
 }
 
-.stat-catatan{
-  display:grid;
-  grid-template-columns:repeat(5,1fr);
-  gap:12px;
-  margin:15px 0;
+/* Modal */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.5);
+  backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
 }
 
-.stat-item{
-  background:#f5f7fb;
-  padding:12px;
-  border-radius:10px;
-  text-align:center;
+.modal.hidden {
+  display: none;
 }
 
-.stat-item h3{
-  margin:0;
-  color:#1e40af;
+.modal-content {
+  background: white;
+  width: 90%;
+  max-width: 700px;
+  border-radius: 16px;
+  padding: 24px;
+  max-height: 85vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 12px;
+}
+
+.modal-header h3 {
+  margin: 0;
+  color: #0f766e;
+}
+
+.modal-header button {
+  background: transparent;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: #64748b;
+}
+
+.catatan-siswa-card {
+  background: #f8fafc;
+  border-left: 4px solid #0f766e;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 12px;
 }

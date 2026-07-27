@@ -3,650 +3,351 @@ import { getCurrentClass } from './auth-sd.js';
 
 let currentClass = null;
 
-document.addEventListener(
-  'DOMContentLoaded',
-  async () => {
-
-    currentClass =
-      await getCurrentClass();
+export async function initRekapJurnal() {
+  try {
+    currentClass = await getCurrentClass();
+    if (!currentClass) {
+      console.warn("Rekap Jurnal: Kelas belum terdeteksi.");
+      return;
+    }
 
     await loadHeaderInfo();
-
     await loadDropdownSiswa();
 
-    document
-      .getElementById(
-        'btnLoadRekapJurnal'
-      )
-      ?.addEventListener(
-        'click',
-        loadRekapJurnal
-      );
+    const container = document.getElementById('rekapJurnalContainer');
+    if (container) {
+      container.innerHTML = `
+        <div style="text-align: center; padding: 30px 20px; color: #64748b; background: #f8fafc; border-radius: 10px; border: 1px dashed #cbd5e1; margin-top: 15px;">
+          <p style="margin: 0; font-size: 0.95rem;">📅 <strong>Pilih Rentang Tanggal</strong> di atas, lalu klik <strong>"Tampilkan Jurnal"</strong> untuk memuat rekap data.</p>
+        </div>
+      `;
+    }
 
-    document
-      .getElementById(
-        'btnCariSiswa'
-      )
-      ?.addEventListener(
-        'click',
-        loadRiwayatSiswa
-      );
+    const stats = document.getElementById('rekapJurnalStats');
+    if (stats) stats.innerHTML = '';
 
-    document
-      .getElementById(
-        'closeModalJurnal'
-      )
-      ?.addEventListener(
-        'click',
-        () => {
-
-          document
-            .getElementById(
-              'modalDetailJurnal'
-            )
-            .classList.add(
-              'hidden'
-            );
-
-        }
-      );
-
-    loadRekapJurnal();
-
+  } catch (err) {
+    console.error("Error initRekapJurnal:", err);
   }
-);
-
-async function loadHeaderInfo(){
-
-  const info =
-    document.getElementById(
-      'rekapJurnalInfo'
-    );
-
-  const {
-    data: semester
-  } = await supabase
-
-    .from('semester')
-
-    .select('*')
-
-    .eq(
-      'school_id',
-      currentClass.school_id
-    )
-
-    .eq(
-      'is_active',
-      true
-    )
-
-    .limit(1);
-
-  info.innerHTML = `
-
-    <strong>Kelas:</strong>
-    ${currentClass.nama_kelas}
-
-    &nbsp; | &nbsp;
-
-    <strong>Semester:</strong>
-    ${semester?.[0]?.nama_semester || '-'}
-
-
-    &nbsp; | &nbsp;
-
-    <strong>Tahun:</strong>
-    ${semester?.[0]?.tahun_ajaran || '-'}
-
-  `;
-
 }
 
-async function loadDropdownSiswa(){
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('btnLoadRekapJurnal')?.addEventListener('click', loadRekapJurnal);
+  document.getElementById('btnCariSiswa')?.addEventListener('click', loadRiwayatSiswa);
 
-  const {
-    data,
-    error
-  } = await supabase
-
-    .from('siswa')
-
-    .select(`
-      id,
-      nama_siswa
-    `)
-
-    .eq(
-      'class_id',
-      currentClass.id
-    )
-
-    .order(
-      'nama_siswa'
-    );
-
-  if(error){
-
-    console.error(error);
-    return;
-
-  }
-
-  const select =
-    document.getElementById(
-      'searchSiswa'
-    );
-
-  if(!select) return;
-
-  select.innerHTML =
-    '<option value="">Pilih Siswa...</option>';
-
-  data.forEach(siswa=>{
-
-    select.innerHTML += `
-      <option value="${siswa.id}">
-        ${siswa.nama_siswa}
-      </option>
-    `;
-
+  document.getElementById('closeModalJurnal')?.addEventListener('click', () => {
+    document.getElementById('modalDetailJurnal')?.classList.add('hidden');
   });
 
+  document.querySelectorAll('.menu[data-page="rekapJurnal"]').forEach(menu => {
+    menu.addEventListener('click', () => {
+      initRekapJurnal();
+    });
+  });
+
+  initRekapJurnal();
+});
+
+async function loadHeaderInfo() {
+  const info = document.getElementById('rekapJurnalInfo');
+  if (!info || !currentClass) return;
+
+  try {
+    const { data: semester, error } = await supabase
+      .from('semester')
+      .select('*')
+      .eq('school_id', currentClass.school_id)
+      .eq('is_active', true)
+      .maybeSingle();
+
+    if (error) console.error("Error semester:", error);
+
+    info.innerHTML = `
+      <strong>Kelas:</strong> ${currentClass.nama_kelas || '-'} &nbsp; | &nbsp;
+      <strong>Semester:</strong> ${semester?.nama_semester || '-'} &nbsp; | &nbsp;
+      <strong>Tahun Ajaran:</strong> ${semester?.tahun_ajaran || '-'}
+    `;
+  } catch (err) {
+    console.error("Error loadHeaderInfo:", err);
+    info.innerHTML = `<strong>Kelas:</strong> ${currentClass.nama_kelas || '-'}`;
+  }
 }
 
-async function loadRekapJurnal(){
+async function loadDropdownSiswa() {
+  const select = document.getElementById('searchSiswa');
+  if (!select || !currentClass) return;
 
-  const container =
-    document.getElementById(
-      'rekapJurnalContainer'
-    );
+  try {
+    const { data, error } = await supabase
+      .from('siswa')
+      .select('id, nama_siswa')
+      .eq('class_id', currentClass.id)
+      .eq('school_id', currentClass.school_id)
+      .order('nama_siswa');
 
-  const stats =
-    document.getElementById(
-      'rekapJurnalStats'
-    );
-
-  const awal =
-    document.getElementById(
-      'filterTanggalAwal'
-    )?.value;
-
-  const akhir =
-    document.getElementById(
-      'filterTanggalAkhir'
-    )?.value;
-
-  let query =
-    supabase
-
-      .from('jurnal_kelas_sd')
-
-      .select(`
-        *,
-        mata_pelajaran(
-          nama_mapel
-        )
-      `)
-
-      .eq(
-        'class_id',
-        currentClass.id
-      );
-
-  if(awal){
-
-    query =
-      query.gte(
-        'tanggal',
-        awal
-      );
-
-  }
-
-  if(akhir){
-
-    query =
-      query.lte(
-        'tanggal',
-        akhir
-      );
-
-  }
-
-  const {
-    data,
-    error
-  } = await query.order(
-    'tanggal',
-    {
-      ascending:false
+    if (error) {
+      console.error("Error fetch siswa:", error);
+      return;
     }
-  );
 
-  if(error){
-
-    console.error(error);
-    return;
-
+    select.innerHTML = '<option value="">Pilih Siswa...</option>';
+    if (data && data.length > 0) {
+      data.forEach(siswa => {
+        select.innerHTML += `<option value="${siswa.id}">${siswa.nama_siswa}</option>`;
+      });
+    }
+  } catch (err) {
+    console.error("Error loadDropdownSiswa:", err);
   }
+}
 
-  stats.innerHTML = `
+async function loadRekapJurnal() {
+  const container = document.getElementById('rekapJurnalContainer');
+  const stats = document.getElementById('rekapJurnalStats');
+  if (!container || !currentClass) return;
 
-    <div class="rekap-jurnal-card">
-      <h3>${data.length}</h3>
-      <p>Jumlah Jurnal</p>
-    </div>
+  if (stats) stats.innerHTML = '';
 
-  `;
+  const awal = document.getElementById('filterTanggalAwal')?.value;
+  const akhir = document.getElementById('filterTanggalAkhir')?.value;
 
-  let html = `
+  container.innerHTML = '<p style="text-align:center; padding: 20px; color: #64748b;">Memuat data jurnal...</p>';
 
-    <div class="table-responsive">
+  try {
+    let query = supabase
+      .from('jurnal_kelas_sd')
+      .select('*')
+      .eq('class_id', currentClass.id)
+      .eq('school_id', currentClass.school_id);
 
-      <table
-        class="rekap-jurnal-table"
-      >
+    if (awal) query = query.gte('tanggal', awal);
+    if (akhir) query = query.lte('tanggal', akhir);
 
+    const { data, error } = await query.order('tanggal', { ascending: false });
+
+    if (error) {
+      console.error("Error fetch jurnal:", error);
+      container.innerHTML = '<p style="color:red; text-align:center; padding: 20px;">Gagal mengambil data jurnal.</p>';
+      return;
+    }
+
+    if (!data || data.length === 0) {
+      container.innerHTML = `
+        <div style="text-align: center; padding: 30px; color: #64748b; background: #fff3cd; border-radius: 10px; border: 1px solid #ffeeba; margin-top: 15px;">
+          <p style="margin: 0;">Tidak ditemukan jurnal ${awal || akhir ? `pada rentang tanggal <strong>${awal || '...'}</strong> s.d. <strong>${akhir || '...'}</strong>` : 'di kelas ini'}.</p>
+        </div>
+      `;
+      return;
+    }
+
+    const { data: mapelList } = await supabase
+      .from('mata_pelajaran')
+      .select('id, nama_mapel')
+      .eq('school_id', currentClass.school_id);
+
+    const mapelMap = {};
+    if (mapelList) {
+      mapelList.forEach(m => mapelMap[m.id] = m.nama_mapel);
+    }
+
+    let html = `
+      <table class="rekap-jurnal-table">
         <thead>
-
           <tr>
-
             <th>Tanggal</th>
             <th>Mapel</th>
             <th>Materi</th>
             <th>Kegiatan</th>
-            <th>Catatan</th>
+            <th>Catatan Khusus</th>
             <th>Aksi</th>
-
           </tr>
-
         </thead>
-
         <tbody>
-
-  `;
-
-  for(const item of data){
-
-    const {
-      data: detail
-    } = await supabase
-
-      .from(
-        'jurnal_siswa_sd'
-      )
-
-      .select('*')
-
-      .eq(
-        'jurnal_id',
-        item.id
-      );
-
-    html += `
-
-      <tr>
-
-        <td>${item.tanggal}</td>
-
-        <td>
-          ${
-            item
-            .mata_pelajaran
-            ?.nama_mapel || '-'
-          }
-        </td>
-
-        <td>${item.materi || '-'}</td>
-
-        <td>${item.kegiatan || '-'}</td>
-
-        <td>
-
-          <span
-            class="badge-catatan"
-          >
-
-            ${detail.length}
-            Catatan
-
-          </span>
-
-        </td>
-
-        <td>
-
-          <button
-            onclick="showDetailJurnal(${item.id})"
-          >
-            Detail
-          </button>
-
-        </td>
-
-      </tr>
-
     `;
 
-  }
+    for (const item of data) {
+      const { data: detail } = await supabase
+        .from('jurnal_siswa_sd')
+        .select('id')
+        .eq('jurnal_id', item.id);
 
-  html += `
+      const countCatatan = detail ? detail.length : 0;
+      const namaMapel = mapelMap[item.mapel_id] || item.mapel || '-';
 
+      html += `
+        <tr>
+          <td><strong>${item.tanggal || '-'}</strong></td>
+          <td>${namaMapel}</td>
+          <td>${item.materi || '-'}</td>
+          <td>${item.kegiatan || '-'}</td>
+          <td>
+            <span class="badge-catatan">
+              ${countCatatan} Catatan
+            </span>
+          </td>
+          <td>
+            <button type="button" class="btn-detail" onclick="showDetailJurnal('${item.id}')">
+              🔍 Detail
+            </button>
+          </td>
+        </tr>
+      `;
+    }
+
+    html += `
         </tbody>
-
       </table>
+    `;
 
-    </div>
+    container.innerHTML = html;
 
-  `;
-
-  container.innerHTML =
-    html;
-
+  } catch (err) {
+    console.error("Error loadRekapJurnal:", err);
+    container.innerHTML = '<p style="color:red; text-align:center; padding: 20px;">Terjadi kesalahan saat memuat rekap jurnal.</p>';
+  }
 }
 
-window.showDetailJurnal =
-async function(id){
+window.showDetailJurnal = async function(id) {
+  const modal = document.getElementById('modalDetailJurnal');
+  const body = document.getElementById('detailJurnalBody');
+  if (!modal || !body) return;
 
-  const modal =
-    document.getElementById(
-      'modalDetailJurnal'
-    );
+  modal.classList.remove('hidden');
+  body.innerHTML = '<p style="text-align:center;">Memuat detail...</p>';
 
-  const body =
-    document.getElementById(
-      'detailJurnalBody'
-    );
+  try {
+    const { data: jurnal } = await supabase
+      .from('jurnal_kelas_sd')
+      .select('*')
+      .eq('id', id)
+      .single();
 
-  modal.classList.remove(
-    'hidden'
-  );
+    const { data: catatan } = await supabase
+      .from('jurnal_siswa_sd')
+      .select(`
+        *,
+        siswa(nama_siswa)
+      `)
+      .eq('jurnal_id', id);
 
-  const {
-    data: jurnal
-  } = await supabase
-
-    .from('jurnal_kelas_sd')
-
-    .select(`
-      *,
-      mata_pelajaran(
-        nama_mapel
-      )
-    `)
-
-    .eq(
-      'id',
-      id
-    )
-
-    .single();
-
-  const {
-    data: catatan
-  } = await supabase
-
-    .from(
-      'jurnal_siswa_sd'
-    )
-
-    .select(`
-      *,
-      siswa(
-        nama_siswa
-      )
-    `)
-
-    .eq(
-      'jurnal_id',
-      id
-    );
-
-  let html = `
-
-    <h3>
-      ${jurnal.materi}
-    </h3>
-
-    <p>
-      ${jurnal.kegiatan || '-'}
-    </p>
-
-    <hr>
-
-    <h4>
-      Catatan Siswa
-    </h4>
-
-  `;
-
-  catatan.forEach(c=>{
-
-    html += `
-
-      <div
-        class="catatan-siswa-card"
-      >
-
-        <strong>
-          ${
-            c.siswa?.nama_siswa
-          }
-        </strong>
-
-        <br>
-
-        ${c.kategori}
-
-        <br><br>
-
-        ${c.catatan}
-
-      </div>
-
-      <br>
-
+    let html = `
+      <h3>Materi: ${jurnal?.materi || '-'}</h3>
+      <p><strong>Kegiatan:</strong> ${jurnal?.kegiatan || '-'}</p>
+      <p><strong>Catatan Umum:</strong> ${jurnal?.catatan_umum || '-'}</p>
+      <hr style="margin: 15px 0; border: 0; border-top: 1px solid #e2e8f0;">
+      <h4>Catatan Khusus Siswa</h4>
     `;
 
-  });
+    if (catatan && catatan.length > 0) {
+      catatan.forEach(c => {
+        html += `
+          <div class="catatan-siswa-card">
+            <strong>${c.siswa?.nama_siswa || 'Siswa'}</strong> 
+            <span style="font-size:0.8rem; color:#0f766e;">(${c.kategori || 'Umum'})</span>
+            <br>
+            <p style="margin-top:5px; font-size:0.9rem;">${c.catatan || '-'}</p>
+          </div>
+        `;
+      });
+    } else {
+      html += '<p style="color:#64748b; font-size:0.9rem;">Tidak ada catatan khusus siswa pada jurnal ini.</p>';
+    }
 
-  body.innerHTML = html;
+    body.innerHTML = html;
 
+  } catch (err) {
+    console.error("Error showDetailJurnal:", err);
+    body.innerHTML = '<p style="color:red;">Gagal memuat detail jurnal.</p>';
+  }
 };
 
-async function loadRiwayatSiswa(){
+async function loadRiwayatSiswa() {
+  const siswaId = document.getElementById('searchSiswa')?.value;
+  const container = document.getElementById('riwayatSiswaContainer');
 
-  const siswaId =
-    document.getElementById(
-      'searchSiswa'
-    ).value;
-
-  if(!siswaId){
-
-    alert(
-      'Pilih siswa terlebih dahulu.'
-    );
-
+  if (!siswaId) {
+    alert('Pilih siswa terlebih dahulu.');
     return;
-
   }
 
-  const {
-    data,
-    error
-  } = await supabase
-
-    .from('jurnal_siswa_sd')
-
-    .select(`
-      *,
-      siswa(
-        nama_siswa
-      ),
-      jurnal_kelas_sd(
-        tanggal
-      )
-    `)
-
-    .eq(
-      'siswa_id',
-      siswaId
-    )
-
-    .order(
-      'created_at',
-      {
-        ascending:false
-      }
-    );
-
-  if(error){
-
-    console.error(error);
-    return;
-
+  if (container) {
+    container.innerHTML = '<p style="text-align:center; padding:15px; color:#64748b;">Memuat riwayat siswa...</p>';
   }
 
-  renderRiwayatSiswa(data);
+  try {
+    const { data, error } = await supabase
+      .from('jurnal_siswa_sd')
+      .select(`
+        *,
+        siswa(nama_siswa),
+        jurnal_kelas_sd(tanggal)
+      `)
+      .eq('siswa_id', siswaId);
 
+    if (error) {
+      console.error("Error loadRiwayatSiswa:", error);
+      if (container) container.innerHTML = '<p style="color:red;">Gagal mengambil riwayat siswa.</p>';
+      return;
+    }
+
+    renderRiwayatSiswa(data || []);
+  } catch (err) {
+    console.error("Error loadRiwayatSiswa:", err);
+  }
 }
 
-function renderRiwayatSiswa(data){
+function renderRiwayatSiswa(data) {
+  const container = document.getElementById('riwayatSiswaContainer');
+  if (!container) return;
 
-  const container =
-    document.getElementById(
-      'riwayatSiswaContainer'
-    );
-
-  if(!data.length){
-
+  if (!data || data.length === 0) {
     container.innerHTML = `
       <div class="riwayat-siswa-card">
-        Tidak ada catatan siswa.
+        <p style="text-align:center; color:#64748b; margin:0;">Tidak ada catatan khusus untuk siswa ini.</p>
       </div>
     `;
-
     return;
-
   }
 
-  const nama =
-    data[0].siswa?.nama_siswa || '-';
-
-  const sosial =
-    data.filter(
-      x => x.kategori === 'Sosial'
-    ).length;
-
-  const akademik =
-    data.filter(
-      x => x.kategori === 'Akademik'
-    ).length;
-
-  const disiplin =
-    data.filter(
-      x => x.kategori === 'Disiplin'
-    ).length;
-
-  const perilaku =
-    data.filter(
-      x => x.kategori === 'Perilaku'
-    ).length;
+  const nama = data[0]?.siswa?.nama_siswa || 'Siswa';
+  const sosial = data.filter(x => x.kategori === 'Sosial').length;
+  const akademik = data.filter(x => x.kategori === 'Akademik').length;
+  const disiplin = data.filter(x => x.kategori === 'Disiplin').length;
+  const perilaku = data.filter(x => x.kategori === 'Perilaku').length;
 
   let rows = '';
-
-  data.forEach(item=>{
-
+  data.forEach(item => {
     rows += `
-
       <tr>
-
-        <td>
-          ${
-            item
-            .jurnal_kelas_sd
-            ?.tanggal || '-'
-          }
-        </td>
-
-        <td>
-          ${item.kategori}
-        </td>
-
-        <td>
-          ${item.catatan}
-        </td>
-
+        <td><strong>${item.jurnal_kelas_sd?.tanggal || '-'}</strong></td>
+        <td><span class="badge-catatan">${item.kategori || 'Umum'}</span></td>
+        <td>${item.catatan || '-'}</td>
       </tr>
-
     `;
-
   });
 
   container.innerHTML = `
-
     <div class="riwayat-siswa-card">
-
-      <h3>
-        📊 Rekap Catatan ${nama}
-      </h3>
-
+      <h3>📊 Rekap Catatan: ${nama}</h3>
       <div class="stat-catatan">
-
-        <div class="stat-item">
-          <small>Total</small>
-          <h3>${data.length}</h3>
-        </div>
-
-        <div class="stat-item">
-          <small>Sosial</small>
-          <h3>${sosial}</h3>
-        </div>
-
-        <div class="stat-item">
-          <small>Akademik</small>
-          <h3>${akademik}</h3>
-        </div>
-
-        <div class="stat-item">
-          <small>Disiplin</small>
-          <h3>${disiplin}</h3>
-        </div>
-
-        <div class="stat-item">
-          <small>Perilaku</small>
-          <h3>${perilaku}</h3>
-        </div>
-
+        <div class="stat-item"><small>Total</small><h3>${data.length}</h3></div>
+        <div class="stat-item"><small>Sosial</small><h3>${sosial}</h3></div>
+        <div class="stat-item"><small>Akademik</small><h3>${akademik}</h3></div>
+        <div class="stat-item"><small>Disiplin</small><h3>${disiplin}</h3></div>
+        <div class="stat-item"><small>Perilaku</small><h3>${perilaku}</h3></div>
       </div>
-
-      <table
-        class="rekap-jurnal-table"
-      >
-
+      <table class="rekap-jurnal-table">
         <thead>
-
           <tr>
-
             <th>Tanggal</th>
             <th>Kategori</th>
             <th>Catatan</th>
-
           </tr>
-
         </thead>
-
         <tbody>
-
           ${rows}
-
         </tbody>
-
       </table>
-
     </div>
-
   `;
-
 }

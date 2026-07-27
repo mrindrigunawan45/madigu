@@ -110,7 +110,21 @@ if ('serviceWorker' in navigator) {
 
       </button>
 
-      
+      <!-- TAMBAHAN MENU WALAS -->
+      <button onclick="showTab('walasTab')">
+
+        <i class="fa-solid fa-user-tie"></i>
+        <span>Absen Walas</span>
+
+      </button>
+
+      <button onclick="showTab('rekapWalasTab')">
+
+        <i class="fa-solid fa-clipboard-user"></i>
+        <span>Rekap Walas</span>
+
+      </button>
+
       <button id="logoutBtn">
 
         <i class="fa-solid fa-right-from-bracket"></i>
@@ -394,6 +408,78 @@ if ('serviceWorker' in navigator) {
 
       </section>
 
+      <!-- ABSEN WALAS -->
+
+      <section
+        class="tab"
+        id="walasTab"
+      >
+
+        <div class="card">
+
+          <input
+            type="date"
+            id="tanggal-walas"
+          />
+
+          <select id="kelas-walas">
+
+            <option value="">
+              Pilih Kelas
+            </option>
+
+          </select>
+
+          <textarea
+            id="catatan-walas"
+            placeholder="Catatan Wali Kelas / Pembinaan"
+          ></textarea>
+
+          <div id="list-siswa-walas"></div>
+
+          <button id="saveWalasBtn">
+
+            Simpan Absen Walas
+
+          </button>
+
+        </div>
+
+      </section>
+
+      <!-- REKAP WALAS -->
+
+      <section
+        class="tab"
+        id="rekapWalasTab"
+      >
+
+        <div class="card">
+
+          <select id="rekap-walas-kelas">
+
+            <option value="">
+              Pilih Kelas
+            </option>
+
+          </select>
+
+          <button id="downloadWalasBtn">
+
+            Download Excel
+
+          </button>
+
+          <div class="table-container">
+
+            <table id="rekap-walas-table"></table>
+
+          </div>
+
+        </div>
+
+      </section>
+
     </main>
 
   </div>
@@ -561,6 +647,38 @@ if (
   }
 
   // =========================
+  // RESET WALAS
+  // =========================
+
+  if (tabId === 'walasTab') {
+
+    const kelasWalas = document.getElementById('kelas-walas')
+    const catatanWalas = document.getElementById('catatan-walas')
+    const listSiswaWalas = document.getElementById('list-siswa-walas')
+    const tglWalas = document.getElementById('tanggal-walas')
+
+    if (kelasWalas) kelasWalas.selectedIndex = 0
+    if (catatanWalas) catatanWalas.value = ''
+    if (listSiswaWalas) listSiswaWalas.innerHTML = ''
+    if (tglWalas) tglWalas.value = new Date().toISOString().split('T')[0]
+
+  }
+
+  // =========================
+  // RESET REKAP WALAS
+  // =========================
+
+  if (tabId === 'rekapWalasTab') {
+
+    const rekapWalasKelas = document.getElementById('rekap-walas-kelas')
+    const rekapWalasTable = document.getElementById('rekap-walas-table')
+
+    if (rekapWalasKelas) rekapWalasKelas.selectedIndex = 0
+    if (rekapWalasTable) rekapWalasTable.innerHTML = ''
+
+  }
+
+  // =========================
   // TAB SWITCH
   // =========================
 
@@ -639,6 +757,16 @@ if (activeButton) {
   <script
     type="module"
     src="js/rekapAbsen.js"
+  ></script>
+
+  <script
+    type="module"
+    src="js/walas.js"
+  ></script>
+
+  <script
+    type="module"
+    src="js/rekapWalas.js"
   ></script>
 
   <script type="module">

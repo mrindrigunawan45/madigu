@@ -211,31 +211,61 @@
     <section id="rekapJurnalPage" class="page hidden">
       <div class="page-header">
         <h2>📖 Rekap Jurnal Kelas</h2>
-        <p id="rekapJurnalInfo">Memuat informasi kelas...</p>
       </div>
-      <div class="rekap-jurnal-filter">
-        <div class="filter-group">
-          <label>Tanggal Awal</label>
-          <input type="date" id="filterTanggalAwal">
+
+      <!-- Card Filter & Info Kelas -->
+      <div class="rekap-card">
+        <div class="rekap-header-info">
+          <p id="rekapJurnalInfo" class="info-badge-text">Memuat informasi kelas...</p>
         </div>
-        <div class="filter-group">
-          <label>Tanggal Akhir</label>
-          <input type="date" id="filterTanggalAkhir">
+
+        <div class="rekap-jurnal-filter">
+          <div class="filter-group">
+            <label for="filterTanggalAwal">Tanggal Awal</label>
+            <input type="date" id="filterTanggalAwal" class="form-input">
+          </div>
+          <div class="filter-group">
+            <label for="filterTanggalAkhir">Tanggal Akhir</label>
+            <input type="date" id="filterTanggalAkhir" class="form-input">
+          </div>
+          <button id="btnLoadRekapJurnal" type="button" class="btn-primary-md">
+            🔍 Tampilkan Jurnal
+          </button>
         </div>
-        <button id="btnLoadRekapJurnal">Tampilkan</button>
+
+        <!-- Statistik Jumlah Jurnal -->
+        <div class="rekap-jurnal-stats" id="rekapJurnalStats"></div>
+
+        <!-- Tabel Hasil Rekap Jurnal Kelas -->
+        <div id="rekapJurnalContainer" class="table-responsive"></div>
       </div>
-      <div class="student-search-card">
-        <h3>🔍 Riwayat Catatan Siswa</h3>
-        <div class="student-search-row">
-          <select id="searchSiswa">
-            <option value="">Pilih Siswa...</option>
-          </select>
-          <button id="btnCariSiswa" type="button">Tampilkan Riwayat</button>
+
+      <br>
+
+      <!-- Card Search Riwayat Catatan Siswa -->
+      <div class="rekap-card">
+        <div class="student-search-card">
+          <div class="student-search-header">
+            <h3>🔍 Riwayat Catatan Khusus Siswa</h3>
+            <p class="section-desc">Pilih nama siswa untuk melihat histori catatan khusus (Akademik, Disiplin, Sosial, dll.)</p>
+          </div>
+          
+          <div class="student-search-row">
+            <div class="filter-group flex-grow">
+              <label for="searchSiswa">Pilih Siswa</label>
+              <select id="searchSiswa" class="form-select">
+                <option value="">Pilih Siswa...</option>
+              </select>
+            </div>
+            <button id="btnCariSiswa" type="button" class="btn-secondary-md">
+              📋 Tampilkan Riwayat
+            </button>
+          </div>
         </div>
+
+        <!-- Container Hasil Riwayat Siswa -->
+        <div id="riwayatSiswaContainer"></div>
       </div>
-      <div id="riwayatSiswaContainer"></div>
-      <div class="rekap-jurnal-stats" id="rekapJurnalStats"></div>
-      <div id="rekapJurnalContainer"></div>
     </section>
 
     <!-- NILAI -->
@@ -296,6 +326,12 @@
 
   <!-- SAMBUNGKAN JS KAMU DI SINI (CONTOH: js/dashboard-sd.js) -->
   <script type="module" src="js/dashboard-sd.js"></script>
+
+<!-- Tambahkan baris ini di bawah script dashboard-sd.js -->
+  <script type="module" src="js/rekap-jurnal-sd.js"></script>
+</body>
+</html>
+
 </body>
 
 </html>
