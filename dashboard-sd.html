@@ -274,26 +274,54 @@
         <h2>📊 Nilai SD</h2>
       </div>
       <div class="rekap-card">
-        <div class="rekap-filter">
-          <div class="filter-item">
-            <label>Semester</label>
-            <select id="semesterNilai">
-              <option value="">Pilih Semester</option>
+        <div class="rekap-jurnal-filter">
+          <div class="filter-group">
+            <label for="semesterNilai">Semester</label>
+            <select id="semesterNilai" class="form-select">
+              <option value="">Pilih Semester...</option>
             </select>
           </div>
-          <div class="filter-item">
-            <label>Mata Pelajaran</label>
-            <select id="mapelNilai">
-              <option value="">Pilih Mata Pelajaran</option>
+
+          <div class="filter-group">
+            <label for="mapelNilai">Mata Pelajaran</label>
+            <select id="mapelNilai" class="form-select">
+              <option value="">Pilih Mata Pelajaran...</option>
             </select>
           </div>
-          <div class="filter-item">
-            <button id="loadNilaiBtn" style="margin-top:24px;">Tampilkan Nilai</button>
+
+          <div class="filter-group">
+            <label for="jenisNilai">Jenis Penilaian / Mode</label>
+            <select id="jenisNilai" class="form-select">
+              <option value="">Pilih Jenis...</option>
+              <optgroup label="📌 Input Tugas">
+                <option value="tugas1">Tugas 1</option>
+                <option value="tugas2">Tugas 2</option>
+                <option value="tugas3">Tugas 3</option>
+                <option value="tugas4">Tugas 4</option>
+              </optgroup>
+              <optgroup label="📝 Input Ulangan">
+                <option value="ulangan1">Ulangan 1</option>
+                <option value="ulangan2">Ulangan 2</option>
+                <option value="ulangan3">Ulangan 3</option>
+                <option value="ulangan4">Ulangan 4</option>
+              </optgroup>
+              <optgroup label="🏫 Ujian Utama">
+                <option value="pts">PTS</option>
+                <option value="pas">PAS</option>
+              </optgroup>
+              <optgroup label="📊 Tampilan">
+                <option value="rekap">-- Lihat Rekap Keseluruhan --</option>
+              </optgroup>
+            </select>
           </div>
+
+          <button id="loadNilaiBtn" type="button" class="btn-primary-md" style="align-self: flex-end;">
+            🔍 Tampilkan
+          </button>
         </div>
       </div>
       <br>
-      <div id="nilaiContainer" class="rekap-card"></div>
+      <div id="nilaiContainer"></div>
     </section>
 
     <!-- LEDGER -->
@@ -329,6 +357,8 @@
 
 <!-- Tambahkan baris ini di bawah script dashboard-sd.js -->
   <script type="module" src="js/rekap-jurnal-sd.js"></script>
+  <script type="module" src="js/nilai-sd.js"></script>
+
 </body>
 </html>
 

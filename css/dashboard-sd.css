@@ -760,3 +760,145 @@ main{
   background-color: #0d655e;
   transform: translateY(-1px);
 }
+
+/* Styling Filter Box & Tombol */
+.nilai-filter-box {
+  display: flex;
+  align-items: flex-end;
+  gap: 15px;
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+  margin-bottom: 20px;
+}
+
+.nilai-filter-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.nilai-filter-item label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #334155;
+}
+
+.nilai-filter-item select {
+  padding: 8px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  min-width: 180px;
+}
+
+.btn-tampilkan-nilai {
+  background: #0f766e;
+  color: #ffffff;
+  border: none;
+  padding: 9px 18px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-tampilkan-nilai:hover {
+  background: #115e59;
+}
+
+/* Styling Tabel Nilai */
+.nilai-table-container {
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+  overflow-x: auto;
+}
+
+.nilai-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.nilai-table th {
+  background-color: #f8fafc;
+  color: #1e293b;
+  font-weight: 700;
+  padding: 12px 10px;
+  border-bottom: 2px solid #e2e8f0;
+  text-align: center;
+}
+
+.nilai-table th:first-child {
+  text-align: left;
+  min-width: 200px; /* Garansi nama siswa tidak terpotong */
+}
+
+.nilai-table td {
+  padding: 10px;
+  border-bottom: 1px solid #f1f5f9;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.nilai-table td:first-child {
+  text-align: left;
+  font-weight: 600;
+  color: #334155;
+}
+
+/* Styling Input Box Nilai */
+.nilai-table input[type="number"] {
+  width: 55px;
+  padding: 6px;
+  text-align: center;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.nilai-table input[type="number"]:focus {
+  border-color: #0f766e;
+  box-shadow: 0 0 0 2px rgba(15, 118, 110, 0.15);
+}
+
+/* Badge Hasil Perhitungan */
+.badge-rata, .badge-na {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+.badge-rata {
+  background: #f1f5f9;
+  color: #475569;
+}
+
+.badge-na {
+  background: #ccfbf1;
+  color: #0f766e;
+}
+
+/* Tombol Simpan */
+.nilai-save-wrap {
+  margin-top: 20px;
+  text-align: right;
+}
+
+#saveNilaiBtn {
+  background: #0f766e;
+  color: white;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 6px;
+  font-weight: bold;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
