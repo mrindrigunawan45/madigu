@@ -135,8 +135,13 @@ async function loadDashboard() {
       console.error('Semester Error:', semesterError)
     } else {
       const semesterAktif = semester?.[0]?.nama_semester || '-'
+      const tahunAjaran = semester?.[0]?.tahun_ajaran || '-'
+
       const elSemester = document.getElementById('semesterAktifInfo')
+      const elTahunAjaran = document.getElementById('tahunAjaranInfo')
+
       if (elSemester) elSemester.textContent = semesterAktif
+      if (elTahunAjaran) elTahunAjaran.textContent = `Tahun Ajaran ${tahunAjaran}`
     }
 
   } catch (err) {
@@ -172,9 +177,16 @@ async function initDashboard() {
 
     currentClass = currentUser.kelas
 
-    if (namaGuru && currentUser.profile?.name) {
-      namaGuru.textContent = currentUser.profile.name
-    }
+   // ✅ KODE BARU:
+  if (namaGuru && currentUser.profile?.name) {
+    namaGuru.textContent = currentUser.profile.name
+  }
+
+  // Tambahkan 3 baris ini untuk menampilkan nama sekolah dari tabel profiles:
+  const sekolahInfo = document.getElementById('sekolahInfo')
+  if (sekolahInfo && currentUser.profile?.sekolah) {
+    sekolahInfo.textContent = currentUser.profile.sekolah
+  }
 
     await loadDashboard()
   } catch (err) {

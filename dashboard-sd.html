@@ -49,10 +49,12 @@
           <span class="mdg-badge">👋 Selamat Datang</span>
           <h1 id="namaGuru">-</h1>
           <p class="mdg-hero-info">
-            <span id="kelasInfo">Kelas -</span> •
-            <span id="semesterAktifInfo">Semester -</span> •
-            <span id="tahunAjaranInfo">Tahun Ajaran -</span>
-          </p>
+            <p class="mdg-hero-info">
+              <span id="sekolahInfo">Sekolah -</span> •
+              <span id="kelasInfo">Kelas -</span> •
+              <span id="semesterAktifInfo">Semester -</span> •
+              <span id="tahunAjaranInfo">Tahun Ajaran -</span>
+            </p>
         </div>
         <div class="mdg-hero-right">
           <div class="mdg-attendance">
@@ -326,20 +328,26 @@
 
     <!-- LEDGER -->
     <section id="ledgerPage" class="page hidden">
-      <div class="ledger-header">
-        <h2>📚 Ledger Nilai SD</h2>
-        <div id="ledgerKelasInfo" class="kelas-info">Kelas -</div>
-        <div id="ledgerSemesterInfo" class="semester-info">-</div>
-      </div>
-      <br>
-      <div class="ledger-action">
-        <button id="exportLedgerBtn" class="btn-primary-md">📊 Export Excel</button>
-      </div>
-      <br>
-      <div id="ledgerContainer" class="rekap-card"></div>
-    </section>
+  <div class="mdg-hero">
+    <div class="mdg-hero-left">
+      <span class="mdg-badge">📚 Ledger Nilai Siswa</span>
+      <h1 id="sekolahLedgerInfo">SDN TELUKPINANG 03</h1>
+      <p class="mdg-hero-info">
+        <span id="ledgerKelasInfo">Kelas 6C</span> •
+        <span id="ledgerSemesterInfo">Semester 1</span> •
+        <span id="ledgerTahunInfo">T.A 2026/2027</span>
+      </p>
+    </div>
+    <div class="mdg-hero-right">
+      <button id="exportLedgerBtn" class="btn-primary-lg" style="background: #ffffff; color: #0d9488; font-weight: 600;">
+        📊 Export Excel
+      </button>
+    </div>
+  </div>
 
-  </main>
+  <br>
+  <div id="ledgerContainer" class="rekap-card"></div>
+    </section>
 
   <!-- MODAL DETAIL JURNAL -->
   <div id="modalDetailJurnal" class="modal hidden">
