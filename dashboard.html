@@ -448,37 +448,61 @@ if ('serviceWorker' in navigator) {
       </section>
 
       <!-- REKAP WALAS -->
+<section class="tab" id="rekapWalasTab">
+  <div class="card">
+    
+    <!-- Top Action Bar (Header & Download) -->
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;">
+      <div>
+        <h3 style="margin: 0; font-size: 18px; font-weight: 700; color: #0f172a;">Rekap Absensi Wali Kelas</h3>
+        <p style="margin: 2px 0 0 0; font-size: 13px; color: #64748b;">Pantau riwayat absensi harian siswa dan ringkasan kehadirannya.</p>
+      </div>
+      
+      <button id="downloadWalasBtn" class="btn btn-primary" style="display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; background: #2563eb; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 13px;">
+        <i class="fa-solid fa-file-excel"></i> Download Excel
+      </button>
+    </div>
 
-      <section
-        class="tab"
-        id="rekapWalasTab"
-      >
+    <!-- Filter Bar Control -->
+<div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px; flex-wrap: wrap;">
+  <!-- Pilih Kelas -->
+  <select id="rekap-walas-kelas" class="form-control" style="width: auto; min-width: 140px; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; background-color: #fff;">
+    <option value="">Pilih Kelas</option>
+  </select>
 
-        <div class="card">
+  <!-- Mode Tampilan (Default: Ringkasan Total) -->
+  <select id="rekap-walas-mode" class="form-control" style="width: auto; min-width: 220px; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; background-color: #fff;">
+    <option value="ringkasan" selected>Mode Ringkasan (Total)</option>
+    <option value="matriks">Mode Matriks (Per Tanggal)</option>
+  </select>
 
-          <select id="rekap-walas-kelas">
+  <!-- Pilih Bulan (Default: Semua Bulan) -->
+  <select id="rekap-walas-bulan" class="form-control" style="width: auto; min-width: 150px; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; background-color: #fff;">
+    <option value="semua" selected>Semua Bulan</option>
+    <option value="01">Januari</option>
+    <option value="02">Februari</option>
+    <option value="03">Maret</option>
+    <option value="04">April</option>
+    <option value="05">Mei</option>
+    <option value="06">Juni</option>
+    <option value="07">Juli</option>
+    <option value="08">Agustus</option>
+    <option value="09">September</option>
+    <option value="10">Oktober</option>
+    <option value="11">November</option>
+    <option value="12">Desember</option>
+  </select>
+</div>
 
-            <option value="">
-              Pilih Kelas
-            </option>
+    <!-- Container Output Tabel -->
+    <div id="rekap-walas-table">
+      <div style="padding: 32px; text-align: center; color: #64748b; background: white; border-radius: 12px; border: 1px solid #e2e8f0;">
+        Silahkan pilih kelas untuk menampilkan data rekapitulasi absensi.
+      </div>
+    </div>
 
-          </select>
-
-          <button id="downloadWalasBtn">
-
-            Download Excel
-
-          </button>
-
-          <div class="table-container">
-
-            <table id="rekap-walas-table"></table>
-
-          </div>
-
-        </div>
-
-      </section>
+  </div>
+</section>
 
     </main>
 
@@ -598,53 +622,26 @@ if (
 }
 
   // =========================
-  // RESET REKAP JURNAL
-  // =========================
+// RESET REKAP WALAS
+// =========================
+if (tabId === 'rekapWalasTab') {
+  const rekapWalasKelas = document.getElementById('rekap-walas-kelas')
+  const rekapWalasMode = document.getElementById('rekap-walas-mode')
+  const rekapWalasBulan = document.getElementById('rekap-walas-bulan')
+  const rekapWalasTable = document.getElementById('rekap-walas-table')
 
-  const rekapJurnalTable =
-    document.getElementById('rekap-jurnal-table')
-
-  if (rekapJurnalTable) {
-
-    rekapJurnalTable.innerHTML = ''
-
+  if (rekapWalasKelas) rekapWalasKelas.selectedIndex = 0
+  if (rekapWalasMode) rekapWalasMode.value = 'ringkasan'
+  if (rekapWalasBulan) rekapWalasBulan.value = 'semua'
+  
+  if (rekapWalasTable) {
+    rekapWalasTable.innerHTML = `
+      <div style="padding: 32px; text-align: center; color: #64748b; background: white; border-radius: 12px; border: 1px solid #e2e8f0;">
+        Silahkan pilih kelas untuk menampilkan data rekapitulasi absensi.
+      </div>
+    `
   }
-
-  const rekapJurnalMapel =
-    document.getElementById('rekap-jurnal-mapel')
-
-  const rekapJurnalKelas =
-    document.getElementById('rekap-jurnal-kelas')
-
-  if (rekapJurnalMapel) {
-    rekapJurnalMapel.selectedIndex = 0
-  }
-
-  if (rekapJurnalKelas) {
-    rekapJurnalKelas.selectedIndex = 0
-  }
-
-  // =========================
-  // RESET REKAP ABSEN
-  // =========================
-
-  const rekapAbsenTable =
-    document.getElementById('rekap-absen-table')
-
-  if (rekapAbsenTable) {
-
-    rekapAbsenTable.innerHTML = ''
-
-  }
-
-  const rekapAbsenKelas =
-    document.getElementById('rekap-absen-kelas')
-
-  if (rekapAbsenKelas) {
-
-    rekapAbsenKelas.selectedIndex = 0
-
-  }
+}
 
   // =========================
   // RESET WALAS
