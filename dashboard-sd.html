@@ -333,7 +333,7 @@
       </div>
       <br>
       <div class="ledger-action">
-        <button id="exportLedgerBtn">📊 Export Excel</button>
+        <button id="exportLedgerBtn" class="btn-primary-md">📊 Export Excel</button>
       </div>
       <br>
       <div id="ledgerContainer" class="rekap-card"></div>
@@ -352,16 +352,14 @@
     </div>
   </div>
 
-  <!-- SAMBUNGKAN JS KAMU DI SINI (CONTOH: js/dashboard-sd.js) -->
+  <!-- SCRIPT MODUL UTAMA -->
   <script type="module" src="js/dashboard-sd.js"></script>
-
-<!-- Tambahkan baris ini di bawah script dashboard-sd.js -->
   <script type="module" src="js/rekap-jurnal-sd.js"></script>
   <script type="module" src="js/nilai-sd.js"></script>
+  <script type="module" src="js/ledger-sd.js"></script>
+
+  <!-- LIBRARY EXTERNAL (SHEETJS UNTUK EXPORT EXCEL LEDGER) -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
 </body>
-</html>
-
-</body>
-
 </html>

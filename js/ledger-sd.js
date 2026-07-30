@@ -1,749 +1,300 @@
-import { supabase }
-from './config.js';
+import { supabase } from './config.js';
+import { loadCurrentUser, getCurrentUser } from './session.js';
 
-import {
-  loadCurrentUser,
-  getCurrentUser
+let currentUser = null;
+let currentClass = null;
+
+let currentLedgerData = [];
+let currentMapel = [];
+let currentSemester = null;
+
+console.log('Ledger SD Loaded - Compact Mode');
+
+document.addEventListener('DOMContentLoaded', async () => {
+  await initLedger();
+
+  const exportBtn = document.getElementById('exportLedgerBtn');
+  if (exportBtn) {
+    exportBtn.addEventListener('click', handleExportExcel);
+  }
+});
+
+// Fungsi pembuat singkatan Nama Mapel agar header tidak terlalu lebar
+function getShortMapelName(fullName) {
+  const map = {
+    'Pendidikan Agama Islam': 'PAI',
+    'Pendidikan Agama Islam dan Budi Pekerti': 'PAI',
+    'Pancasila': 'PPKn',
+    'Pendidikan Pancasila': 'PPKn',
+    'Bahasa Indonesia': 'B.Indo',
+    'Matematika': 'MTK',
+    'Ilmu Pengetahuan Alam dan Sosial': 'IPAS',
+    'Seni Budaya': 'SBdP',
+    'Seni dan Budaya': 'SBdP',
+    'Seni Musik': 'S.Musik',
+    'Seni Rupa': 'S.Rupa',
+    'Pendidikan Jasmani, Olahraga, dan Kesehatan': 'PJOK',
+    'Bahasa Inggris': 'B.Ing',
+    'Bahasa Daerah': 'B.Sunda'
+  };
+
+  return map[fullName] || (fullName.length > 8 ? fullName.substring(0, 6) + '.' : fullName);
 }
-from './session.js';
 
-let currentUser = null
-let currentClass = null
-
-let currentLedgerData = []
-let currentMapel = []
-let currentSemester = null
-
-// =====================
-// ELEMENT
-// =====================
-
-const exportBtn =
-  document.getElementById(
-    'exportLedgerBtn'
-  )
-
-const container =
-  document.getElementById(
-    'ledgerContainer'
-  )
-
-const semesterInfo =
-  document.getElementById(
-    'ledgerSemesterInfo'
-  )
-
-// =====================
-// LOAD LEDGER
-// =====================
-
-async function loadLedger() {
+// ==========================================
+// 1. INIT LEDGER
+// ==========================================
+async function initLedger() {
+  const container = document.getElementById('ledgerContainer');
+  const semesterInfo = document.getElementById('ledgerSemesterInfo');
+  const kelasInfo = document.getElementById('ledgerKelasInfo');
 
   try {
-
-    await loadCurrentUser()
-
-    currentUser =
-      getCurrentUser()
-
-    if (!currentUser) {
-
-      alert(
-        'Session tidak ditemukan'
-      )
-
-      return
-
+    if (container) {
+      container.innerHTML = '<p style="text-align:center; padding:20px; color:#64748b;">⏳ Memuat Ledger...</p>';
     }
 
-    currentClass =
-      currentUser.kelas
-      
-    container.innerHTML =
-      'Memuat Ledger...'
+    await loadCurrentUser();
+    currentUser = getCurrentUser();
 
-    // =====================
-    // SEMESTER AKTIF
-    // =====================
+    if (!currentUser || !currentUser.kelas) {
+      alert('Session atau data kelas tidak ditemukan.');
+      if (container) container.innerHTML = '<p style="color:#ef4444; text-align:center;">Data kelas tidak ditemukan.</p>';
+      return;
+    }
 
-    const {
-      data: semester,
-      error: semesterError
-    } = await supabase
+    currentClass = currentUser.kelas;
 
+    if (kelasInfo) {
+      kelasInfo.textContent = `Kelas ${currentClass.nama_kelas || currentClass.tingkat || '-'}`;
+    }
+
+    // A. LOAD SEMESTER AKTIF
+    const { data: semester, error: semesterError } = await supabase
       .from('semester')
       .select('*')
-      .eq(
-          'school_id',
-          currentUser.profile.school_id
-      )
-      .eq(
-        'is_active',
-        true
-      )
-      .single()
+      .eq('school_id', currentUser.profile.school_id)
+      .eq('is_active', true)
+      .maybeSingle();
 
-    if (
-      semesterError ||
-      !semester
-    ) {
-
-      semesterInfo.textContent =
-        'Semester tidak ditemukan'
-
-      container.innerHTML =
-        'Semester aktif tidak ditemukan'
-
-      return
-
+    if (semesterError || !semester) {
+      if (semesterInfo) semesterInfo.textContent = 'Semester tidak aktif';
+      if (container) container.innerHTML = '<p style="color:#ef4444; text-align:center;">Semester aktif tidak ditemukan.</p>';
+      return;
     }
 
-    semesterInfo.textContent =
-      `${semester.nama_semester} • ${semester.tahun_ajaran}`
+    currentSemester = semester;
+    if (semesterInfo) {
+      semesterInfo.textContent = `${semester.nama_semester} • T.A ${semester.tahun_ajaran}`;
+    }
 
-    // =====================
-    // SISWA
-    // =====================
+    // B. LOAD SISWA
+    const { data: siswa, error: siswaError } = await supabase
+      .from('siswa')
+      .select('id, nama_siswa')
+      .eq('class_id', currentClass.id)
+      .order('nama_siswa');
 
-   
-const {
-  data: siswa,
-  error: siswaError
-} = await supabase
+    if (siswaError) throw siswaError;
 
-  .from('siswa')
-  .select(
-    'id,nama_siswa'
-  )
-  .eq(
-    'class_id',
-    currentClass.id
-  )
-  .order(
-    'nama_siswa'
-  )
-
-if (siswaError) {
-
-  console.error(
-    'ERROR SISWA',
-    siswaError
-  )
-
-  throw siswaError
-
-}
-
-    // =====================
-    // MAPEL
-    // =====================
-
-    const {
-      data: mapel
-    } = await supabase
-
+    // C. LOAD MAPEL
+    const { data: mapel, error: mapelError } = await supabase
       .from('mata_pelajaran')
-      .select(
-        'id,nama_mapel'
-      )
-      .eq(
-          'school_id',
-          currentUser.profile.school_id
-      )
+      .select('id, nama_mapel')
+      .eq('school_id', currentUser.profile.school_id)
+      .order('id');
 
-      .order(
-        'id'
-      )
+    if (mapelError) throw mapelError;
 
-    // =====================
-    // NILAI
-    // =====================
+    currentMapel = mapel || [];
 
-    const {
-      data: nilai
-    } = await supabase
-
+    // D. LOAD NILAI
+    const { data: nilai, error: nilaiError } = await supabase
       .from('nilai_sd')
       .select('*')
-      .eq(
-        'school_id',
-        currentUser.profile.school_id
-      )
-      .eq(
-        'semester_id',
-        semester.id
-      )
+      .eq('school_id', currentUser.profile.school_id)
+      .eq('class_id', currentClass.id)
+      .eq('semester_id', semester.id);
 
-    // =====================
-    // BENTUK DATA LEDGER
-    // =====================
+    if (nilaiError) throw nilaiError;
 
-    const ledgerData = []
+    // E. OLAH DATA LEDGER
+    const ledgerData = [];
 
-    siswa.forEach(s => {
+    siswa?.forEach(s => {
+      let total = 0;
+      let jumlahMapelDiisi = 0;
+      const nilaiMapel = {};
 
-      let total = 0
-      let jumlah = 0
+      currentMapel.forEach(m => {
+        const n = nilai?.find(
+          x => Number(x.siswa_id) === Number(s.id) && Number(x.mapel_id) === Number(m.id)
+        );
 
-      const nilaiMapel = {}
+        const akhir = n?.nilai_akhir !== null && n?.nilai_akhir !== undefined ? Number(n.nilai_akhir) : null;
+        nilaiMapel[m.id] = akhir;
 
-      mapel.forEach(m => {
-
-        const n = nilai.find(
-          x =>
-            Number(x.siswa_id) === Number(s.id)
-            &&
-            Number(x.mapel_id) === Number(m.id)
-        )
-
-        const akhir =
-          Number(
-            n?.nilai_akhir || 0
-          )
-
-        nilaiMapel[m.id] =
-          akhir
-
-        if (akhir > 0) {
-
-          total += akhir
-          jumlah++
-
+        if (akhir !== null && !isNaN(akhir)) {
+          total += akhir;
+          jumlahMapelDiisi++;
         }
+      });
 
-      })
-
-      const rata =
-        jumlah > 0
-          ? total / jumlah
-          : 0
+      const rata = jumlahMapelDiisi > 0 ? total / jumlahMapelDiisi : 0;
 
       ledgerData.push({
-
         siswa_id: s.id,
-        nama:s.nama_siswa,
+        nama: s.nama_siswa,
         nilai: nilaiMapel,
-        rata
+        rata: rata,
+        hasValue: jumlahMapelDiisi > 0
+      });
+    });
 
-      })
+    currentLedgerData = ledgerData;
 
-    })
-
-    // =====================
-    // RANKING
-    // =====================
-
-    
-currentLedgerData = ledgerData
-currentMapel = mapel
-currentSemester = semester
-
-    // =====================
-    // STATISTIK
-    // =====================
-
-    const rataKelas =
-
-      ledgerData.length
-
-      ?
-
-      ledgerData.reduce(
-        (a,b)=>
-          a + b.rata,
-        0
-      ) / ledgerData.length
-
-      :
-
-      0
-
-    const tertinggi =
-
-      ledgerData.length
-
-      ?
-
-      Math.max(
-        ...ledgerData.map(
-          x => x.rata
-        )
-      )
-
-      :
-
-      0
-
-    const terendah =
-
-      ledgerData.length
-
-      ?
-
-      Math.min(
-        ...ledgerData.map(
-          x => x.rata
-        )
-      )
-
-      :
-
-      0
-
-    // =====================
-    // REKAP MAPEL
-    // =====================
-
-    let mapelHtml = `
-
-      <h3>
-        Rekap Mata Pelajaran
-      </h3>
-
-      <table
-        class="ledger-table"
-        id="ledgerTable"
->
-
-      <thead>
-
-      <tr>
-
-        <th>Mapel</th>
-        <th>Rata-rata</th>
-
-      </tr>
-
-      </thead>
-
-      <tbody>
-
-    `
-
-    mapel.forEach(m => {
-
-      let total = 0
-      let count = 0
-
-      ledgerData.forEach(s => {
-
-        const n =
-          s.nilai[m.id]
-
-        if (n > 0) {
-
-          total += n
-          count++
-
-        }
-
-      })
-
-      const rataMapel =
-
-        count > 0
-
-        ?
-
-        (
-          total / count
-        ).toFixed(2)
-
-        :
-
-        '-'
-
-      mapelHtml += `
-
-        <tr>
-
-          <td>
-            ${m.nama_mapel}
-          </td>
-
-          <td>
-            ${rataMapel}
-          </td>
-
-        </tr>
-
-      `
-
-    })
-
-    mapelHtml += `
-      </tbody>
-      </table>
-    `
-
-    // =====================
-    // TABEL
-    // =====================
-
+    // F. RENDER TABEL RESPONSITIF KETAT (TANPA SCROLL HORIZONTAL)
     let html = `
-
-      <div class="ledger-stats">
-
-        <div class="summary-card">
-          <h4>Rata-rata Kelas</h4>
-          <h2>${rataKelas.toFixed(2)}</h2>
-        </div>
-
-        <div class="summary-card">
-          <h4>Nilai Tertinggi</h4>
-          <h2>${tertinggi.toFixed(2)}</h2>
-        </div>
-
-        <div class="summary-card">
-          <h4>Nilai Terendah</h4>
-          <h2>${terendah.toFixed(2)}</h2>
-        </div>
-
+      <div style="margin-bottom:12px; display:flex; justify-content:space-between; align-items:center;">
+        <h3 style="color:#0f766e; font-size:1.05rem; margin:0; font-weight:600;">
+          📊 Rekap Ledger Nilai Keseluruhan
+        </h3>
       </div>
 
-      <br>
+      <div style="border:1px solid #e2e8f0; border-radius:8px; overflow:hidden; background:#fff;">
+        <table style="width:100%; table-layout:fixed; border-collapse:collapse; font-size:0.82rem;">
+          <thead>
+            <tr style="background:#f8fafc; border-bottom:2px solid #cbd5e1; color:#334155;">
+              <th style="padding:8px 4px; width:32px; text-align:center;">No</th>
+              <th style="padding:8px 8px; text-align:left; width:auto;">Nama Siswa</th>
+    `;
 
-      <div class="table-responsive">
+    // Kolom Mapel Menggunakan Singkatan Singkat & Fixed Width (misal 50px-55px per kolom)
+    currentMapel.forEach(m => {
+      const shortName = getShortMapelName(m.nama_mapel);
+      html += `
+        <th style="padding:8px 2px; width:52px; text-align:center; font-weight:600;" title="${m.nama_mapel}">
+          ${shortName}
+        </th>`;
+    });
 
-      <table class="ledger-table">
+    // Kolom Rata-Rata Akhir
+    html += `
+              <th style="padding:8px 2px; width:58px; background:#d1fae5; color:#0f766e; text-align:center; font-weight:bold;">
+                Rata²
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+    `;
 
-      <thead>
-
-      <tr>
-
-      <th>No</th>
-      <th>Nama</th>
-
-    `
-
-    mapel.forEach(m => {
+    ledgerData.forEach((s, index) => {
+      const bgRow = index % 2 === 0 ? '#ffffff' : '#f8fafc';
 
       html += `
-        <th>
-          ${m.nama_mapel}
-        </th>
-      `
-
-    })
-
-    html += `
-      <th>Rata²</th>
-      </tr>
-      </thead>
-      <tbody>
-    `
-
-    ledgerData.forEach(
-      (s,index) => {
-        
-        html += `
-
-          <tr>
-
-          <td>${index+1}</td>
-
-          <td>${s.nama}</td>
-
-        `
-
-        mapel.forEach(m => {
-
-          html += `
-            <td>
-              ${
-                s.nilai[m.id] || ''
-              }
-            </td>
-          `
-
-        })
-
-        html += `
-
-          <td>
-            ${s.rata.toFixed(2)}
+        <tr style="border-bottom:1px solid #f1f5f9; background:${bgRow};">
+          <td style="padding:6px 2px; color:#64748b; text-align:center; font-size:0.8rem;">${index + 1}</td>
+          <td style="padding:6px 8px; font-weight:600; color:#1e293b; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${s.nama}">
+            ${s.nama}
           </td>
-          
-          </tr>
+      `;
 
-        `
+      currentMapel.forEach(m => {
+        const val = s.nilai[m.id];
+        const displayVal = val !== null && val !== undefined ? val : '-';
+        const textColor = val !== null && val !== undefined ? '#0f766e' : '#cbd5e1';
 
-      }
-    )
+        html += `<td style="padding:6px 2px; text-align:center; font-weight:500; color:${textColor};">${displayVal}</td>`;
+      });
+
+      const rataDisplay = s.hasValue ? s.rata.toFixed(0) : '0';
+      const rataColor = s.hasValue ? '#0f766e' : '#94a3b8';
+
+      html += `
+          <td style="padding:6px 2px; background:#e6f4ea; font-weight:bold; color:${rataColor}; text-align:center;">
+            ${rataDisplay}
+          </td>
+        </tr>
+      `;
+    });
 
     html += `
-      </tbody>
-      </table>
+          </tbody>
+        </table>
       </div>
+    `;
 
-      <br><br>
+    // G. KETERANGAN SINGKATAN MAPEL DI BAWAH TABEL
+    html += `
+      <div style="margin-top:14px; padding:10px; background:#f8fafc; border-radius:6px; border:1px solid #e2e8f0; font-size:0.78rem; color:#64748b;">
+        <strong style="color:#334155;">💡 Keterangan Singkatan Mata Pelajaran:</strong>
+        <div style="display:flex; flex-wrap:wrap; gap:10px; margin-top:6px;">
+    `;
 
-      ${mapelHtml}
-    `
+    currentMapel.forEach(m => {
+      html += `<span><strong>${getShortMapelName(m.nama_mapel)}</strong>: ${m.nama_mapel}</span>`;
+    });
 
-    container.innerHTML =
-      html
+    html += `
+        </div>
+      </div>
+    `;
 
+    if (container) container.innerHTML = html;
+
+  } catch (err) {
+    console.error(err);
+    if (container) container.innerHTML = `<p style="color:#ef4444; text-align:center; padding:20px;">Gagal memuat ledger: ${err.message}</p>`;
   }
-
-  catch(err) {
-
-    console.error(err)
-
-    container.innerHTML =
-      'Gagal memuat ledger'
-
-  }
-
 }
 
-// =====================
-// INIT
-// =====================
-
-loadLedger()
-
-// =====================
-// EXPORT EXCEL
-// =====================
-
-
-// =====================
-// EXPORT EXCEL FINAL
-// =====================
-
-exportBtn?.addEventListener(
-  'click',
-  () => {
-
-    if(
-      !currentLedgerData.length
-    ){
-      alert(
-        'Data ledger belum tersedia'
-      )
-      return
-    }
-
-    const wb =
-      XLSX.utils.book_new()
-
-    const data = []
-
-    // =====================
-    // HEADER
-    // =====================
-        
-    data.push([
-      'LEDGER NILAI SISWA'
-    ])
-
-    data.push([
-      currentSemester.nama_semester
-    ])
-
-    data.push([
-      `Tahun Ajaran ${currentSemester.tahun_ajaran}`
-    ])
-
-    data.push([])
-
-    // =====================
-    // HEADER TABEL
-    // =====================
-
-    const header = [
-
-      'No',
-      'Nama Siswa'
-
-    ]
-
-    currentMapel.forEach(
-      m =>
-        header.push(
-          m.nama_mapel
-        )
-    )
-
-    header.push(
-      'Rata-rata'
-    )
-
-    data.push(header)
-
-    // =====================
-    // DATA SISWA
-    // =====================
-
-    currentLedgerData.forEach(
-      (s,index)=>{
-
-        const row = [
-
-          index + 1,
-          s.nama
-
-        ]
-
-        currentMapel.forEach(
-          m => {
-
-            row.push(
-              s.nilai[m.id] || ''
-            )
-
-          }
-        )
-
-        row.push(
-          Number(
-            s.rata
-          ).toFixed(2)
-        )
-
-        data.push(row)
-
-      }
-    )
-
-    // =====================
-    // REKAP MAPEL
-    // =====================
-
-    data.push([])
-    data.push([])
-
-    data.push([
-      'REKAP MATA PELAJARAN'
-    ])
-
-    data.push([
-      'Mapel',
-      'Rata-rata'
-    ])
-
-    currentMapel.forEach(
-      m => {
-
-        let total = 0
-        let count = 0
-
-        currentLedgerData.forEach(
-          s => {
-
-            const nilai =
-              s.nilai[m.id]
-
-            if(nilai > 0){
-
-              total += nilai
-              count++
-
-            }
-
-          }
-        )
-
-        const rata =
-
-          count > 0
-
-          ?
-
-          (
-            total / count
-          ).toFixed(2)
-
-          :
-
-          '-'
-
-        data.push([
-          m.nama_mapel,
-          rata
-        ])
-
-      }
-    )
-
-    // =====================
-    // TTD
-    // =====================
-
-    data.push([])
-    data.push([])
-
-    data.push([
-      'Mengetahui'
-    ])
-
-    data.push([])
-
-    data.push([
-      'Kepala Sekolah',
-      '',
-      '',
-      '',
-      '',
-      '',
-      'Guru Kelas'
-    ])
-
-    data.push([])
-    data.push([])
-    data.push([])
-    data.push([])
-
-    data.push([
-      '(________________)',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '(________________)'
-    ])
-
-    // =====================
-    // SHEET
-    // =====================
-
-    const ws =
-      XLSX.utils.aoa_to_sheet(
-        data
-      )
-
-    // Lebar kolom
-
-    ws['!cols'] = [
-
-      { wch:5 },
-      { wch:30 },
-
-      ...currentMapel.map(
-        ()=>({
-          wch:18
-        })
-      ),
-
-      { wch:12 }
-
-    ]
-
-    XLSX.utils.book_append_sheet(
-      wb,
-      ws,
-      'Ledger'
-    )
-
-    XLSX.writeFile(
-
-      wb,
-
-      `Ledger_SD_${currentSemester.nama_semester}_${currentSemester.tahun_ajaran}.xlsx`
-
-    )
-
+// ==========================================
+// 2. EXPORT EXCEL FUNCTION (TETAP MENGGUNAKAN NAMA MAPEL LENGKAP)
+// ==========================================
+function handleExportExcel() {
+  if (!currentLedgerData.length) {
+    alert('Data ledger belum tersedia.');
+    return;
   }
-)
+
+  if (typeof XLSX === 'undefined') {
+    alert('Library SheetJS (XLSX) belum dimuat.');
+    return;
+  }
+
+  const wb = XLSX.utils.book_new();
+  const data = [];
+
+  data.push(['LEDGER NILAI SISWA']);
+  data.push([`Kelas: ${currentClass?.nama_kelas || '-'}`]);
+  data.push([`${currentSemester?.nama_semester || ''} - T.A ${currentSemester?.tahun_ajaran || ''}`]);
+  data.push([]);
+
+  const header = ['No', 'Nama Siswa'];
+  currentMapel.forEach(m => header.push(m.nama_mapel));
+  header.push('Rata-rata');
+  data.push(header);
+
+  currentLedgerData.forEach((s, index) => {
+    const row = [index + 1, s.nama];
+    currentMapel.forEach(m => {
+      const val = s.nilai[m.id];
+      row.push(val !== null && val !== undefined ? val : '-');
+    });
+    row.push(s.hasValue ? Number(s.rata).toFixed(1) : '0');
+    data.push(row);
+  });
+
+  const ws = XLSX.utils.aoa_to_sheet(data);
+  ws['!cols'] = [
+    { wch: 5 },
+    { wch: 30 },
+    ...currentMapel.map(() => ({ wch: 16 })),
+    { wch: 12 }
+  ];
+
+  XLSX.utils.book_append_sheet(wb, ws, 'Ledger Nilai');
+
+  const fileName = `Ledger_Nilai_${currentClass?.nama_kelas || 'Kelas'}.xlsx`;
+  XLSX.writeFile(wb, fileName);
+}
