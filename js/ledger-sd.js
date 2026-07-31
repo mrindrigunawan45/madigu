@@ -44,8 +44,9 @@ function getShortMapelName(fullName) {
 // ==========================================
 // 1. INIT LEDGER
 // ==========================================
-async function initLedger() {
+export async function initLedger() {
   const container = document.getElementById('ledgerContainer');
+  const sekolahInfo = document.getElementById('sekolahLedgerInfo');
   const semesterInfo = document.getElementById('ledgerSemesterInfo');
   const kelasInfo = document.getElementById('ledgerKelasInfo');
 
@@ -61,6 +62,11 @@ async function initLedger() {
       alert('Session atau data kelas tidak ditemukan.');
       if (container) container.innerHTML = '<p style="color:#ef4444; text-align:center;">Data kelas tidak ditemukan.</p>';
       return;
+    }
+
+    // Set nama sekolah dinamis dari profil user login
+    if (sekolahInfo) {
+      sekolahInfo.textContent = currentUser.profile?.sekolah || 'Sekolah -';
     }
 
     currentClass = currentUser.kelas;
@@ -153,7 +159,7 @@ async function initLedger() {
 
     currentLedgerData = ledgerData;
 
-    // F. RENDER TABEL RESPONSITIF KETAT (TANPA SCROLL HORIZONTAL)
+    // F. RENDER TABEL RESPONSITIF
     let html = `
       <div style="margin-bottom:12px; display:flex; justify-content:space-between; align-items:center;">
         <h3 style="color:#0f766e; font-size:1.05rem; margin:0; font-weight:600;">
@@ -169,7 +175,6 @@ async function initLedger() {
               <th style="padding:8px 8px; text-align:left; width:auto;">Nama Siswa</th>
     `;
 
-    // Kolom Mapel Menggunakan Singkatan Singkat & Fixed Width (misal 50px-55px per kolom)
     currentMapel.forEach(m => {
       const shortName = getShortMapelName(m.nama_mapel);
       html += `
@@ -178,7 +183,6 @@ async function initLedger() {
         </th>`;
     });
 
-    // Kolom Rata-Rata Akhir
     html += `
               <th style="padding:8px 2px; width:58px; background:#d1fae5; color:#0f766e; text-align:center; font-weight:bold;">
                 Rata²
@@ -249,7 +253,7 @@ async function initLedger() {
 }
 
 // ==========================================
-// 2. EXPORT EXCEL FUNCTION (TETAP MENGGUNAKAN NAMA MAPEL LENGKAP)
+// 2. EXPORT EXCEL FUNCTION
 // ==========================================
 function handleExportExcel() {
   if (!currentLedgerData.length) {
@@ -266,6 +270,7 @@ function handleExportExcel() {
   const data = [];
 
   data.push(['LEDGER NILAI SISWA']);
+  data.push([`Sekolah: ${currentUser?.profile?.sekolah || '-'}`]);
   data.push([`Kelas: ${currentClass?.nama_kelas || '-'}`]);
   data.push([`${currentSemester?.nama_semester || ''} - T.A ${currentSemester?.tahun_ajaran || ''}`]);
   data.push([]);
