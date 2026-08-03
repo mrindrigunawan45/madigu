@@ -191,7 +191,10 @@ async function loadRekap() {
 
   }
 
-  rekapData = data
+  // Melakukan sorting A-Z berdasarkan nama siswa
+  rekapData = (data || []).sort((a, b) => 
+    (a.siswa || '').localeCompare(b.siswa || '')
+  )
 
   renderTable()
 

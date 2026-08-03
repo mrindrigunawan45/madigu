@@ -166,6 +166,7 @@ async function loadSiswaDanNilai() {
     !jenisSelect.value
   ) return
 
+  // Mengambil daftar siswa dan diurutkan A-Z secara eksplisit
   const { data: siswa, error: siswaError } =
     await supabaseClient
 
@@ -173,6 +174,7 @@ async function loadSiswaDanNilai() {
     .select('*')
     .eq('kelas', kelasSelect.value)
     .eq('school_id', schoolId)
+    .order('nama_siswa', { ascending: true })
 
   if (siswaError) {
 
