@@ -2,307 +2,132 @@
 <html lang="id">
 
 <head>
-
   <meta charset="UTF-8" />
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  />
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dashboard BK</title>
-
-  <link
-    rel="stylesheet"
-    href="css/dashboard-bk.css"
-  />
-
+  <link rel="stylesheet" href="css/dashboard-bk.css" />
 </head>
 
 <body>
 
   <!-- MOBILE TOPBAR -->
-
   <header class="mobile-topbar">
-
-    <button id="menuBtn">
-      ☰
-    </button>
-
+    <button id="menuBtn">☰</button>
     <h1>TiTaTif BK</h1>
-
   </header>
 
-  <!-- OVERLAY -->
-
+  <!-- OVERLAY SIDEBAR -->
   <div id="overlay"></div>
 
   <!-- SIDEBAR -->
-
   <aside id="sidebar">
-
     <div class="sidebar-header">
-
       <h2>TiTaTif BK</h2>
-
-      <img
-        src="img/titatif-logo.png"
-        alt="Logo"
-        class="sidebar-logo"
-  >
-
-      </div>
+      <img src="img/titatif-logo.png" alt="Logo" class="sidebar-logo">
+    </div>
 
     <nav>
-
-      <a
-        href="#"
-        class="menu active"
-        data-page="dashboard"
-      >
-        Dashboard
-      </a>
-
-      <a
-        href="#"
-        class="menu"
-        data-page="jurnal"
-      >
-        Jurnal Laporan
-      </a>
-
-      <a
-        href="#"
-        class="menu"
-        data-page="rekap"
-      >
-        Rekap Kelas
-      </a>
-
-      <a
-        href="#"
-        id="logoutBtn"
-      >
-        Logout
-      </a>
-
+      <a href="#" class="menu active" data-page="dashboard">Dashboard</a>
+      <a href="#" class="menu" data-page="jurnal">Jurnal Laporan</a>
+      <a href="#" class="menu" data-page="rekap">Rekap Kelas</a>
+      <a href="#" id="logoutBtn" class="logout-link">Logout</a>
     </nav>
-
   </aside>
 
-  <!-- MAIN -->
-
+  <!-- MAIN CONTENT -->
   <main id="main-content">
 
-    <!-- DASHBOARD -->
-
+    <!-- DASHBOARD PAGE -->
     <section id="dashboardPage">
-
       <div class="dashboard-hero">
-
         <div class="hero-text">
-
-          <h1>
-            Dashboard BK
-          </h1>
-
-          <p>
-            Monitoring laporan siswa secara realtime
-          </p>
-
+          <h1>Dashboard BK</h1>
+          <p>Monitoring laporan siswa secara realtime</p>
         </div>
-
-        <div class="hero-icon">
-          📘
-        </div>
-
+        <div class="hero-icon">📘</div>
       </div>
 
       <!-- STATS -->
-
       <div class="stats-grid">
-
         <div class="summary-card primary">
-
           <div class="card-top">
-
-            <span>
-              Total Laporan Bulan Ini
-            </span>
-
-            <div class="icon-circle">
-              📊
-            </div>
-
+            <span>Total Laporan Bulan Ini</span>
+            <div class="icon-circle">📊</div>
           </div>
-
-          <h2 id="monthCount">
-            0
-          </h2>
-
+          <h2 id="monthCount">0</h2>
         </div>
 
         <div class="summary-card secondary">
-
           <div class="card-top">
-
-            <span>
-              Laporan Hari Ini
-            </span>
-
-            <div class="icon-circle">
-              🔔
-            </div>
-
+            <span>Laporan Hari Ini</span>
+            <div class="icon-circle">🔔</div>
           </div>
-
-          <h2 id="todayOnly">
-            0
-          </h2>
-
+          <h2 id="todayOnly">0</h2>
         </div>
-
       </div>
-
     </section>
 
-    <!-- JURNAL -->
-
-    <section
-      id="jurnalPage"
-      class="hidden"
-    >
-
+    <!-- JURNAL PAGE -->
+    <section id="jurnalPage" class="hidden">
       <div class="page-header">
-
-        <h2>
-          Jurnal Laporan
-        </h2>
-
+        <h2>Jurnal Laporan</h2>
       </div>
 
-      <!-- SEARCH -->
-
+      <!-- TOOLBAR / FILTER -->
       <div class="jurnal-toolbar">
-
         <div class="jurnal-search">
-
-          <span>
-            🔍
-          </span>
-
-          <input
-            type="text"
-            id="searchInput"
-            placeholder="Cari histori siswa..."
-          >
-
+          <span>🔍</span>
+          <input type="text" id="searchInput" placeholder="Cari histori siswa..." autocomplete="off">
         </div>
-
       </div>
 
       <div id="jurnalList"></div>
 
       <div class="load-more-wrap">
-
-        <button id="loadMoreBtn">
-
-          Muat Lagi
-
-        </button>
-
+        <button id="loadMoreBtn">Muat Lagi</button>
       </div>
-
     </section>
 
-    <!-- REKAP -->
-
-    <section
-      id="rekapPage"
-      class="hidden"
-    >
-
+    <!-- REKAP PAGE -->
+    <section id="rekapPage" class="hidden">
       <div class="page-header">
-
-        <h2>
-          Rekap Kelas
-        </h2>
-
+        <h2>Rekap Kelas</h2>
       </div>
 
       <div class="rekap-filter">
-
         <select id="kelasSelect">
-
-          <option value="">
-            Pilih Kelas
-          </option>
-
+          <option value="">Pilih Kelas</option>
         </select>
-
       </div>
 
       <div class="table-wrapper">
-
-  <table class="rekap-table">
-
-    <thead>
-
-      <tr>
-
-        <th>Nama Siswa</th>
-
-        <th>Total</th>
-
-        <th>Pelanggaran Terakhir</th>
-
-        <th>Kategori Dominan</th>
-
-      </tr>
-
-    </thead>
-
-    <tbody id="rekapBody"></tbody>
-
-  </table>
-
-</div>
-
+        <table class="rekap-table">
+          <thead>
+            <tr>
+              <th>Nama Siswa</th>
+              <th>Total</th>
+              <th>Pelanggaran Terakhir</th>
+              <th>Kategori Dominan</th>
+            </tr>
+          </thead>
+          <tbody id="rekapBody"></tbody>
+        </table>
+      </div>
     </section>
 
   </main>
 
-  <!-- MODAL -->
-
-  <div
-    id="detailModal"
-    class="modal hidden"
-  >
-
+  <!-- DETAIL MODAL -->
+  <div id="detailModal" class="modal hidden">
+    <div class="modal-backdrop" id="modalBackdrop"></div>
     <div class="modal-content">
-
-      <button
-        id="closeModal"
-        class="close-btn"
-      >
-        ✕
-      </button>
-
-      <h2>
-        Detail Laporan
-      </h2>
-
+      <button id="closeModal" class="close-btn" aria-label="Tutup">✕</button>
+      <h2>Detail Laporan</h2>
       <div id="modalBody"></div>
-
     </div>
-
   </div>
 
-  <script
-    type="module"
-    src="js/dashboard-bk.js"
-  ></script>
-
+  <script type="module" src="js/dashboard-bk.js"></script>
 </body>
 
 </html>
