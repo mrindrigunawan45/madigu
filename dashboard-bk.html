@@ -4,32 +4,132 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dashboard BK</title>
-  <link rel="stylesheet" href="css/dashboard-bk.css" />
+  <title>TiTaTif BK - Dashboard Guru BK</title>
+
+  <!-- CSS ASLI KAMU -->
+  <link rel="stylesheet" href="css/dashboard-bk.css?v=2" />
+
+  <style>
+    /* STYLING MODAL BK & BADGE */
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+    .modal-content {
+      background: #ffffff;
+      padding: 24px;
+      border-radius: 16px;
+      width: 90%;
+      max-width: 500px;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+    .form-group {
+      margin-bottom: 14px;
+    }
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 4px;
+    }
+    .form-control {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      font-size: 14px;
+      outline: none;
+      box-sizing: border-box;
+    }
+    .form-control:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    .btn-secondary {
+      background: #e5e7eb;
+      color: #374151;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .btn-primary {
+      background: #2563eb;
+      color: #ffffff;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .btn-success {
+      background: #059669;
+      color: #ffffff;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.2s;
+    }
+    .btn-success:hover {
+      background: #047857;
+    }
+    .badge {
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      display: inline-block;
+    }
+    .badge.blue { background: #e0e7ff; color: #1d4ed8; }
+    .badge.orange { background: #ffedd5; color: #c2410c; }
+    .badge.green { background: #dcfce7; color: #15803d; }
+    .badge.gray { background: #f3f4f6; color: #6b7280; }
+  </style>
 </head>
 
 <body>
 
   <!-- MOBILE TOPBAR -->
-  <header class="mobile-topbar">
-    <button id="menuBtn">☰</button>
-    <h1>TiTaTif BK</h1>
-  </header>
+  <div class="mobile-topbar">
+    <h3>TiTaTif BK</h3>
+    <button id="menuToggle">☰</button>
+  </div>
 
-  <!-- OVERLAY SIDEBAR -->
   <div id="overlay"></div>
 
   <!-- SIDEBAR -->
   <aside id="sidebar">
     <div class="sidebar-header">
       <h2>TiTaTif BK</h2>
-      <img src="img/titatif-logo.png" alt="Logo" class="sidebar-logo">
+      <img src="img/titatif-logo.png" alt="Logo TiTaTif" class="sidebar-logo" />
     </div>
 
     <nav>
-      <a href="#" class="menu active" data-page="dashboard">Dashboard</a>
-      <a href="#" class="menu" data-page="jurnal">Jurnal Laporan</a>
-      <a href="#" class="menu" data-page="rekap">Rekap Kelas</a>
+      <a href="#" id="navDashboard" class="nav-item active">Dashboard</a>
+      <a href="#" id="navJurnal" class="nav-item">Jurnal Laporan</a>
+      <a href="#" id="navRekap" class="nav-item">Rekap Kelas</a>
       <a href="#" id="logoutBtn" class="logout-link">Logout</a>
     </nav>
   </aside>
@@ -37,24 +137,34 @@
   <!-- MAIN CONTENT -->
   <main id="main-content">
 
-    <!-- DASHBOARD PAGE -->
-    <section id="dashboardPage">
-      <div class="dashboard-hero">
-        <div class="hero-text">
-          <h1>Dashboard BK</h1>
-          <p>Monitoring laporan siswa secara realtime</p>
-        </div>
-        <div class="hero-icon">📘</div>
+    <!-- HERO BANNER -->
+    <div class="dashboard-hero">
+      <div class="hero-text">
+        <h1 id="pageTitle">Dashboard BK</h1>
+        <p id="pageSubtitle">Monitoring laporan siswa secara realtime</p>
+      </div>
+      <div class="hero-icon" id="pageIcon">📘</div>
+    </div>
+
+    <!-- TAB 1: VIEW DASHBOARD -->
+    <section id="viewDashboard" class="tab-content">
+      <div class="jurnal-toolbar" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h3 style="font-size: 20px; color: #1e3a8a;">Ringkasan Data</h3>
+        <select id="timeFilter" style="padding: 10px 16px; border-radius: 12px; border: 1px solid #d1d5db; background: white; font-size: 14px; font-weight: bold; color: #374151; cursor: pointer;">
+          <option value="today">Hari Ini</option>
+          <option value="week">Minggu Ini</option>
+          <option value="month" selected>Bulan Ini</option>
+          <option value="all">Semua Waktu</option>
+        </select>
       </div>
 
-      <!-- STATS -->
-      <div class="stats-grid">
+      <div class="stats-grid" style="margin-bottom: 30px;">
         <div class="summary-card primary">
           <div class="card-top">
-            <span>Total Laporan Bulan Ini</span>
+            <span id="statPeriodTitle">Total Laporan Bulan Ini</span>
             <div class="icon-circle">📊</div>
           </div>
-          <h2 id="monthCount">0</h2>
+          <h2 id="totalLaporanBulan">0</h2>
         </div>
 
         <div class="summary-card secondary">
@@ -62,72 +172,179 @@
             <span>Laporan Hari Ini</span>
             <div class="icon-circle">🔔</div>
           </div>
-          <h2 id="todayOnly">0</h2>
+          <h2 id="totalLaporanHari">0</h2>
+        </div>
+      </div>
+
+      <div style="background: white; border-radius: 24px; padding: 24px; box-shadow: 0 4px 14px rgba(0,0,0,0.05); border: 1px solid #eef2ff;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
+          <h3 style="font-size: 18px; color: #111827;">Laporan Terbaru (5 Terakhir)</h3>
+          <a href="#" id="seeAllBtn" style="color: #2563eb; text-decoration: none; font-size: 14px; font-weight: bold;">Lihat Semua →</a>
+        </div>
+        
+        <div id="recentReportsContainer">
+          <div class="loading-state">Memuat laporan terbaru...</div>
         </div>
       </div>
     </section>
 
-    <!-- JURNAL PAGE -->
-    <section id="jurnalPage" class="hidden">
-      <div class="page-header">
-        <h2>Jurnal Laporan</h2>
-      </div>
+    <!-- TAB 2: VIEW JURNAL LAPORAN -->
+    <section id="viewJurnal" class="tab-content" style="display: none;">
+      <div style="background: white; border-radius: 20px; padding: 20px; margin-bottom: 24px; box-shadow: 0 4px 14px rgba(0,0,0,0.04); display: flex; gap: 12px; flex-wrap: wrap; align-items: center; justify-content: space-between;">
+        
+        <!-- SEARCH & FILTER STATUS -->
+        <div style="display: flex; gap: 10px; flex-wrap: wrap; flex: 1;">
+          <input type="text" id="searchInput" placeholder="Cari nama siswa..." style="min-width: 200px; padding: 10px 16px; border-radius: 12px; border: 1px solid #d1d5db; font-size: 14px;">
+          
+          <select id="filterStatus" style="padding: 10px 16px; border-radius: 12px; border: 1px solid #d1d5db; font-size: 14px; background: white;">
+            <option value="all">Semua Status</option>
+            <option value="baru">Baru</option>
+            <option value="diproses">Diproses</option>
+            <option value="selesai">Selesai</option>
+          </select>
+        </div>
 
-      <!-- TOOLBAR / FILTER -->
-      <div class="jurnal-toolbar">
-        <div class="jurnal-search">
-          <span>🔍</span>
-          <input type="text" id="searchInput" placeholder="Cari histori siswa..." autocomplete="off">
+        <!-- TOMBOL EXPORT JURNAL & CATAT LAPORAN -->
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+          <button id="btnExportJurnal" class="btn-success">
+            📥 Export Excel Jurnal
+          </button>
+
+          <button id="btnTambahLaporanBK" class="btn-primary" style="padding: 10px 18px;">
+            + Catat Laporan Mandiri
+          </button>
         </div>
       </div>
 
-      <div id="jurnalList"></div>
-
-      <div class="load-more-wrap">
-        <button id="loadMoreBtn">Muat Lagi</button>
+      <div id="jurnalContainer">
+        <div class="loading-state">Memuat semua laporan...</div>
       </div>
     </section>
 
-    <!-- REKAP PAGE -->
-    <section id="rekapPage" class="hidden">
-      <div class="page-header">
-        <h2>Rekap Kelas</h2>
-      </div>
-
-      <div class="rekap-filter">
-        <select id="kelasSelect">
+    <!-- TAB 3: VIEW REKAP KELAS -->
+    <section id="viewRekap" class="tab-content" style="display: none;">
+      <div style="background: white; border-radius: 20px; padding: 20px; margin-bottom: 24px; box-shadow: 0 4px 14px rgba(0,0,0,0.04); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+        <select id="rekapClassSelect" style="width: 100%; max-width: 300px; padding: 12px 16px; border-radius: 12px; border: 1px solid #d1d5db; font-size: 14px; font-weight: bold; cursor: pointer;">
           <option value="">Pilih Kelas</option>
         </select>
+
+        <button id="btnExportRekap" class="btn-success">
+          📥 Export Excel Rekap
+        </button>
       </div>
 
-      <div class="table-wrapper">
-        <table class="rekap-table">
+      <div style="background: white; border-radius: 20px; padding: 24px; box-shadow: 0 4px 14px rgba(0,0,0,0.04); overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 14px;">
           <thead>
-            <tr>
-              <th>Nama Siswa</th>
-              <th>Total</th>
-              <th>Pelanggaran Terakhir</th>
-              <th>Kategori Dominan</th>
+            <tr style="border-bottom: 2px solid #f3f4f6; color: #1e3a8a;">
+              <th style="padding: 12px;">Nama Siswa</th>
+              <th style="padding: 12px;">Total</th>
+              <th style="padding: 12px;">Pelanggaran Terakhir</th>
+              <th style="padding: 12px;">Kategori Dominan</th>
+              <th style="padding: 12px; text-align: center;">Aksi</th>
             </tr>
           </thead>
-          <tbody id="rekapBody"></tbody>
+          <tbody id="rekapTableBody">
+            <tr>
+              <td colspan="5" style="text-align: center; padding: 40px; color: #6b7280;">
+                📊<br>Pilih kelas terlebih dahulu
+              </td>
+            </tr>
+          </tbody>
         </table>
       </div>
     </section>
 
   </main>
 
-  <!-- DETAIL MODAL -->
-  <div id="detailModal" class="modal hidden">
-    <div class="modal-backdrop" id="modalBackdrop"></div>
-    <div class="modal-content">
-      <button id="closeModal" class="close-btn" aria-label="Tutup">✕</button>
-      <h2>Detail Laporan</h2>
-      <div id="modalBody"></div>
+  <!-- MODAL 1: DETAIL & EDIT STATUS -->
+  <div id="modalDetail" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center; padding: 16px;">
+    <div style="background: white; border-radius: 24px; width: 100%; max-width: 500px; padding: 24px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);">
+      <h3 style="font-size: 20px; color: #111827; margin-bottom: 16px;">Detail Laporan</h3>
+      
+      <div id="modalBody" style="font-size: 14px; color: #374151; line-height: 1.6; margin-bottom: 20px;"></div>
+
+      <div style="margin-bottom: 20px;">
+        <label style="display: block; font-weight: bold; margin-bottom: 6px; font-size: 13px;">Update Status Tindak Lanjut:</label>
+        <select id="updateStatusSelect" style="width: 100%; padding: 10px; border-radius: 10px; border: 1px solid #d1d5db;">
+          <option value="baru">Baru</option>
+          <option value="diproses">Diproses (Pemanggilan/Konseling)</option>
+          <option value="selesai">Selesai</option>
+        </select>
+      </div>
+
+      <div style="display: flex; gap: 10px; justify-content: flex-end;">
+        <button id="closeModalBtn" style="padding: 10px 18px; border-radius: 10px; border: 1px solid #d1d5db; background: #f3f4f6; cursor: pointer; font-weight: bold;">Tutup</button>
+        <button id="saveStatusBtn" style="padding: 10px 18px; border-radius: 10px; border: none; background: #2563eb; color: white; cursor: pointer; font-weight: bold;">Simpan Status</button>
+      </div>
     </div>
   </div>
 
-  <script type="module" src="js/dashboard-bk.js"></script>
+  <!-- MODAL 2: INPUT LAPORAN BK MANDIRI -->
+  <div id="modalInputBK" class="modal" style="display: none;">
+    <div class="modal-content">
+      <h3 style="margin-top: 0; color: #1e293b; font-size: 18px; margin-bottom: 16px;">+ Catat Laporan / Bimbingan BK</h3>
+      <form id="formInputBK">
+        
+        <!-- STEP 1: PILIH KELAS -->
+        <div class="form-group">
+          <label for="inputKelasSelect">Pilih Kelas *</label>
+          <select id="inputKelasSelect" class="form-control" required>
+            <option value="">-- Pilih Kelas --</option>
+          </select>
+        </div>
+
+        <!-- STEP 2: PILIH SISWA (TERAMBIL DARI KELAS) -->
+        <div class="form-group">
+          <label for="inputSiswaSelect">Pilih Siswa *</label>
+          <select id="inputSiswaSelect" class="form-control" required disabled>
+            <option value="">-- Pilih Kelas Terlebih Dahulu --</option>
+          </select>
+        </div>
+
+        <!-- STEP 3: KATEGORI MASALAH -->
+        <div class="form-group">
+          <label for="inputKategoriSelect">Kategori Masalah *</label>
+          <select id="inputKategoriSelect" class="form-control" required>
+            <option value="">-- Pilih Kategori --</option>
+          </select>
+        </div>
+
+        <!-- STEP 4: RINCIAN JENIS MASALAH (TERAMBIL DARI KATEGORI) -->
+        <div class="form-group">
+          <label for="inputJenisSelect">Jenis / Rincian Masalah</label>
+          <select id="inputJenisSelect" class="form-control" disabled>
+            <option value="">-- Pilih Kategori Terlebih Dahulu --</option>
+          </select>
+        </div>
+
+        <!-- STEP 5: CATATAN & STATUS -->
+        <div class="form-group">
+          <label for="inputCatatan">Catatan / Tindakan Guru BK</label>
+          <textarea id="inputCatatan" class="form-control" rows="3" placeholder="Contoh: Siswa sudah dipanggil dan diberikan bimbingan individu."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="inputStatusSelect">Status Laporan</label>
+          <select id="inputStatusSelect" class="form-control">
+            <option value="diproses">Diproses</option>
+            <option value="selesai" selected>Selesai</option>
+          </select>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" id="closeModalInputBtn" class="btn-secondary">Batal</button>
+          <button type="submit" class="btn-primary">Simpan Laporan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- LIBRARY SHEETJS UNTUK EXPORT EXCEL -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+  <!-- JS ASLI KAMU -->
+  <script type="module" src="js/dashboard-bk.js?v=5"></script>
 </body>
 
 </html>
