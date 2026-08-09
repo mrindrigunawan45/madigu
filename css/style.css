@@ -1302,3 +1302,97 @@ tr:nth-child(even) {
     padding-right: 4px;
   }
 }
+/* ABSENSI / LIST SISWA STYLING */
+.siswa-list-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.siswa-card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-left: 5px solid #0d8a73;
+  border-radius: 12px;
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+}
+
+.siswa-info {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.avatar-initial {
+  width: 42px;
+  height: 42px;
+  background-color: #2563eb;
+  color: #ffffff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.siswa-nama {
+  font-weight: 700;
+  font-size: 1rem;
+  color: #1f2937;
+}
+
+.status-group {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-status {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  background: #f9fafb;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-status .icon {
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: #ffffff;
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-status .label {
+  font-size: 0.65rem;
+  font-weight: 600;
+  margin-top: 2px;
+  color: #4b5563;
+}
+
+/* WARNA UNTUK STATUS */
+.btn-status[data-status="Hadir"] .icon { background-color: #16a34a; }
+.btn-status[data-status="Sakit"] .icon { background-color: #eab308; }
+.btn-status[data-status="Izin"] .icon { background-color: #2563eb; }
+.btn-status[data-status="Alpa"] .icon { background-color: #dc2626; }
+
+/* KONDISI STATUS AKTIF / TERPILIH */
+.btn-status.active[data-status="Hadir"] { background-color: #dcfce7; border-color: #16a34a; }
+.btn-status.active[data-status="Sakit"] { background-color: #fef9c3; border-color: #eab308; }
+.btn-status.active[data-status="Izin"] { background-color: #dbeafe; border-color: #2563eb; }
+.btn-status.active[data-status="Alpa"] { background-color: #fee2e2; border-color: #dc2626; }

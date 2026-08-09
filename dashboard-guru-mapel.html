@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Guru Mapel - MaDiGU</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Library SheetJS untuk Export Excel -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+  <style>
+    :root {
+      --primary-teal: #0d8a73;
+      --dark-teal: #0a6b59;
+      --light-teal: #11a086;
+      --bg-body: #f4f7f6;
+      --card-bg: #ffffff;
+      --text-dark: #1f2937;
+      --text-muted: #6b7280;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-body);
+      color: var(--text-dark);
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* SIDEBAR */
+    .sidebar {
+      width: 250px;
+      background: var(--primary-teal);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      height: 100vh;
+      z-index: 20;
+      transition: all 0.3s ease;
+    }
+
+    .sidebar-brand {
+      padding: 24px 20px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .sidebar-brand-text {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: #ffffff;
+      letter-spacing: -0.5px;
+    }
+
+    .sidebar-menu {
+      list-style: none;
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      gap: 4px;
+    }
+
+    .sidebar-menu li a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      color: #e6f4f1;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.92rem;
+      border-radius: 10px;
+      transition: all 0.2s ease;
+    }
+
+    .sidebar-menu li a:hover,
+    .sidebar-menu li a.active {
+      background: rgba(255, 255, 255, 0.2);
+      color: #ffffff;
+    }
+
+    .sidebar-menu li.logout-item {
+      margin-top: auto;
+      margin-bottom: 10px;
+    }
+
+    .sidebar-menu li.logout-item a:hover {
+      background: rgba(239, 68, 68, 0.2);
+    }
+
+    /* MAIN CONTENT */
+    .main-wrapper {
+      margin-left: 250px;
+      width: calc(100% - 250px);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    .content-container {
+      padding: 28px;
+    }
+
+    /* HERO BANNER */
+    .welcome-banner {
+      background: linear-gradient(135deg, var(--primary-teal), var(--light-teal));
+      border-radius: 16px;
+      padding: 24px 28px;
+      color: #ffffff;
+      margin-bottom: 24px;
+      box-shadow: 0 4px 14px rgba(13, 138, 115, 0.15);
+    }
+
+    .badge-welcome {
+      background: rgba(255, 255, 255, 0.2);
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      display: inline-block;
+      margin-bottom: 8px;
+    }
+
+    .welcome-title {
+      font-size: 1.6rem;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+
+    .welcome-subtitle {
+      font-size: 0.88rem;
+      opacity: 0.9;
+    }
+
+    /* CARDS & FORMS */
+    .card {
+      background: var(--card-bg);
+      border-radius: 14px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+      border: 1px solid #e5e7eb;
+    }
+
+    .card h3 {
+      font-size: 1.1rem;
+      color: var(--text-dark);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .filter-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .form-control {
+      padding: 10px 14px;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      outline: none;
+      font-size: 0.9rem;
+    }
+
+    .form-control:focus {
+      border-color: var(--primary-teal);
+      box-shadow: 0 0 0 3px rgba(13, 138, 115, 0.15);
+    }
+
+    .btn-primary {
+      background: var(--primary-teal);
+      color: #ffffff;
+      border: none;
+      padding: 10px 22px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-primary:hover {
+      background: var(--dark-teal);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--primary-teal);
+      color: var(--primary-teal);
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-outline:hover {
+      background: var(--primary-teal);
+      color: #ffffff;
+    }
+
+    .card-header-flex {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* ABSENSI / LIST SISWA STYLING */
+    .siswa-list-container {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .siswa-card {
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      border-left: 5px solid #0d8a73;
+      border-radius: 12px;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+    }
+
+    .siswa-info {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .avatar-initial {
+      width: 42px;
+      height: 42px;
+      background-color: #2563eb;
+      color: #ffffff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+
+    .siswa-nama {
+      font-weight: 700;
+      font-size: 1rem;
+      color: #1f2937;
+    }
+
+    .status-group {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-status {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 52px;
+      height: 52px;
+      border-radius: 10px;
+      border: 1px solid #e5e7eb;
+      background: #f9fafb;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-status .icon {
+      font-size: 0.9rem;
+      font-weight: 800;
+      color: #ffffff;
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .btn-status .label {
+      font-size: 0.65rem;
+      font-weight: 600;
+      margin-top: 2px;
+      color: #4b5563;
+    }
+
+    /* WARNA TOMBOL STATUS ABSENSI */
+    .btn-status[data-status="Hadir"] .icon { background-color: #16a34a; }
+    .btn-status[data-status="Sakit"] .icon { background-color: #eab308; }
+    .btn-status[data-status="Izin"] .icon { background-color: #2563eb; }
+    .btn-status[data-status="Alpa"] .icon { background-color: #dc2626; }
+
+    .btn-status.active[data-status="Hadir"] { background-color: #dcfce7; border-color: #16a34a; }
+    .btn-status.active[data-status="Sakit"] { background-color: #fef9c3; border-color: #eab308; }
+    .btn-status.active[data-status="Izin"] { background-color: #dbeafe; border-color: #2563eb; }
+    .btn-status.active[data-status="Alpa"] { background-color: #fee2e2; border-color: #dc2626; }
+
+    /* TABLES */
+    .table-container {
+      width: 100%;
+      overflow-x: auto;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+
+    th {
+      background: #f9fafb;
+      color: #374151;
+      padding: 12px 16px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      border-bottom: 2px solid #e5e7eb;
+    }
+
+    td {
+      padding: 14px 16px;
+      border-bottom: 1px solid #e5e7eb;
+      font-size: 0.9rem;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    @media (max-width: 768px) {
+      .sidebar { display: none; }
+      .main-wrapper { margin-left: 0; width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- SIDEBAR MADIGU MAPEL -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <span class="sidebar-brand-text">MADIGU MAPEL</span>
+    </div>
+
+    <ul class="sidebar-menu">
+      <li>
+        <a href="#" class="active" data-tab="tab-jurnal">
+          <i class="fas fa-book-open"></i> Jurnal Mengajar
+        </a>
+      </li>
+      <li>
+        <a href="#" data-tab="tab-nilai">
+          <i class="fas fa-file-pen"></i> Buku Nilai & Ledger
+        </a>
+      </li>
+      <li class="logout-item">
+        <a href="#" id="logoutBtn">
+          <i class="fas fa-right-from-bracket"></i> Logout
+        </a>
+      </li>
+    </ul>
+  </aside>
+
+  <!-- MAIN WRAPPER -->
+  <div class="main-wrapper">
+    <main class="content-container">
+
+      <!-- WELCOME HERO BANNER -->
+      <div class="welcome-banner">
+        <div>
+          <span class="badge-welcome">👋 Selamat Datang</span>
+          <h1 class="welcome-title" id="namaGuru">Memuat Nama...</h1>
+          <p class="welcome-subtitle">
+            <span id="sekolahInfo">Memuat Sekolah...</span> • 
+            <span id="mapelInfo">Mata Pelajaran: -</span> • 
+            <span id="semesterAktifInfo">Semester -</span> • 
+            <span id="tahunAjaranInfo">Tahun Ajaran -</span>
+          </p>
+        </div>
+      </div>
+
+      <!-- TAB 1: JURNAL MENGAJAR & ABSENSI -->
+      <section id="tab-jurnal" class="tab-section">
+        <div class="card">
+          <h3><i class="fas fa-pen-to-square"></i> Input Jurnal Mengajar & Kehadiran</h3>
+          <form id="formJurnal">
+            <div class="filter-grid">
+              <div class="form-group">
+                <label>Tanggal</label>
+                <input type="date" class="form-control" id="jurnalTanggal" required>
+              </div>
+              <div class="form-group">
+                <label>Kelas</label>
+                <select class="form-control" id="jurnalKelas" required>
+                  <option value="">Pilih Kelas...</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Jam Ke-</label>
+                <input type="text" class="form-control" placeholder="Contoh: 1 - 2" id="jurnalJam" required>
+              </div>
+              <div class="form-group">
+                <label>Materi / CP</label>
+                <input type="text" class="form-control" placeholder="Materi yang diajarkan" id="jurnalMateri" required>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Catatan / Kendala Siswa</label>
+              <textarea class="form-control" rows="3" id="jurnalCatatan" placeholder="Catatan kegiatan belajar mengajar..."></textarea>
+            </div>
+
+            <div id="containerAbsensi" class="hidden" style="margin-top: 24px;">
+              <h4 style="margin-bottom: 12px; color: #374151;">Daftar Kehadiran Siswa</h4>
+              <div id="siswaList" class="siswa-list-container">
+                <!-- List Siswa Di-inject via JS -->
+              </div>
+            </div>
+
+            <div style="margin-top: 24px; text-align: right;">
+              <button type="submit" class="btn-primary" style="padding: 12px 28px; font-size: 1rem;">
+                <i class="fas fa-save"></i> Simpan Jurnal & Absensi
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <div class="card">
+          <div class="card-header-flex">
+            <h3><i class="fas fa-list-check"></i> Rekap Jurnal Mengajar</h3>
+            <button class="btn-outline" id="btnExportJurnal"><i class="fas fa-file-excel"></i> Export</button>
+          </div>
+          <br>
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>No</th>
+                  <th>Tanggal</th>
+                  <th>Kelas</th>
+                  <th>Jam</th>
+                  <th>Materi / CP</th>
+                  <th>Catatan</th>
+                </tr>
+              </thead>
+              <tbody id="tbodyJurnal">
+                <tr><td colspan="6" style="text-align:center;">Belum ada data jurnal.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 2: BUKU NILAI & LEDGER -->
+      <section id="tab-nilai" class="tab-section hidden">
+        <!-- FILTER CARD -->
+        <div class="card">
+          <h3><i class="fas fa-filter"></i> Filter Nilai</h3>
+          <div class="filter-grid">
+            <div class="form-group">
+              <label>Kelas</label>
+              <select class="form-control" id="nilaiKelas">
+                <option value="">Pilih Kelas...</option>
+              </select>
+            </div>
+            <div class="form-group" id="groupJenisPenilaian">
+              <label>Jenis Penilaian</label>
+              <select class="form-control" id="nilaiJenis">
+                <option value="TP1">Tujuan Pembelajaran 1 (TP1)</option>
+                <option value="TP2">Tujuan Pembelajaran 2 (TP2)</option>
+                <option value="TP3">Tujuan Pembelajaran 3 (TP3)</option>
+                <option value="TP4">Tujuan Pembelajaran 4 (TP4)</option>
+                <option value="TP5">Tujuan Pembelajaran 5 (TP5)</option>
+                <option value="TP6">Tujuan Pembelajaran 6 (TP6)</option>
+                <option value="STS">Sumatif Tengah Semester (STS)</option>
+                <option value="SAS">Sumatif Akhir Semester (SAS)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- SUB-TAB TOGGLE -->
+        <div class="subtab-container" style="display: flex; gap: 10px; margin-bottom: 20px;">
+          <button class="btn-subtab active" data-subtab="subtab-entry" style="padding: 10px 20px; border-radius: 8px; border: 1px solid #0d8a73; background: #0d8a73; color: white; font-weight: 600; cursor: pointer;">
+            <i class="fas fa-pen-to-square"></i> Entry Nilai
+          </button>
+          <button class="btn-subtab" data-subtab="subtab-ledger" style="padding: 10px 20px; border-radius: 8px; border: 1px solid #0d8a73; background: white; color: #0d8a73; font-weight: 600; cursor: pointer;">
+            <i class="fas fa-table-list"></i> Ledger Nilai
+          </button>
+        </div>
+
+        <!-- VIEW 1: ENTRY NILAI -->
+        <div id="subtab-entry" class="subtab-content">
+          <div class="card">
+            <div class="card-header-flex">
+              <h3>Entry Nilai Siswa</h3>
+              <button class="btn-primary" id="btnSimpanNilai"><i class="fas fa-save"></i> Simpan Nilai</button>
+            </div>
+            <br>
+            <div class="table-container">
+              <table>
+                <thead>
+                  <tr>
+                    <th style="width: 60px;">No</th>
+                    <th>Nama Siswa</th>
+                    <th style="width: 150px;">Nilai (0-100)</th>
+                  </tr>
+                </thead>
+                <tbody id="tbodyInputNilai">
+                  <tr><td colspan="3" style="text-align:center;">Pilih kelas untuk menampilkan siswa.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- VIEW 2: LEDGER NILAI -->
+        <div id="subtab-ledger" class="subtab-content hidden">
+          <div class="card">
+            <div class="card-header-flex">
+              <h3>Ledger Nilai Siswa</h3>
+              <button class="btn-outline" id="btnExportLedger"><i class="fas fa-file-excel"></i> Export Ledger</button>
+            </div>
+            <br>
+            <div class="table-container">
+              <table>
+                <thead>
+                  <tr style="text-align: center;">
+                    <th style="width: 50px;">No</th>
+                    <th style="text-align: left;">Nama Siswa</th>
+                    <th>TP1</th>
+                    <th>TP2</th>
+                    <th>TP3</th>
+                    <th>TP4</th>
+                    <th>TP5</th>
+                    <th>TP6</th>
+                    <th>STS</th>
+                    <th>SAS</th>
+                    <th style="background-color: #e6f4f1; color: #0d8a73;">Rata-Rata</th>
+                  </tr>
+                </thead>
+                <tbody id="tbodyLedger">
+                  <tr><td colspan="11" style="text-align:center;">Pilih kelas untuk menampilkan ledger nilai.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script type="module" src="js/guru-mapel.js"></script>
+</body>
+</html>

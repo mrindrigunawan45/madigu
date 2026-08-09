@@ -1,110 +1,41 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    
-  <meta
-    name="theme-color"
-    content="#2563eb"
-  />
-  
+  <meta name="theme-color" content="#2563eb" />
   <meta charset="UTF-8" />
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  />
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Login MaDiGU</title>
-
-  <link
-    rel="stylesheet"
-    href="css/style.css"
-  />
-
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
-  />
-
+  
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="icon" href="data:,">
 </head>
-
-<link rel="icon" href="data:,">
 
 <body class="login-page">
 
   <div class="login-container">
-
     <div class="login-card">
-
-      <img
-        src="img/logo.png"
-        alt="MaDiGu"
-        class="login-logo"
-      />
-
+      <img src="img/logo.png" alt="MaDiGu" class="login-logo" />
       <h1>Login MaDiGu</h1>
 
       <form id="loginForm">
-
         <div class="form-group">
-
-          <input
-            type="email"
-            id="email"
-            placeholder="Email"
-            required
-          />
-
+          <input type="email" id="email" placeholder="Email" required />
         </div>
 
         <div class="form-group">
-
-          <input
-            type="password"
-            id="password"
-            placeholder="Password"
-            required
-          />
-
+          <input type="password" id="password" placeholder="Password" required />
         </div>
 
-        <button
-          type="submit"
-          class="login-btn"
-        >
-
-          <i class="fa-solid fa-right-to-bracket"></i>
-          Masuk
-
+        <button type="submit" class="login-btn">
+          <i class="fa-solid fa-right-to-bracket"></i> Masuk
         </button>
-
       </form>
-
-    </div>
-
-  </div>
-
-  <script
-    type="module"
-    src="js/auth.js"
-  ></script>
-
-  <script>
- 
-</script>
-
-<!-- MODAL DETAIL SISWA TIDAK HADIR -->
-  <div id="modalAbsen" class="modal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h3>Daftar Siswa Tidak Hadir</h3>
-        <span class="close-modal" onclick="closeModalAbsen()">&times;</span>
-      </div>
-      <div class="modal-body">
-        <ul id="listTidakHadir" class="list-tidak-hadir"></ul>
-      </div>
     </div>
   </div>
-  
+
+  <!-- SCRIPT AUTHENTICATION MAIN -->
+  <script type="module" src="js/auth.js"></script>
+
 </body>
 </html>
