@@ -6,8 +6,9 @@
   <title>Dashboard Guru Mapel - MaDiGU</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
-  <!-- Library SheetJS untuk Export Excel -->
-  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <!-- Library ExcelJS & FileSaver untuk export Excel Rapi -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.3.0/exceljs.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
 
   <style>
     :root {
@@ -187,6 +188,7 @@
       border-radius: 8px;
       outline: none;
       font-size: 0.9rem;
+      background-color: #fff;
     }
 
     .form-control:focus {
@@ -204,6 +206,7 @@
       cursor: pointer;
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       gap: 8px;
     }
 
@@ -233,6 +236,8 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
     }
 
     /* ABSENSI / LIST SISWA STYLING */
@@ -318,7 +323,7 @@
       color: #4b5563;
     }
 
-    /* WARNA TOMBOL STATUS ABSENSI */
+    /* WARNA TOMBOL STATUS ABSENSI INPUT */
     .btn-status[data-status="Hadir"] .icon { background-color: #16a34a; }
     .btn-status[data-status="Sakit"] .icon { background-color: #eab308; }
     .btn-status[data-status="Izin"] .icon { background-color: #2563eb; }
@@ -358,6 +363,50 @@
       font-size: 0.9rem;
     }
 
+    /* BADGE & CARD REKAP HYBRID */
+    .rekap-item-card {
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      border-left: 5px solid var(--primary-teal);
+      border-radius: 12px;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+    }
+
+    .badge-status-group {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .badge-status-item {
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .badge-h { background: #dcfce7; color: #166534; }
+    .badge-s { background: #fef9c3; color: #854d0e; }
+    .badge-i { background: #dbeafe; color: #1e40af; }
+    .badge-a { background: #fee2e2; color: #991b1b; }
+
+    .persen-badge {
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 0.85rem;
+    }
+    .persen-tinggi { background: #dcfce7; color: #15803d; }
+    .persen-sedang { background: #fef9c3; color: #a16207; }
+    .persen-rendah { background: #fee2e2; color: #b91c1c; }
+
+    /* PENANGANAN UTAMA ELEMEN SEMBUNYI */
     .hidden {
       display: none !important;
     }
@@ -383,7 +432,13 @@
         </a>
       </li>
       <li>
-        <a href="#" data-tab="tab-nilai">
+        <a href="#" data-tab="tab-rekap-absensi">
+          <i class="fas fa-chart-pie"></i> Rekap Absensi
+        </a>
+      </li>
+      <li>
+        <!-- DISESUAIKAN: data-tab menjadi tab-buku-nilai -->
+        <a href="#" data-tab="tab-buku-nilai">
           <i class="fas fa-file-pen"></i> Buku Nilai & Ledger
         </a>
       </li>
@@ -417,29 +472,30 @@
       <section id="tab-jurnal" class="tab-section">
         <div class="card">
           <h3><i class="fas fa-pen-to-square"></i> Input Jurnal Mengajar & Kehadiran</h3>
-          <form id="formJurnal">
+          
+          <div id="formJurnal">
             <div class="filter-grid">
               <div class="form-group">
-                <label>Tanggal</label>
+                <label for="jurnalTanggal">Tanggal</label>
                 <input type="date" class="form-control" id="jurnalTanggal" required>
               </div>
               <div class="form-group">
-                <label>Kelas</label>
+                <label for="jurnalKelas">Kelas</label>
                 <select class="form-control" id="jurnalKelas" required>
                   <option value="">Pilih Kelas...</option>
                 </select>
               </div>
               <div class="form-group">
-                <label>Jam Ke-</label>
+                <label for="jurnalJam">Jam Ke-</label>
                 <input type="text" class="form-control" placeholder="Contoh: 1 - 2" id="jurnalJam" required>
               </div>
               <div class="form-group">
-                <label>Materi / CP</label>
+                <label for="jurnalMateri">Materi / CP</label>
                 <input type="text" class="form-control" placeholder="Materi yang diajarkan" id="jurnalMateri" required>
               </div>
             </div>
             <div class="form-group">
-              <label>Catatan / Kendala Siswa</label>
+              <label for="jurnalCatatan">Catatan / Kendala Siswa</label>
               <textarea class="form-control" rows="3" id="jurnalCatatan" placeholder="Catatan kegiatan belajar mengajar..."></textarea>
             </div>
 
@@ -451,27 +507,27 @@
             </div>
 
             <div style="margin-top: 24px; text-align: right;">
-              <button type="submit" class="btn-primary" style="padding: 12px 28px; font-size: 1rem;">
+              <button type="button" id="btnSimpanAbsensi" class="btn-primary" style="padding: 12px 28px; font-size: 1rem;">
                 <i class="fas fa-save"></i> Simpan Jurnal & Absensi
               </button>
             </div>
-          </form>
+          </div>
         </div>
 
         <div class="card">
           <div class="card-header-flex">
             <h3><i class="fas fa-list-check"></i> Rekap Jurnal Mengajar</h3>
-            <button class="btn-outline" id="btnExportJurnal"><i class="fas fa-file-excel"></i> Export</button>
+            <button type="button" class="btn-outline" id="btnExportJurnal"><i class="fas fa-file-excel"></i> Export</button>
           </div>
           <br>
           <div class="table-container">
             <table>
               <thead>
                 <tr>
-                  <th>No</th>
-                  <th>Tanggal</th>
-                  <th>Kelas</th>
-                  <th>Jam</th>
+                  <th style="width: 50px;">No</th>
+                  <th style="width: 120px;">Tanggal</th>
+                  <th style="width: 100px;">Kelas</th>
+                  <th style="width: 80px;">Jam</th>
                   <th>Materi / CP</th>
                   <th>Catatan</th>
                 </tr>
@@ -484,21 +540,30 @@
         </div>
       </section>
 
-      <!-- TAB 2: BUKU NILAI & LEDGER -->
-      <section id="tab-nilai" class="tab-section hidden">
+      <!-- TAB 2: REKAP ABSENSI -->
+      <section id="tab-rekap-absensi" class="tab-section hidden">
+        <div id="rekapAbsensiContainer">
+          <!-- Komponen Rekap Absensi Di-inject Otomatis oleh JavaScript -->
+        </div>
+      </section>
+
+      <!-- TAB 3: BUKU NILAI & LEDGER -->
+      <!-- DISESUAIKAN: id menjadi tab-buku-nilai -->
+      <section id="tab-buku-nilai" class="tab-section hidden">
         <!-- FILTER CARD -->
         <div class="card">
           <h3><i class="fas fa-filter"></i> Filter Nilai</h3>
           <div class="filter-grid">
             <div class="form-group">
-              <label>Kelas</label>
+              <label for="nilaiKelas">Kelas</label>
               <select class="form-control" id="nilaiKelas">
                 <option value="">Pilih Kelas...</option>
               </select>
             </div>
             <div class="form-group" id="groupJenisPenilaian">
-              <label>Jenis Penilaian</label>
-              <select class="form-control" id="nilaiJenis">
+              <label for="jenisPenilaian">Jenis Penilaian</label>
+              <select class="form-control" id="jenisPenilaian">
+                <option value="">Pilih Penilaian...</option>
                 <option value="TP1">Tujuan Pembelajaran 1 (TP1)</option>
                 <option value="TP2">Tujuan Pembelajaran 2 (TP2)</option>
                 <option value="TP3">Tujuan Pembelajaran 3 (TP3)</option>
@@ -514,69 +579,65 @@
 
         <!-- SUB-TAB TOGGLE -->
         <div class="subtab-container" style="display: flex; gap: 10px; margin-bottom: 20px;">
-          <button class="btn-subtab active" data-subtab="subtab-entry" style="padding: 10px 20px; border-radius: 8px; border: 1px solid #0d8a73; background: #0d8a73; color: white; font-weight: 600; cursor: pointer;">
+          <button type="button" class="btn-subtab active" data-subtab="subtab-entry" style="padding: 10px 20px; border-radius: 8px; border: 1px solid #0d8a73; background: #0d8a73; color: white; font-weight: 600; cursor: pointer;">
             <i class="fas fa-pen-to-square"></i> Entry Nilai
           </button>
-          <button class="btn-subtab" data-subtab="subtab-ledger" style="padding: 10px 20px; border-radius: 8px; border: 1px solid #0d8a73; background: white; color: #0d8a73; font-weight: 600; cursor: pointer;">
+          <button type="button" class="btn-subtab" data-subtab="subtab-ledger" style="padding: 10px 20px; border-radius: 8px; border: 1px solid #0d8a73; background: white; color: #0d8a73; font-weight: 600; cursor: pointer;">
             <i class="fas fa-table-list"></i> Ledger Nilai
           </button>
         </div>
 
         <!-- VIEW 1: ENTRY NILAI -->
-        <div id="subtab-entry" class="subtab-content">
-          <div class="card">
-            <div class="card-header-flex">
-              <h3>Entry Nilai Siswa</h3>
-              <button class="btn-primary" id="btnSimpanNilai"><i class="fas fa-save"></i> Simpan Nilai</button>
-            </div>
-            <br>
-            <div class="table-container">
-              <table>
-                <thead>
-                  <tr>
-                    <th style="width: 60px;">No</th>
-                    <th>Nama Siswa</th>
-                    <th style="width: 150px;">Nilai (0-100)</th>
-                  </tr>
-                </thead>
-                <tbody id="tbodyInputNilai">
-                  <tr><td colspan="3" style="text-align:center;">Pilih kelas untuk menampilkan siswa.</td></tr>
-                </tbody>
-              </table>
-            </div>
+        <div id="subtab-entry" class="subtab-content card">
+          <div class="card-header-flex">
+            <h3>Entry Nilai Siswa</h3>
+            <button type="button" class="btn-primary" id="btnSimpanNilai"><i class="fas fa-save"></i> Simpan Nilai</button>
+          </div>
+          <br>
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th style="width: 60px;">No</th>
+                  <th>Nama Siswa</th>
+                  <th style="width: 150px;">Nilai (0-100)</th>
+                </tr>
+              </thead>
+              <tbody id="tbodyInputNilai">
+                <tr><td colspan="3" style="text-align:center;">Pilih kelas untuk menampilkan siswa.</td></tr>
+              </tbody>
+            </table>
           </div>
         </div>
 
         <!-- VIEW 2: LEDGER NILAI -->
-        <div id="subtab-ledger" class="subtab-content hidden">
-          <div class="card">
-            <div class="card-header-flex">
-              <h3>Ledger Nilai Siswa</h3>
-              <button class="btn-outline" id="btnExportLedger"><i class="fas fa-file-excel"></i> Export Ledger</button>
-            </div>
-            <br>
-            <div class="table-container">
-              <table>
-                <thead>
-                  <tr style="text-align: center;">
-                    <th style="width: 50px;">No</th>
-                    <th style="text-align: left;">Nama Siswa</th>
-                    <th>TP1</th>
-                    <th>TP2</th>
-                    <th>TP3</th>
-                    <th>TP4</th>
-                    <th>TP5</th>
-                    <th>TP6</th>
-                    <th>STS</th>
-                    <th>SAS</th>
-                    <th style="background-color: #e6f4f1; color: #0d8a73;">Rata-Rata</th>
-                  </tr>
-                </thead>
-                <tbody id="tbodyLedger">
-                  <tr><td colspan="11" style="text-align:center;">Pilih kelas untuk menampilkan ledger nilai.</td></tr>
-                </tbody>
-              </table>
-            </div>
+        <div id="subtab-ledger" class="subtab-content card hidden">
+          <div class="card-header-flex">
+            <h3>Ledger Nilai Siswa</h3>
+            <button type="button" class="btn-outline" id="btnExportLedger"><i class="fas fa-file-excel"></i> Export Ledger</button>
+          </div>
+          <br>
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr style="text-align: center;">
+                  <th style="width: 50px;">No</th>
+                  <th style="text-align: left; min-width: 200px;">Nama Siswa</th>
+                  <th>TP1</th>
+                  <th>TP2</th>
+                  <th>TP3</th>
+                  <th>TP4</th>
+                  <th>TP5</th>
+                  <th>TP6</th>
+                  <th>STS</th>
+                  <th>SAS</th>
+                  <th style="background-color: #e6f4f1; color: #0d8a73;">Rata-Rata</th>
+                </tr>
+              </thead>
+              <tbody id="tbodyLedger">
+                <tr><td colspan="11" style="text-align:center;">Pilih kelas untuk menampilkan ledger nilai.</td></tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </section>
