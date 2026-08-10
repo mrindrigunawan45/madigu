@@ -334,12 +334,15 @@
     .btn-status.active[data-status="Izin"] { background-color: #dbeafe; border-color: #2563eb; }
     .btn-status.active[data-status="Alpa"] { background-color: #fee2e2; border-color: #dc2626; }
 
-    /* TABLES */
-    .table-container {
+    /* TABLES RESPONSIVE */
+    .table-container,
+    .table-responsive {
       width: 100%;
       overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
       border: 1px solid #e5e7eb;
       border-radius: 10px;
+      margin-bottom: 1rem;
     }
 
     table {
@@ -411,9 +414,47 @@
       display: none !important;
     }
 
+    /* OPTIMASI TAMPILAN MOBILE (HP) */
     @media (max-width: 768px) {
       .sidebar { display: none; }
       .main-wrapper { margin-left: 0; width: 100%; }
+      .content-container { padding: 14px; }
+      
+      .welcome-banner { padding: 16px 18px; border-radius: 12px; }
+      .welcome-title { font-size: 1.3rem; }
+      
+      .card { padding: 16px; border-radius: 10px; margin-bottom: 16px; }
+
+      .siswa-card {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 12px !important;
+        padding: 12px !important;
+      }
+
+      .siswa-card .status-group {
+        width: 100% !important;
+        display: grid !important;
+        grid-template-columns: repeat(4, 1fr) !important;
+        gap: 6px !important;
+      }
+
+      .siswa-card .status-group .btn-status {
+        width: 100% !important;
+        height: 46px !important;
+      }
+
+      /* Rekap Item Card di HP */
+      .rekap-item-card {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 12px !important;
+      }
+
+      .badge-status-group {
+        width: 100% !important;
+        justify-content: space-between !important;
+      }
     }
   </style>
 </head>
@@ -437,7 +478,6 @@
         </a>
       </li>
       <li>
-        <!-- DISESUAIKAN: data-tab menjadi tab-buku-nilai -->
         <a href="#" data-tab="tab-buku-nilai">
           <i class="fas fa-file-pen"></i> Buku Nilai & Ledger
         </a>
@@ -507,7 +547,7 @@
             </div>
 
             <div style="margin-top: 24px; text-align: right;">
-              <button type="button" id="btnSimpanAbsensi" class="btn-primary" style="padding: 12px 28px; font-size: 1rem;">
+              <button type="button" id="btnSimpanAbsensi" class="btn-primary" style="padding: 12px 28px; font-size: 1rem; width: 100%;">
                 <i class="fas fa-save"></i> Simpan Jurnal & Absensi
               </button>
             </div>
@@ -520,16 +560,16 @@
             <button type="button" class="btn-outline" id="btnExportJurnal"><i class="fas fa-file-excel"></i> Export</button>
           </div>
           <br>
-          <div class="table-container">
+          <div class="table-responsive">
             <table>
               <thead>
                 <tr>
                   <th style="width: 50px;">No</th>
-                  <th style="width: 120px;">Tanggal</th>
-                  <th style="width: 100px;">Kelas</th>
-                  <th style="width: 80px;">Jam</th>
-                  <th>Materi / CP</th>
-                  <th>Catatan</th>
+                  <th style="min-width: 110px;">Tanggal</th>
+                  <th style="min-width: 90px;">Kelas</th>
+                  <th style="min-width: 80px;">Jam</th>
+                  <th style="min-width: 200px;">Materi / CP</th>
+                  <th style="min-width: 180px;">Catatan</th>
                 </tr>
               </thead>
               <tbody id="tbodyJurnal">
@@ -548,7 +588,6 @@
       </section>
 
       <!-- TAB 3: BUKU NILAI & LEDGER -->
-      <!-- DISESUAIKAN: id menjadi tab-buku-nilai -->
       <section id="tab-buku-nilai" class="tab-section hidden">
         <!-- FILTER CARD -->
         <div class="card">
@@ -579,10 +618,10 @@
 
         <!-- SUB-TAB TOGGLE -->
         <div class="subtab-container" style="display: flex; gap: 10px; margin-bottom: 20px;">
-          <button type="button" class="btn-subtab active" data-subtab="subtab-entry" style="padding: 10px 20px; border-radius: 8px; border: 1px solid #0d8a73; background: #0d8a73; color: white; font-weight: 600; cursor: pointer;">
+          <button type="button" class="btn-subtab active" data-subtab="subtab-entry" style="flex: 1; padding: 10px; border-radius: 8px; border: 1px solid #0d8a73; background: #0d8a73; color: white; font-weight: 600; cursor: pointer;">
             <i class="fas fa-pen-to-square"></i> Entry Nilai
           </button>
-          <button type="button" class="btn-subtab" data-subtab="subtab-ledger" style="padding: 10px 20px; border-radius: 8px; border: 1px solid #0d8a73; background: white; color: #0d8a73; font-weight: 600; cursor: pointer;">
+          <button type="button" class="btn-subtab" data-subtab="subtab-ledger" style="flex: 1; padding: 10px; border-radius: 8px; border: 1px solid #0d8a73; background: white; color: #0d8a73; font-weight: 600; cursor: pointer;">
             <i class="fas fa-table-list"></i> Ledger Nilai
           </button>
         </div>
@@ -594,13 +633,13 @@
             <button type="button" class="btn-primary" id="btnSimpanNilai"><i class="fas fa-save"></i> Simpan Nilai</button>
           </div>
           <br>
-          <div class="table-container">
+          <div class="table-responsive">
             <table>
               <thead>
                 <tr>
-                  <th style="width: 60px;">No</th>
-                  <th>Nama Siswa</th>
-                  <th style="width: 150px;">Nilai (0-100)</th>
+                  <th style="width: 50px;">No</th>
+                  <th style="min-width: 180px;">Nama Siswa</th>
+                  <th style="width: 130px;">Nilai (0-100)</th>
                 </tr>
               </thead>
               <tbody id="tbodyInputNilai">
@@ -617,21 +656,21 @@
             <button type="button" class="btn-outline" id="btnExportLedger"><i class="fas fa-file-excel"></i> Export Ledger</button>
           </div>
           <br>
-          <div class="table-container">
+          <div class="table-responsive">
             <table>
               <thead>
                 <tr style="text-align: center;">
                   <th style="width: 50px;">No</th>
-                  <th style="text-align: left; min-width: 200px;">Nama Siswa</th>
-                  <th>TP1</th>
-                  <th>TP2</th>
-                  <th>TP3</th>
-                  <th>TP4</th>
-                  <th>TP5</th>
-                  <th>TP6</th>
-                  <th>STS</th>
-                  <th>SAS</th>
-                  <th style="background-color: #e6f4f1; color: #0d8a73;">Rata-Rata</th>
+                  <th style="text-align: left; min-width: 180px;">Nama Siswa</th>
+                  <th style="min-width: 60px;">TP1</th>
+                  <th style="min-width: 60px;">TP2</th>
+                  <th style="min-width: 60px;">TP3</th>
+                  <th style="min-width: 60px;">TP4</th>
+                  <th style="min-width: 60px;">TP5</th>
+                  <th style="min-width: 60px;">TP6</th>
+                  <th style="min-width: 60px;">STS</th>
+                  <th style="min-width: 60px;">SAS</th>
+                  <th style="min-width: 90px; background-color: #e6f4f1; color: #0d8a73;">Rata-Rata</th>
                 </tr>
               </thead>
               <tbody id="tbodyLedger">

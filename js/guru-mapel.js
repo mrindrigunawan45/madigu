@@ -692,34 +692,29 @@ async function loadSiswaByKelas(classId) {
 
         const card = document.createElement('div')
         card.className = 'siswa-card'
-        card.style.cssText = 'display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; margin-bottom: 10px; background: #fff; border: 1px solid #e5e7eb; border-radius: 10px; border-left: 4px solid #0d8a73;'
+        card.style.cssText = 'background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; border-left: 4px solid #0d8a73; margin-bottom: 8px;'
         
         card.innerHTML = `
-          <div class="siswa-info" style="display: flex; align-items: center; gap: 12px;">
-            <div class="avatar-initial" style="width: 40px; height: 40px; background: #2563eb; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">
+          <div class="siswa-info" style="display: flex; align-items: center; gap: 10px;">
+            <div class="avatar-initial" style="width: 32px; height: 32px; flex-shrink: 0; background: #2563eb; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.8rem;">
               ${getInitial(item.nama_siswa)}
             </div>
-            <div class="siswa-nama" style="font-weight: 600; color: #1f2937;">${item.nama_siswa}</div>
+            <div class="siswa-nama" style="font-weight: 600; color: #1f2937; font-size: 0.9rem;">${item.nama_siswa}</div>
           </div>
-          <div class="status-group" data-siswa-id="${item.id}" style="display: flex; gap: 8px;">
-            <button type="button" class="btn-status active" data-status="H" style="padding: 6px 14px; border: 1px solid #0d8a73; background: #0d8a73; color: white; border-radius: 6px; cursor: pointer; font-weight: 600;">
-              Hadir
-            </button>
-            <button type="button" class="btn-status" data-status="S" style="padding: 6px 14px; border: 1px solid #d1d5db; background: #f3f4f6; color: #374151; border-radius: 6px; cursor: pointer;">
-              Sakit
-            </button>
-            <button type="button" class="btn-status" data-status="I" style="padding: 6px 14px; border: 1px solid #d1d5db; background: #f3f4f6; color: #374151; border-radius: 6px; cursor: pointer;">
-              Izin
-            </button>
-            <button type="button" class="btn-status" data-status="A" style="padding: 6px 14px; border: 1px solid #d1d5db; background: #f3f4f6; color: #374151; border-radius: 6px; cursor: pointer;">
-              Alpa
-            </button>
+          <div class="status-group" data-siswa-id="${item.id}">
+            <button type="button" class="btn-status active" data-status="H">Hadir</button>
+            <button type="button" class="btn-status" data-status="S">Sakit</button>
+            <button type="button" class="btn-status" data-status="I">Izin</button>
+            <button type="button" class="btn-status" data-status="A">Alpa</button>
           </div>
         `
         siswaList.appendChild(card)
       })
 
       attachStatusEvents()
+      
+      // Auto Scroll smooth ke daftar absensi begitu kelas dipilih
+      containerAbsensi?.scrollIntoView({ behavior: 'smooth' })
     } else {
       containerAbsensi?.classList.remove('hidden')
       siswaList.innerHTML = '<p style="color: #6b7280; text-align: center; padding: 12px;">Tidak ada data siswa di kelas ini.</p>'
