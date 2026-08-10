@@ -1145,21 +1145,59 @@ jenisPenilaian?.addEventListener('change', () => {
 })
 
 // =====================
-// DASHBOARD & INIT
+// DASHBOARD & HEADER USER (FIXED NAMA & SEKOLAH)
 // =====================
 async function loadDashboard() {
   try {
-    const schoolId = currentUser?.profile?.school_id || currentUser?.user?.user_metadata?.school_id || null
+    // 1. Dapatkan Sesi / Auth User dari Supabase
+    const { data: { session } } = await supabase.auth.getSession()
+    const user = session?.user
 
-    if (namaGuru) namaGuru.textContent = currentUser.header?.nama || 'Guru Mapel'
-    if (sekolahInfo) sekolahInfo.textContent = currentUser.header?.sekolah || '-'
-    if (mapelInfo) mapelInfo.textContent = `Mata Pelajaran: ${currentUser.header?.mapel || 'PAI'}`
-    if (semesterAktifInfo) semesterAktifInfo.textContent = currentUser.header?.semester || 'Semester 1'
-    if (tahunAjaranInfo) tahunAjaranInfo.textContent = currentUser.header?.tahun_ajaran || 'Tahun Ajaran 2026/2027'
+    let namaUser = ''
+    let sekolahUser = ''
 
+    if (user) {
+      // Query ke tabel 'profiles' menggunakan kolom 'name' dan 'sekolah'
+      const { data: profile, error } = await supabase
+        .from('profiles')
+        .select('name, sekolah, school_id')
+        .eq('id', user.id)
+        .maybeSingle()
+
+      if (profile && profile.name) {
+        namaUser = profile.name
+        sekolahUser = profile.sekolah
+      }
+    }
+
+    // 2. Fallback dari metadata/session jika query profiles tidak mengembalikan nama
+    if (!namaUser) {
+      namaUser = currentUser?.profile?.name || 
+                 currentUser?.profile?.nama_lengkap || 
+                 currentUser?.profile?.nama || 
+                 currentUser?.user?.user_metadata?.full_name || 
+                 currentUser?.user?.user_metadata?.name || 
+                 'Guru Mapel'
+    }
+
+    if (!sekolahUser) {
+      sekolahUser = currentUser?.header?.sekolah || 
+                    currentUser?.profile?.sekolah || 
+                    currentUser?.profile?.nama_sekolah || 
+                    'SD Negeri'
+    }
+
+    // 3. Render ke elemen DOM
+    if (namaGuru) namaGuru.textContent = namaUser
+    if (sekolahInfo) sekolahInfo.textContent = sekolahUser
+    if (mapelInfo) mapelInfo.textContent = `Mata Pelajaran: ${currentUser?.header?.mapel || 'PAI'}`
+    if (semesterAktifInfo) semesterAktifInfo.textContent = currentUser?.header?.semester || 'Semester 1'
+    if (tahunAjaranInfo) tahunAjaranInfo.textContent = currentUser?.header?.tahun_ajaran || 'Tahun Ajaran 2026/2027'
+
+    // 4. Load Option Kelas berdasarkan school_id
+    const schoolId = currentUser?.profile?.school_id || currentUser?.profile?.sekolah_id || null
     await loadKelasOptions(schoolId)
     
-    // Otomatis muat nilai siswa jika dropdown kelas langsung terisi
     if (nilaiKelas && nilaiKelas.value) {
       loadSiswaNilai(nilaiKelas.value)
     }

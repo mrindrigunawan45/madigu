@@ -1396,3 +1396,60 @@ tr:nth-child(even) {
 .btn-status.active[data-status="Sakit"] { background-color: #fef9c3; border-color: #eab308; }
 .btn-status.active[data-status="Izin"] { background-color: #dbeafe; border-color: #2563eb; }
 .btn-status.active[data-status="Alpa"] { background-color: #fee2e2; border-color: #dc2626; }
+
+/* ==========================================
+   HEADER RESPONSIVE & MOBILE FRIENDLY
+   ========================================== */
+
+.welcome-card, .header-card {
+  background: linear-gradient(135deg, #0d8a73 0%, #055e4e 100%);
+  color: white;
+  padding: 24px;
+  border-radius: 20px;
+  box-shadow: 0 8px 20px rgba(13, 138, 115, 0.15);
+  margin-bottom: 20px;
+}
+
+.welcome-card h2, #namaGuru {
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin: 10px 0 6px 0;
+  color: #ffffff;
+  word-break: break-word;
+}
+
+.header-subtitle {
+  font-size: 0.88rem;
+  opacity: 0.92;
+  line-height: 1.6;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Penyesuaian Tampilan Layar Smartphone (HP) */
+@media screen and (max-width: 640px) {
+  .welcome-card, .header-card {
+    padding: 16px 18px;
+    border-radius: 16px;
+  }
+
+  .welcome-card h2, #namaGuru {
+    font-size: 1.25rem;
+    margin: 8px 0 6px 0;
+  }
+
+  .header-subtitle {
+    font-size: 0.78rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 3px;
+  }
+
+  /* Menyembunyikan separator titik (•) di layar HP agar baris teks rapi ke bawah */
+  .header-subtitle .dot-separator,
+  .header-subtitle span:contains("•") {
+    display: none;
+  }
+}
