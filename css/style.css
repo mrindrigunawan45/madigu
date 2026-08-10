@@ -1397,59 +1397,52 @@ tr:nth-child(even) {
 .btn-status.active[data-status="Izin"] { background-color: #dbeafe; border-color: #2563eb; }
 .btn-status.active[data-status="Alpa"] { background-color: #fee2e2; border-color: #dc2626; }
 
-/* ==========================================
-   HEADER RESPONSIVE & MOBILE FRIENDLY
-   ========================================== */
+/* ===================================
+   RESPONSIF MOBILE (GURU MAPEL UI)
+   =================================== */
 
-.welcome-card, .header-card {
-  background: linear-gradient(135deg, #0d8a73 0%, #055e4e 100%);
-  color: white;
-  padding: 24px;
-  border-radius: 20px;
-  box-shadow: 0 8px 20px rgba(13, 138, 115, 0.15);
-  margin-bottom: 20px;
+/* Pembungkus Tabel Agar Bisa di-Scroll Horizontal di HP */
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin-bottom: 1rem;
 }
 
-.welcome-card h2, #namaGuru {
-  font-size: 1.6rem;
-  font-weight: 700;
-  margin: 10px 0 6px 0;
-  color: #ffffff;
-  word-break: break-word;
-}
-
-.header-subtitle {
-  font-size: 0.88rem;
-  opacity: 0.92;
-  line-height: 1.6;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 6px;
-}
-
-/* Penyesuaian Tampilan Layar Smartphone (HP) */
-@media screen and (max-width: 640px) {
-  .welcome-card, .header-card {
-    padding: 16px 18px;
-    border-radius: 16px;
+/* Responsif Kartu Siswa Absensi di HP */
+@media (max-width: 640px) {
+  .siswa-card {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 12px !important;
   }
 
-  .welcome-card h2, #namaGuru {
-    font-size: 1.25rem;
-    margin: 8px 0 6px 0;
+  .siswa-card .status-group {
+    width: 100% !important;
+    display: grid !important;
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 4px !important;
   }
 
-  .header-subtitle {
-    font-size: 0.78rem;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 3px;
+  .siswa-card .status-group button {
+    padding: 8px 0 !important;
+    font-size: 0.8rem !important;
+    text-align: center !important;
   }
 
-  /* Menyembunyikan separator titik (•) di layar HP agar baris teks rapi ke bawah */
-  .header-subtitle .dot-separator,
-  .header-subtitle span:contains("•") {
-    display: none;
+  /* Responsif Rekap Absensi */
+  .rekap-item-card {
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+
+  .rekap-item-card .badge-status-group {
+    width: 100% !important;
+    justify-content: space-between !important;
+  }
+
+  .rekap-item-card > div:last-child {
+    width: 100% !important;
+    text-align: left !important;
   }
 }
