@@ -1,3 +1,6 @@
+/* ==========================================================================
+   1. RESET & CSS VARIABLES
+   ========================================================================== */
 * {
   margin: 0;
   padding: 0;
@@ -10,6 +13,7 @@
   --bg: #f1f5f9;
   --white: #ffffff;
   --text: #0f172a;
+  --text-muted: #64748b;
   --border: #e2e8f0;
   --shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
 }
@@ -22,10 +26,9 @@ body {
   overflow-x: hidden;
 }
 
-/* =========================
-   OVERLAY
-========================= */
-
+/* ==========================================================================
+   2. LAYOUT & STRUCTURE
+   ========================================================================== */
 .overlay {
   position: fixed;
   inset: 0;
@@ -41,17 +44,13 @@ body {
   visibility: visible;
 }
 
-/* =========================
-   SIDEBAR
-========================= */
-
 .sidebar {
   position: fixed;
   top: 0;
   left: -290px;
   width: 280px;
   height: 100vh;
-  background: white;
+  background: var(--white);
   z-index: 999;
   padding: 16px;
   transition: 0.3s;
@@ -64,10 +63,6 @@ body {
 .sidebar.active {
   left: 0;
 }
-
-/* =========================
-   SIDEBAR TOP & LOGO
-========================= */
 
 .sidebar-top {
   width: 100%;
@@ -92,10 +87,6 @@ body {
   object-fit: contain;
 }
 
-/* =========================
-   SIDEBAR MENU
-========================= */
-
 .sidebar-menu {
   display: flex;
   flex-direction: column;
@@ -116,14 +107,14 @@ body {
   gap: 10px;
   font-weight: 600;
   transition: 0.25s;
-  color: #0f172a;
+  color: var(--text);
   width: 100%;
 }
 
 .sidebar-menu button i {
   width: 20px;
   font-size: 16px;
-  color: #64748b;
+  color: var(--text-muted);
   transition: 0.25s;
 }
 
@@ -131,20 +122,14 @@ body {
   color: var(--primary);
 }
 
-/* ACTIVE MENU */
-
 .sidebar-menu button.active {
   background: var(--primary);
-  color: white;
+  color: var(--white);
 }
 
 .sidebar-menu button.active i {
-  color: #ffffff !important;
+  color: var(--white) !important;
 }
-
-/* =========================
-   CONTENT & LAYOUT
-========================= */
 
 .content-wrapper {
   width: 100%;
@@ -153,13 +138,9 @@ body {
   flex-direction: column;
 }
 
-/* =========================
-   HEADER
-========================= */
-
 header {
   height: 86px;
-  background: white;
+  background: var(--white);
   display: flex;
   align-items: center;
   gap: 20px;
@@ -189,34 +170,37 @@ header {
 }
 
 .header-title p {
-  color: #64748b;
+  color: var(--text-muted);
   font-size: 14px;
 }
-
-/* =========================
-   MAIN
-========================= */
 
 main {
   flex: 1;
   padding: 24px;
 }
 
-/* =========================
-   CARD
-========================= */
-
 .card {
-  background: white;
+  background: var(--white);
   border-radius: 28px;
-  padding: 24px; /* Padding disesuaikan agar isi tabel tidak terdorong keluar */
+  padding: 24px;
   box-shadow: var(--shadow);
   margin-bottom: 24px;
 }
 
-/* =========================
-   FORM & INPUTS
-========================= */
+.tab {
+  display: none;
+}
+
+.tab.active {
+  display: block;
+}
+
+/* ==========================================================================
+   3. FORMS & INPUTS
+   ========================================================================== */
+.form-group {
+  margin-bottom: 18px;
+}
 
 label {
   display: block;
@@ -228,7 +212,8 @@ label {
 
 input,
 select,
-textarea {
+textarea,
+.form-control {
   width: 100%;
   padding: 16px 18px;
   border-radius: 16px;
@@ -238,13 +223,14 @@ textarea {
   margin-bottom: 18px;
   outline: none;
   transition: 0.25s;
-  background: white;
+  background: var(--white);
   color: var(--text);
 }
 
 input:focus,
 select:focus,
-textarea:focus {
+textarea:focus,
+.form-control:focus {
   border-color: var(--primary);
 }
 
@@ -253,14 +239,10 @@ textarea {
   resize: vertical;
 }
 
-/* =========================
-   BUTTON
-========================= */
-
 button {
   border: none;
   background: var(--primary);
-  color: white;
+  color: var(--white);
   padding: 18px 24px;
   border-radius: 18px;
   font-size: 16px;
@@ -273,37 +255,27 @@ button:hover {
   background: var(--primary-dark);
 }
 
-/* =========================
-   TAB
-========================= */
-
-.tab {
-  display: none;
+/* ==========================================================================
+   4. ABSENSI & SISWA COMPONENTS
+   ========================================================================== */
+.siswa-list-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 16px;
 }
-
-.tab.active {
-  display: block;
-}
-
-/* =========================
-   SISWA CARD
-========================= */
 
 .siswa-card {
-  display: grid;
-  grid-template-columns: minmax(220px, 320px) 1fr;
-  gap: 20px;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-left: 5px solid #0d8a73;
+  border-radius: 12px;
+  padding: 14px 20px;
+  display: flex;
   align-items: center;
-  padding: 18px 0;
-  border-bottom: 1px solid #e5e7eb;
-}
-
-.siswa-card h4 {
-  font-size: 19px;
-  font-weight: 700;
-  color: #0f172a;
-  line-height: 1.4;
-  word-break: break-word;
+  justify-content: space-between;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+  gap: 16px;
 }
 
 .siswa-info {
@@ -313,12 +285,13 @@ button:hover {
   min-width: 0;
 }
 
-.siswa-avatar {
+.siswa-avatar,
+.avatar-initial {
   width: 44px;
   height: 44px;
   border-radius: 50%;
   background: linear-gradient(135deg, #2563eb, #1d4ed8);
-  color: white;
+  color: var(--white);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -327,13 +300,62 @@ button:hover {
   flex-shrink: 0;
 }
 
-.siswa-name {
-  min-width: 0;
+.siswa-name,
+.siswa-nama {
+  font-weight: 700;
+  font-size: 1rem;
+  color: #1f2937;
+  word-break: break-word;
 }
 
-/* =========================
-   ABSENSI
-========================= */
+.status-group {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-status {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: #f9fafb;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 0;
+}
+
+.btn-status .icon {
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: var(--white);
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-status .label {
+  font-size: 0.65rem;
+  font-weight: 600;
+  margin-top: 2px;
+  color: #4b5563;
+}
+
+.btn-status[data-status="Hadir"] .icon { background-color: #16a34a; }
+.btn-status[data-status="Sakit"] .icon { background-color: #eab308; }
+.btn-status[data-status="Izin"] .icon { background-color: #2563eb; }
+.btn-status[data-status="Alpa"] .icon { background-color: #dc2626; }
+
+.btn-status.active[data-status="Hadir"] { background-color: #dcfce7; border-color: #16a34a; }
+.btn-status.active[data-status="Sakit"] { background-color: #fef9c3; border-color: #eab308; }
+.btn-status.active[data-status="Izin"] { background-color: #dbeafe; border-color: #2563eb; }
+.btn-status.active[data-status="Alpa"] { background-color: #fee2e2; border-color: #dc2626; }
 
 .absen-modern {
   display: grid;
@@ -342,12 +364,12 @@ button:hover {
 }
 
 .absen-card {
-  border: 2px solid #e5e7eb;
+  border: 2px solid var(--border);
   border-radius: 22px;
   padding: 20px;
   cursor: pointer;
   transition: 0.25s;
-  background: white;
+  background: var(--white);
   position: relative;
 }
 
@@ -374,54 +396,74 @@ button:hover {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
+  color: var(--white);
   font-size: 28px;
   font-weight: 700;
 }
 
-/* HADIR */
-.absen-card.hadir .absen-icon {
-  background: #16a34a;
+.absen-card.hadir .absen-icon { background: #16a34a; }
+.absen-card.hadir:has(input:checked) { border-color: #16a34a; background: #f0fdf4; }
+
+.absen-card.sakit .absen-icon { background: #eab308; }
+.absen-card.sakit:has(input:checked) { border-color: #eab308; background: #fefce8; }
+
+.absen-card.izin .absen-icon { background: #2563eb; }
+.absen-card.izin:has(input:checked) { border-color: #2563eb; background: #eff6ff; }
+
+.absen-card.alpa .absen-icon { background: #ef4444; }
+.absen-card.alpa:has(input:checked) { border-color: #ef4444; background: #fef2f2; }
+
+/* ==========================================================================
+   5. TABLES & RESPONSIVE CONTAINERS
+   ========================================================================== */
+.table-container,
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin-top: 20px;
+  border-radius: 18px;
 }
 
-.absen-card.hadir:has(input:checked) {
-  border-color: #16a34a;
-  background: #f0fdf4;
+table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: auto;
+  min-width: 600px;
 }
 
-/* SAKIT */
-.absen-card.sakit .absen-icon {
-  background: #eab308;
+th,
+td {
+  padding: 12px 10px;
+  font-size: 14px;
+  text-align: center;
 }
 
-.absen-card.sakit:has(input:checked) {
-  border-color: #eab308;
-  background: #fefce8;
+th {
+  background: var(--primary);
+  color: var(--white);
+  padding: 14px 12px;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
 }
 
-/* IZIN */
-.absen-card.izin .absen-icon {
-  background: #2563eb;
+td {
+  border-bottom: 1px solid var(--border);
+  color: #334155;
 }
 
-.absen-card.izin:has(input:checked) {
-  border-color: #2563eb;
-  background: #eff6ff;
+tr:nth-child(even) {
+  background: #f8fafc;
 }
 
-/* ALPA */
-.absen-card.alpa .absen-icon {
-  background: #ef4444;
-}
-
-.absen-card.alpa:has(input:checked) {
-  border-color: #ef4444;
-  background: #fef2f2;
-}
-
-/* =========================
-   NILAI ROW (RAMPING & PROPOSIONAL)
-========================= */
+#rekap-jurnal-table th:nth-child(1), #rekap-jurnal-table td:nth-child(1) { width: 100px; white-space: nowrap; }
+#rekap-jurnal-table th:nth-child(2), #rekap-jurnal-table td:nth-child(2) { width: 60px; }
+#rekap-jurnal-table th:nth-child(3), #rekap-jurnal-table td:nth-child(3) { width: 110px; }
+#rekap-jurnal-table th:nth-child(4), #rekap-jurnal-table td:nth-child(4) { text-align: left; min-width: 150px; }
+#rekap-jurnal-table th:nth-child(5), #rekap-jurnal-table td:nth-child(5) { text-align: left; min-width: 120px; }
+#rekap-jurnal-table th:nth-child(6), #rekap-jurnal-table td:nth-child(6) { width: 110px; white-space: nowrap; }
+#rekap-jurnal-table th:nth-child(7), #rekap-jurnal-table td:nth-child(7) { width: 90px; white-space: nowrap; }
 
 .nilai-row {
   display: flex;
@@ -437,7 +479,7 @@ button:hover {
 .nilai-row span {
   font-weight: 700;
   font-size: 15px;
-  color: #0f172a;
+  color: var(--text);
 }
 
 .nilai-row input {
@@ -448,163 +490,9 @@ button:hover {
   text-align: center;
 }
 
-/* =========================
-   TABLE & TABLE CONTAINER
-========================= */
-
-.table-container {
-  width: 100%;
-  overflow-x: auto;
-  margin-top: 20px;
-  border-radius: 18px;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-  table-layout: auto;
-}
-
-th,
-td {
-  padding: 12px 10px;
-  font-size: 14px;
-  text-align: center;
-}
-
-th {
-  background: var(--primary);
-  color: white;
-  padding: 14px 12px;
-  font-size: 14px;
-  font-weight: 600;
-  white-space: nowrap;
-}
-
-td {
-  border-bottom: 1px solid #e5e7eb;
-  color: #334155;
-}
-
-tr:nth-child(even) {
-  background: #f8fafc;
-}
-
-/* =========================
-   REKAP JURNAL TABLE COLUMNS (PAS DI LAYAR)
-========================= */
-
-#rekap-jurnal-table th:nth-child(1),
-#rekap-jurnal-table td:nth-child(1) {
-  width: 100px;
-  white-space: nowrap;
-}
-
-#rekap-jurnal-table th:nth-child(2),
-#rekap-jurnal-table td:nth-child(2) {
-  width: 60px;
-}
-
-#rekap-jurnal-table th:nth-child(3),
-#rekap-jurnal-table td:nth-child(3) {
-  width: 110px;
-}
-
-#rekap-jurnal-table th:nth-child(4),
-#rekap-jurnal-table td:nth-child(4) {
-  text-align: left;
-  min-width: 150px;
-}
-
-#rekap-jurnal-table th:nth-child(5),
-#rekap-jurnal-table td:nth-child(5) {
-  text-align: left;
-  min-width: 120px;
-}
-
-#rekap-jurnal-table th:nth-child(6),
-#rekap-jurnal-table td:nth-child(6) {
-  width: 110px;
-  white-space: nowrap;
-}
-
-#rekap-jurnal-table th:nth-child(7),
-#rekap-jurnal-table td:nth-child(7) {
-  width: 90px;
-  white-space: nowrap;
-}
-
-.aksi-jurnal {
-  display: flex;
-  gap: 8px;
-  justify-content: center;
-  align-items: center;
-}
-
-.aksi-jurnal .edit-btn,
-.aksi-jurnal .delete-btn {
-  width: 42px;
-  height: 42px;
-  padding: 0;
-  border-radius: 12px;
-}
-
-.btn-tidak-hadir {
-  border: none;
-  background: #ef4444;
-  color: white;
-  padding: 6px 12px;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-/* =========================
-   LOGIN
-========================= */
-
-.login-page {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #f1f5f9;
-}
-
-.login-container {
-  width: 100%;
-  padding: 20px;
-  display: flex;
-  justify-content: center;
-}
-
-.login-card {
-  width: 100%;
-  max-width: 420px;
-  background: white;
-  border-radius: 28px;
-  padding: 40px;
-  box-shadow: var(--shadow);
-}
-
-.login-logo {
-  width: 220px;
-  display: block;
-  margin: 0 auto 24px;
-}
-
-.login-card h1 {
-  text-align: center;
-  margin-bottom: 24px;
-}
-
-.login-btn {
-  width: 100%;
-}
-
-/* =========================
-   REKAP ABSEN
-========================= */
-
+/* ==========================================================================
+   6. REKAP & DASHBOARD COMPONENTS
+   ========================================================================== */
 .rekap-modern {
   display: flex;
   flex-direction: column;
@@ -613,8 +501,8 @@ tr:nth-child(even) {
 }
 
 .rekap-card {
-  background: white;
-  border: 1px solid #e5e7eb;
+  background: var(--white);
+  border: 1px solid var(--border);
   border-radius: 22px;
   padding: 16px 20px;
   display: grid;
@@ -641,7 +529,7 @@ tr:nth-child(even) {
   height: 48px;
   border-radius: 50%;
   background: linear-gradient(135deg, #2563eb, #1d4ed8);
-  color: white;
+  color: var(--white);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -657,14 +545,14 @@ tr:nth-child(even) {
 .rekap-user h3 {
   font-size: 17px;
   line-height: 1.35;
-  color: #0f172a;
+  color: var(--text);
   margin-bottom: 4px;
   text-align: left;
   word-break: break-word;
 }
 
 .rekap-user p {
-  color: #64748b;
+  color: var(--text-muted);
   font-size: 14px;
   text-align: left;
 }
@@ -684,14 +572,12 @@ tr:nth-child(even) {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  border: 1.5px solid #e5e7eb;
+  border: 1.5px solid var(--border);
   transition: 0.25s;
   padding: 8px;
 }
 
-.rekap-badge i {
-  font-size: 18px;
-}
+.rekap-badge i { font-size: 18px; }
 
 .rekap-badge-content {
   display: flex;
@@ -700,45 +586,18 @@ tr:nth-child(even) {
   line-height: 1.1;
 }
 
-.rekap-badge-content span {
-  font-size: 13px;
-  font-weight: 700;
-}
+.rekap-badge-content span { font-size: 13px; font-weight: 700; }
+.rekap-badge-content strong { font-size: 16px; }
 
-.rekap-badge-content strong {
-  font-size: 16px;
-}
-
-.rekap-badge.hadir {
-  background: #f0fdf4;
-  border-color: #22c55e;
-  color: #16a34a;
-}
-
-.rekap-badge.sakit {
-  background: #fefce8;
-  border-color: #eab308;
-  color: #ca8a04;
-}
-
-.rekap-badge.izin {
-  background: #eff6ff;
-  border-color: #2563eb;
-  color: #2563eb;
-}
-
-.rekap-badge.alpa {
-  background: #fef2f2;
-  border-color: #ef4444;
-  color: #ef4444;
-}
+.rekap-badge.hadir { background: #f0fdf4; border-color: #22c55e; color: #16a34a; }
+.rekap-badge.sakit { background: #fefce8; border-color: #eab308; color: #ca8a04; }
+.rekap-badge.izin  { background: #eff6ff; border-color: #2563eb; color: #2563eb; }
+.rekap-badge.alpa  { background: #fef2f2; border-color: #ef4444; color: #ef4444; }
 
 .rekap-right {
   display: flex;
   align-items: center;
   gap: 14px;
-  padding-top: 12px;
-  border-top: 1px solid #e5e7eb;
   width: 100%;
 }
 
@@ -758,10 +617,7 @@ tr:nth-child(even) {
   position: absolute;
   inset: 0;
   border-radius: 50%;
-  background: conic-gradient(
-    #22c55e calc(var(--percent) * 1%),
-    #dcfce7 0%
-  );
+  background: conic-gradient(#22c55e calc(var(--percent) * 1%), #dcfce7 0%);
 }
 
 .persen-circle::after {
@@ -769,7 +625,7 @@ tr:nth-child(even) {
   position: absolute;
   width: 60px;
   height: 60px;
-  background: white;
+  background: var(--white);
   border-radius: 50%;
 }
 
@@ -778,24 +634,8 @@ tr:nth-child(even) {
   z-index: 2;
   font-size: 17px;
   font-weight: 700;
-  color: #0f172a;
+  color: var(--text);
 }
-
-.rekap-label {
-  font-size: 13px;
-  color: #64748b;
-  line-height: 1.3;
-}
-
-.empty-state {
-  padding: 40px;
-  text-align: center;
-  color: #64748b;
-}
-
-/* =========================
-   GURU BOX
-========================= */
 
 .guru-box {
   display: flex;
@@ -803,9 +643,9 @@ tr:nth-child(even) {
   gap: 18px;
   margin-top: 10px;
   padding: 14px 18px;
-  background: white;
+  background: var(--white);
   border-radius: 18px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--border);
   width: fit-content;
 }
 
@@ -815,25 +655,9 @@ tr:nth-child(even) {
   gap: 4px;
 }
 
-.guru-item span {
-  font-size: 12px;
-  color: #64748b;
-}
-
-.guru-item strong {
-  font-size: 16px;
-  color: #0f172a;
-}
-
-.guru-divider {
-  width: 1px;
-  height: 38px;
-  background: #e5e7eb;
-}
-
-/* =========================
-   WALAS & REKAP STATS
-========================= */
+.guru-item span { font-size: 12px; color: var(--text-muted); }
+.guru-item strong { font-size: 16px; color: var(--text); }
+.guru-divider { width: 1px; height: 38px; background: var(--border); }
 
 .stat-cards-grid {
   display: grid;
@@ -856,9 +680,7 @@ tr:nth-child(even) {
   text-transform: uppercase;
 }
 
-.stat-card span {
-  font-size: 22px;
-}
+.stat-card span { font-size: 22px; }
 
 .hadir-bg { background-color: #10b981; }
 .sakit-bg { background-color: #f59e0b; }
@@ -868,7 +690,7 @@ tr:nth-child(even) {
 .badge {
   padding: 4px 8px;
   border-radius: 6px;
-  color: white;
+  color: var(--white);
   font-size: 12px;
   font-weight: bold;
 }
@@ -878,9 +700,41 @@ tr:nth-child(even) {
 .badge-info    { background-color: #3b82f6; }
 .badge-danger  { background-color: #ef4444; }
 
-/* =========================
-   MODAL / POPUP
-========================= */
+/* ==========================================================================
+   7. MODAL & MISC
+   ========================================================================== */
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg);
+}
+
+.login-container {
+  width: 100%;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 420px;
+  background: var(--white);
+  border-radius: 28px;
+  padding: 40px;
+  box-shadow: var(--shadow);
+}
+
+.login-logo {
+  width: 220px;
+  display: block;
+  margin: 0 auto 24px;
+}
+
+.login-card h1 { text-align: center; margin-bottom: 24px; }
+.login-btn { width: 100%; }
 
 .modal {
   display: none;
@@ -892,12 +746,10 @@ tr:nth-child(even) {
   justify-content: center;
 }
 
-.modal.hidden {
-  display: none;
-}
+.modal.hidden { display: none; }
 
 .modal-content {
-  background-color: #fff;
+  background-color: var(--white);
   padding: 24px;
   border-radius: 16px;
   width: 90%;
@@ -920,11 +772,7 @@ tr:nth-child(even) {
   margin-bottom: 16px;
 }
 
-.modal-header h3 {
-  margin: 0;
-  font-size: 1.15rem;
-  color: #333;
-}
+.modal-header h3 { margin: 0; font-size: 1.15rem; color: #333; }
 
 .close-modal {
   font-size: 24px;
@@ -933,26 +781,15 @@ tr:nth-child(even) {
   color: #aaa;
 }
 
-.close-modal:hover {
-  color: #000;
-}
+.close-modal:hover { color: #000; }
 
-.list-tidak-hadir {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
+.list-tidak-hadir { list-style: none; padding: 0; margin: 0; }
 .list-tidak-hadir li {
   padding: 12px 0;
   border-bottom: 1px solid #f0f0f0;
   display: flex;
   justify-content: space-between;
   align-items: center;
-}
-
-.list-tidak-hadir li:last-child {
-  border-bottom: none;
 }
 
 .status-badge {
@@ -967,8 +804,8 @@ tr:nth-child(even) {
 .status-badge.A { background-color: #fee2e2; color: #dc2626; }
 
 .lihat-absen-btn {
-  background-color: #2563eb;
-  color: white;
+  background-color: var(--primary);
+  color: var(--white);
   border: none;
   padding: 8px 16px;
   border-radius: 20px;
@@ -981,72 +818,42 @@ tr:nth-child(even) {
 }
 
 .lihat-absen-btn:hover {
-  background-color: #1d4ed8;
+  background-color: var(--primary-dark);
   transform: scale(1.03);
 }
 
-/* =========================
-   DESKTOP MEDIA QUERY
-========================= */
+.empty-state {
+  padding: 40px;
+  text-align: center;
+  color: var(--text-muted);
+}
 
+/* ==========================================================================
+   8. MEDIA QUERIES (DESKTOP & TABLET)
+   ========================================================================== */
 @media (min-width: 1024px) {
-  .sidebar {
-    left: 0;
-  }
-
-  .overlay {
-    display: none;
-  }
-
-  .menu-btn {
-    display: none;
-  }
-
+  .sidebar { left: 0; }
+  .overlay { display: none; }
+  .menu-btn { display: none; }
   .content-wrapper {
     margin-left: 280px;
     width: calc(100% - 280px);
   }
-
-  main {
-    padding: 34px;
-  }
-
-  .card {
-    padding: 28px;
-  }
-
-  .sidebar-menu button {
-    font-size: 14px;
-    padding: 10px 14px;
-  }
-
-  .header-title h1 {
-    font-size: 30px;
-  }
-
-  .sidebar-logo img {
-    max-width: 150px;
-  }
+  main { padding: 34px; }
+  .card { padding: 28px; }
+  .sidebar-menu button { font-size: 14px; padding: 10px 14px; }
+  .header-title h1 { font-size: 30px; }
+  .sidebar-logo img { max-width: 150px; }
 }
-
-/* =========================
-   TABLET MEDIA QUERY
-========================= */
 
 @media (max-width: 1023px) {
-  .sidebar {
-    left: -290px;
-  }
-
-  .sidebar.active {
-    left: 0;
-  }
+  .sidebar { left: -290px; }
+  .sidebar.active { left: 0; }
 }
 
-/* =========================
-   MOBILE MEDIA QUERY
-========================= */
-
+/* ==========================================================================
+   9. MEDIA QUERIES (MOBILE OPTIMIZATIONS)
+   ========================================================================== */
 @media (max-width: 768px) {
   header {
     height: 74px;
@@ -1061,24 +868,18 @@ tr:nth-child(even) {
     font-size: 20px;
   }
 
-  .header-title h1 {
-    font-size: 20px;
-    line-height: 1.2;
-  }
-
-  .header-title p {
-    font-size: 12px;
-  }
+  .header-title h1 { font-size: 20px; line-height: 1.2; }
+  .header-title p { font-size: 12px; }
 
   main {
-    padding: 16px;
-    padding-bottom: 110px;
+    padding: 14px;
+    padding-bottom: 100px;
   }
 
-  .card {
-    padding: 20px 16px;
-    border-radius: 24px;
-    margin-bottom: 18px;
+  .card, .tab-section {
+    padding: 16px !important;
+    border-radius: 20px;
+    margin-bottom: 14px !important;
   }
 
   .sidebar {
@@ -1086,87 +887,59 @@ tr:nth-child(even) {
     padding: 16px;
   }
 
-  .sidebar-logo img {
-    max-width: 140px;
-  }
-
-  .sidebar-menu button {
-    padding: 10px 12px;
-    border-radius: 12px;
-    font-size: 14px;
-  }
+  .form-group { margin-bottom: 12px !important; }
 
   input,
   select,
-  textarea {
-    padding: 16px;
-    font-size: 15px;
-    border-radius: 16px;
-  }
-
-  textarea {
-    min-height: 120px;
+  textarea,
+  .form-control {
+    padding: 12px 14px !important;
+    font-size: 14px !important;
+    border-radius: 12px !important;
+    margin-bottom: 12px;
   }
 
   button {
     width: 100%;
-    border-radius: 16px;
-    padding: 16px;
+    border-radius: 14px;
+    padding: 14px;
     font-size: 15px;
   }
 
   .siswa-card {
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    gap: 10px;
-    padding: 18px 0;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 12px !important;
+    padding: 14px !important;
   }
 
-  .siswa-info {
-    width: 100%;
-    gap: 12px;
+  .siswa-card .status-group {
+    display: grid !important;
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 6px !important;
+    width: 100% !important;
   }
 
-  .siswa-avatar {
-    width: 46px;
-    height: 46px;
-    font-size: 17px;
-  }
-
-  .siswa-card h4 {
-    font-size: 18px;
-    line-height: 1.4;
+  .btn-status {
+    width: 100% !important;
+    height: 48px !important;
   }
 
   .absen-modern {
-    width: 100%;
-    display: grid;
-    grid-template-columns: repeat(4, minmax(60px, 1fr));
-    gap: 4px;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
   }
 
   .absen-card {
-    width: 100%;
-    min-height: 78px;
-    padding: 6px;
+    min-height: 70px;
+    padding: 8px 4px;
     border-radius: 14px;
   }
 
-  .absen-content {
-    gap: 4px;
-  }
-
   .absen-icon {
-    width: 42px;
-    height: 42px;
-    font-size: 22px;
-    border-radius: 12px;
-  }
-
-  .absen-content span {
-    font-size: 11px;
-    font-weight: 600;
+    width: 38px;
+    height: 38px;
+    font-size: 18px;
   }
 
   .nilai-row {
@@ -1175,110 +948,37 @@ tr:nth-child(even) {
     gap: 10px;
   }
 
-  .nilai-row input {
-    width: 100%;
-  }
+  .nilai-row input { width: 100%; }
 
-  table {
-    min-width: 800px; /* Di HP tetap bisa di-scroll horizontal secara mandiri */
-  }
-
-  th, td {
-    font-size: 13px;
-    padding: 10px;
-  }
-
-  .login-card {
-    padding: 30px 22px;
-    border-radius: 24px;
-  }
-
-  .login-logo {
-    width: 180px;
-  }
+  table { min-width: 650px; }
+  th, td { font-size: 13px; padding: 8px; }
 
   .rekap-card {
     grid-template-columns: 1fr;
-    gap: 18px;
-    padding: 20px 16px;
-    border-radius: 24px;
-  }
-
-  .rekap-left {
-    align-items: flex-start;
     gap: 14px;
-  }
-
-  .rekap-avatar {
-    width: 50px;
-    height: 50px;
-    font-size: 20px;
-  }
-
-  .rekap-user h3 {
-    font-size: 17px;
-    line-height: 1.4;
-  }
-
-  .rekap-user p {
-    font-size: 13px;
+    padding: 16px;
   }
 
   .rekap-center {
-    display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
-    width: 100%;
+    gap: 8px;
   }
 
   .rekap-badge {
     width: 100%;
-    height: 72px;
-    border-radius: 18px;
-    flex-direction: column;
-    gap: 6px;
-  }
-
-  .rekap-badge i {
-    font-size: 20px;
-  }
-
-  .rekap-badge-content span {
-    font-size: 14px;
-  }
-
-  .rekap-badge-content strong {
-    font-size: 18px;
+    height: 60px;
+    padding: 4px;
   }
 
   .rekap-right {
-    justify-content: flex-start;
-    margin-top: 2px;
-  }
-
-  .persen-circle {
-    width: 92px;
-    height: 92px;
-  }
-
-  .persen-circle::after {
-    width: 68px;
-    height: 68px;
-  }
-
-  .persen-circle span {
-    font-size: 20px;
+    padding-top: 10px;
+    border-top: 1px solid var(--border);
   }
 
   .guru-box {
     width: 100%;
     justify-content: space-between;
-    gap: 12px;
-    padding: 12px 14px;
-  }
-
-  .guru-item strong {
-    font-size: 14px;
+    padding: 12px;
   }
 
   .stat-cards-grid {
@@ -1286,163 +986,7 @@ tr:nth-child(even) {
   }
 
   .modal-content {
-    width: 90% !important;
-    max-width: 100% !important;
-    margin: 15px auto !important;
-    padding: 16px !important;
-    border-radius: 12px !important;
-    max-height: 85vh;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .modal-body {
-    overflow-y: auto;
-    max-height: 60vh;
-    padding-right: 4px;
-  }
-}
-/* ABSENSI / LIST SISWA STYLING */
-.siswa-list-container {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-top: 16px;
-}
-
-.siswa-card {
-  background: #ffffff;
-  border: 1px solid #e5e7eb;
-  border-left: 5px solid #0d8a73;
-  border-radius: 12px;
-  padding: 14px 20px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
-}
-
-.siswa-info {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-
-.avatar-initial {
-  width: 42px;
-  height: 42px;
-  background-color: #2563eb;
-  color: #ffffff;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  font-size: 0.95rem;
-}
-
-.siswa-nama {
-  font-weight: 700;
-  font-size: 1rem;
-  color: #1f2937;
-}
-
-.status-group {
-  display: flex;
-  gap: 8px;
-}
-
-.btn-status {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 52px;
-  height: 52px;
-  border-radius: 10px;
-  border: 1px solid #e5e7eb;
-  background: #f9fafb;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.btn-status .icon {
-  font-size: 0.9rem;
-  font-weight: 800;
-  color: #ffffff;
-  width: 24px;
-  height: 24px;
-  border-radius: 6px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.btn-status .label {
-  font-size: 0.65rem;
-  font-weight: 600;
-  margin-top: 2px;
-  color: #4b5563;
-}
-
-/* WARNA UNTUK STATUS */
-.btn-status[data-status="Hadir"] .icon { background-color: #16a34a; }
-.btn-status[data-status="Sakit"] .icon { background-color: #eab308; }
-.btn-status[data-status="Izin"] .icon { background-color: #2563eb; }
-.btn-status[data-status="Alpa"] .icon { background-color: #dc2626; }
-
-/* KONDISI STATUS AKTIF / TERPILIH */
-.btn-status.active[data-status="Hadir"] { background-color: #dcfce7; border-color: #16a34a; }
-.btn-status.active[data-status="Sakit"] { background-color: #fef9c3; border-color: #eab308; }
-.btn-status.active[data-status="Izin"] { background-color: #dbeafe; border-color: #2563eb; }
-.btn-status.active[data-status="Alpa"] { background-color: #fee2e2; border-color: #dc2626; }
-
-/* ===================================
-   RESPONSIF MOBILE (GURU MAPEL UI)
-   =================================== */
-
-/* Pembungkus Tabel Agar Bisa di-Scroll Horizontal di HP */
-.table-responsive {
-  width: 100%;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  margin-bottom: 1rem;
-}
-
-/* Responsif Kartu Siswa Absensi di HP */
-@media (max-width: 640px) {
-  .siswa-card {
-    flex-direction: column !important;
-    align-items: flex-start !important;
-    gap: 12px !important;
-  }
-
-  .siswa-card .status-group {
-    width: 100% !important;
-    display: grid !important;
-    grid-template-columns: repeat(4, 1fr) !important;
-    gap: 4px !important;
-  }
-
-  .siswa-card .status-group button {
-    padding: 8px 0 !important;
-    font-size: 0.8rem !important;
-    text-align: center !important;
-  }
-
-  /* Responsif Rekap Absensi */
-  .rekap-item-card {
-    grid-template-columns: 1fr !important;
-    gap: 10px !important;
-  }
-
-  .rekap-item-card .badge-status-group {
-    width: 100% !important;
-    justify-content: space-between !important;
-  }
-
-  .rekap-item-card > div:last-child {
-    width: 100% !important;
-    text-align: left !important;
+    width: 92% !important;
+    padding: 18px !important;
   }
 }

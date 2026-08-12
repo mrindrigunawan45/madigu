@@ -2,13 +2,15 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Dashboard Guru Mapel - MaDiGU</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
   <!-- Library ExcelJS & FileSaver untuk export Excel Rapi -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.3.0/exceljs.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+  <!-- Library SheetJS untuk Export Rekap Absen -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
   <style>
     :root {
@@ -28,14 +30,20 @@
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
-    body {
+    html, body {
+      width: 100%;
+      max-width: 100vw;
+      overflow-x: hidden;
       background-color: var(--bg-body);
       color: var(--text-dark);
+    }
+
+    body {
       display: flex;
       min-height: 100vh;
     }
 
-    /* SIDEBAR */
+    /* SIDEBAR (DESKTOP) */
     .sidebar {
       width: 250px;
       background: var(--primary-teal);
@@ -82,6 +90,7 @@
       font-size: 0.92rem;
       border-radius: 10px;
       transition: all 0.2s ease;
+      cursor: pointer;
     }
 
     .sidebar-menu li a:hover,
@@ -103,6 +112,7 @@
     .main-wrapper {
       margin-left: 250px;
       width: calc(100% - 250px);
+      max-width: 100%;
       display: flex;
       flex-direction: column;
       min-height: 100vh;
@@ -110,6 +120,7 @@
 
     .content-container {
       padding: 28px;
+      width: 100%;
     }
 
     /* HERO BANNER */
@@ -120,6 +131,7 @@
       color: #ffffff;
       margin-bottom: 24px;
       box-shadow: 0 4px 14px rgba(13, 138, 115, 0.15);
+      width: 100%;
     }
 
     .badge-welcome {
@@ -136,11 +148,14 @@
       font-size: 1.6rem;
       font-weight: 800;
       margin-bottom: 6px;
+      word-break: break-word;
     }
 
     .welcome-subtitle {
       font-size: 0.88rem;
       opacity: 0.9;
+      line-height: 1.4;
+      word-break: break-word;
     }
 
     /* CARDS & FORMS */
@@ -151,6 +166,7 @@
       margin-bottom: 24px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.03);
       border: 1px solid #e5e7eb;
+      width: 100%;
     }
 
     .card h3 {
@@ -167,6 +183,7 @@
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       gap: 16px;
       margin-bottom: 16px;
+      width: 100%;
     }
 
     .form-group {
@@ -174,6 +191,7 @@
       flex-direction: column;
       gap: 6px;
       margin-bottom: 16px;
+      width: 100%;
     }
 
     .form-group label {
@@ -183,6 +201,7 @@
     }
 
     .form-control {
+      width: 100%;
       padding: 10px 14px;
       border: 1px solid #d1d5db;
       border-radius: 8px;
@@ -200,7 +219,7 @@
       background: var(--primary-teal);
       color: #ffffff;
       border: none;
-      padding: 10px 22px;
+      padding: 12px 22px;
       border-radius: 8px;
       font-weight: 600;
       cursor: pointer;
@@ -208,6 +227,8 @@
       align-items: center;
       justify-content: center;
       gap: 8px;
+      width: 100%;
+      transition: background 0.2s ease;
     }
 
     .btn-primary:hover {
@@ -246,6 +267,7 @@
       flex-direction: column;
       gap: 12px;
       margin-top: 16px;
+      width: 100%;
     }
 
     .siswa-card {
@@ -258,31 +280,7 @@
       align-items: center;
       justify-content: space-between;
       box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
-    }
-
-    .siswa-info {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-    }
-
-    .avatar-initial {
-      width: 42px;
-      height: 42px;
-      background-color: #2563eb;
-      color: #ffffff;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 700;
-      font-size: 0.95rem;
-    }
-
-    .siswa-nama {
-      font-weight: 700;
-      font-size: 1rem;
-      color: #1f2937;
+      width: 100%;
     }
 
     .status-group {
@@ -323,7 +321,6 @@
       color: #4b5563;
     }
 
-    /* WARNA TOMBOL STATUS ABSENSI INPUT */
     .btn-status[data-status="Hadir"] .icon { background-color: #16a34a; }
     .btn-status[data-status="Sakit"] .icon { background-color: #eab308; }
     .btn-status[data-status="Izin"] .icon { background-color: #2563eb; }
@@ -335,7 +332,6 @@
     .btn-status.active[data-status="Alpa"] { background-color: #fee2e2; border-color: #dc2626; }
 
     /* TABLES RESPONSIVE */
-    .table-container,
     .table-responsive {
       width: 100%;
       overflow-x: auto;
@@ -366,101 +362,85 @@
       font-size: 0.9rem;
     }
 
-    /* BADGE & CARD REKAP HYBRID */
-    .rekap-item-card {
-      background: #ffffff;
-      border: 1px solid #e5e7eb;
-      border-left: 5px solid var(--primary-teal);
-      border-radius: 12px;
-      padding: 16px 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 16px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.02);
-    }
-
-    .badge-status-group {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-    }
-
-    .badge-status-item {
-      padding: 6px 12px;
-      border-radius: 8px;
-      font-size: 0.85rem;
-      font-weight: 600;
-    }
-
-    .badge-h { background: #dcfce7; color: #166534; }
-    .badge-s { background: #fef9c3; color: #854d0e; }
-    .badge-i { background: #dbeafe; color: #1e40af; }
-    .badge-a { background: #fee2e2; color: #991b1b; }
-
-    .persen-badge {
-      padding: 6px 14px;
-      border-radius: 20px;
-      font-weight: 700;
-      font-size: 0.85rem;
-    }
-    .persen-tinggi { background: #dcfce7; color: #15803d; }
-    .persen-sedang { background: #fef9c3; color: #a16207; }
-    .persen-rendah { background: #fee2e2; color: #b91c1c; }
-
-    /* PENANGANAN UTAMA ELEMEN SEMBUNYI */
     .hidden {
       display: none !important;
     }
 
-    /* OPTIMASI TAMPILAN MOBILE (HP) */
+    .mobile-bottom-nav {
+      display: none;
+    }
+
     @media (max-width: 768px) {
-      .sidebar { display: none; }
-      .main-wrapper { margin-left: 0; width: 100%; }
-      .content-container { padding: 14px; }
-      
-      .welcome-banner { padding: 16px 18px; border-radius: 12px; }
-      .welcome-title { font-size: 1.3rem; }
-      
-      .card { padding: 16px; border-radius: 10px; margin-bottom: 16px; }
-
-      .siswa-card {
-        flex-direction: column !important;
-        align-items: flex-start !important;
-        gap: 12px !important;
-        padding: 12px !important;
+      body {
+        padding-bottom: 65px;
       }
-
-      .siswa-card .status-group {
-        width: 100% !important;
-        display: grid !important;
-        grid-template-columns: repeat(4, 1fr) !important;
-        gap: 6px !important;
+      .sidebar { 
+        display: none !important; 
       }
-
-      .siswa-card .status-group .btn-status {
-        width: 100% !important;
-        height: 46px !important;
+      .main-wrapper { 
+        margin-left: 0 !important; 
+        width: 100% !important; 
       }
-
-      /* Rekap Item Card di HP */
-      .rekap-item-card {
-        flex-direction: column !important;
-        align-items: flex-start !important;
-        gap: 12px !important;
+      .content-container { 
+        padding: 12px !important; 
       }
-
-      .badge-status-group {
-        width: 100% !important;
-        justify-content: space-between !important;
+      .welcome-banner { 
+        padding: 16px 18px !important; 
+        border-radius: 12px !important; 
+        margin-bottom: 16px !important;
+      }
+      .welcome-title { 
+        font-size: 1.25rem !important; 
+      }
+      .welcome-subtitle {
+        font-size: 0.8rem !important;
+      }
+      .card { 
+        padding: 16px !important; 
+        border-radius: 12px !important; 
+        margin-bottom: 16px !important; 
+      }
+      .filter-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 10px !important;
+      }
+      .mobile-bottom-nav {
+        display: flex;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 60px;
+        background-color: #ffffff;
+        border-top: 1px solid #e5e7eb;
+        justify-content: space-around;
+        align-items: center;
+        z-index: 1000;
+        box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+      }
+      .mobile-nav-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 3px;
+        text-decoration: none;
+        color: var(--text-muted);
+        font-size: 0.7rem;
+        font-weight: 600;
+        cursor: pointer;
+      }
+      .mobile-nav-item i {
+        font-size: 1.1rem;
+      }
+      .mobile-nav-item.active {
+        color: var(--primary-teal);
       }
     }
   </style>
 </head>
 <body>
 
-  <!-- SIDEBAR MADIGU MAPEL -->
+  <!-- SIDEBAR MADIGU MAPEL (DESKTOP) -->
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-brand">
       <span class="sidebar-brand-text">MADIGU MAPEL</span>
@@ -497,7 +477,7 @@
       <!-- WELCOME HERO BANNER -->
       <div class="welcome-banner">
         <div>
-          <span class="badge-welcome">👋 Selamat Datang</span>
+          <span class="badge-welcome">👏 Selamat Datang</span>
           <h1 class="welcome-title" id="namaGuru">Memuat Nama...</h1>
           <p class="welcome-subtitle">
             <span id="sekolahInfo">Memuat Sekolah...</span> • 
@@ -546,8 +526,8 @@
               </div>
             </div>
 
-            <div style="margin-top: 24px; text-align: right;">
-              <button type="button" id="btnSimpanAbsensi" class="btn-primary" style="padding: 12px 28px; font-size: 1rem; width: 100%;">
+            <div style="margin-top: 24px;">
+              <button type="button" id="btnSimpanAbsensi" class="btn-primary" style="padding: 12px 28px; font-size: 1rem;">
                 <i class="fas fa-save"></i> Simpan Jurnal & Absensi
               </button>
             </div>
@@ -580,16 +560,64 @@
         </div>
       </section>
 
-      <!-- TAB 2: REKAP ABSENSI -->
+      <!-- TAB 2: REKAP ABSENSI MAPEL -->
       <section id="tab-rekap-absensi" class="tab-section hidden">
-        <div id="rekapAbsensiContainer">
-          <!-- Komponen Rekap Absensi Di-inject Otomatis oleh JavaScript -->
+        <div class="card">
+          <div class="card-header-flex" style="margin-bottom: 20px;">
+            <div>
+              <h3 style="margin-bottom: 4px;"><i class="fas fa-chart-pie"></i> Rekap Absensi Mata Pelajaran</h3>
+              <p style="color: var(--text-muted); font-size: 0.88rem;">Pantau riwayat absensi siswa dan ringkasan kehadirannya.</p>
+            </div>
+            
+            <button type="button" class="btn-primary" id="downloadAbsenBtn" style="width: auto;">
+              <i class="fas fa-file-excel"></i> Download Excel
+            </button>
+          </div>
+
+          <!-- Filter Grid (Tanpa Mata Pelajaran) -->
+          <div class="filter-grid" style="margin-bottom: 20px;">
+            <div class="form-group" style="margin-bottom: 0;">
+              <label for="rekap-absen-kelas">Kelas</label>
+              <select class="form-control" id="rekap-absen-kelas">
+                <option value="">Pilih Kelas...</option>
+              </select>
+            </div>
+
+            <div class="form-group" style="margin-bottom: 0;">
+              <label for="rekap-absen-mode">Tampilan Mode</label>
+              <select class="form-control" id="rekap-absen-mode">
+                <option value="ringkasan">Mode Ringkasan (Total)</option>
+                <option value="matriks">Mode Matriks (Per Tanggal)</option>
+              </select>
+            </div>
+
+            <div class="form-group" style="margin-bottom: 0;">
+              <label for="rekap-absen-bulan">Bulan</label>
+              <select class="form-control" id="rekap-absen-bulan">
+                <option value="semua">Semua Bulan</option>
+                <option value="01">Januari</option>
+                <option value="02">Februari</option>
+                <option value="03">Maret</option>
+                <option value="04">April</option>
+                <option value="05">Mei</option>
+                <option value="06">Juni</option>
+                <option value="07">Juli</option>
+                <option value="08">Agustus</option>
+                <option value="09">September</option>
+                <option value="10">Oktober</option>
+                <option value="11">November</option>
+                <option value="12">Desember</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Container Tabel Tempat JavaScript Menggambar Data -->
+          <div id="rekap-absen-table"></div>
         </div>
       </section>
 
       <!-- TAB 3: BUKU NILAI & LEDGER -->
       <section id="tab-buku-nilai" class="tab-section hidden">
-        <!-- FILTER CARD -->
         <div class="card">
           <h3><i class="fas fa-filter"></i> Filter Nilai</h3>
           <div class="filter-grid">
@@ -616,7 +644,6 @@
           </div>
         </div>
 
-        <!-- SUB-TAB TOGGLE -->
         <div class="subtab-container" style="display: flex; gap: 10px; margin-bottom: 20px;">
           <button type="button" class="btn-subtab active" data-subtab="subtab-entry" style="flex: 1; padding: 10px; border-radius: 8px; border: 1px solid #0d8a73; background: #0d8a73; color: white; font-weight: 600; cursor: pointer;">
             <i class="fas fa-pen-to-square"></i> Entry Nilai
@@ -626,11 +653,10 @@
           </button>
         </div>
 
-        <!-- VIEW 1: ENTRY NILAI -->
         <div id="subtab-entry" class="subtab-content card">
           <div class="card-header-flex">
             <h3>Entry Nilai Siswa</h3>
-            <button type="button" class="btn-primary" id="btnSimpanNilai"><i class="fas fa-save"></i> Simpan Nilai</button>
+            <button type="button" class="btn-primary" id="btnSimpanNilai" style="width: auto;"><i class="fas fa-save"></i> Simpan Nilai</button>
           </div>
           <br>
           <div class="table-responsive">
@@ -649,7 +675,6 @@
           </div>
         </div>
 
-        <!-- VIEW 2: LEDGER NILAI -->
         <div id="subtab-ledger" class="subtab-content card hidden">
           <div class="card-header-flex">
             <h3>Ledger Nilai Siswa</h3>
@@ -684,6 +709,54 @@
     </main>
   </div>
 
+  <!-- BOTTOM NAVIGATION UNTUK SMARTPHONE -->
+  <nav class="mobile-bottom-nav">
+    <a class="mobile-nav-item active" data-tab="tab-jurnal">
+      <i class="fas fa-book-open"></i>
+      <span>Jurnal</span>
+    </a>
+    <a class="mobile-nav-item" data-tab="tab-rekap-absensi">
+      <i class="fas fa-chart-pie"></i>
+      <span>Absensi</span>
+    </a>
+    <a class="mobile-nav-item" data-tab="tab-buku-nilai">
+      <i class="fas fa-file-pen"></i>
+      <span>Nilai</span>
+    </a>
+  </nav>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const navLinks = document.querySelectorAll('[data-tab]');
+      
+      navLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          const targetTabId = link.getAttribute('data-tab');
+
+          document.querySelectorAll('.tab-section').forEach(section => {
+            section.classList.add('hidden');
+          });
+
+          const targetSection = document.getElementById(targetTabId);
+          if (targetSection) {
+            targetSection.classList.remove('hidden');
+          }
+
+          document.querySelectorAll('[data-tab]').forEach(el => {
+            if (el.getAttribute('data-tab') === targetTabId) {
+              el.classList.add('active');
+            } else {
+              el.classList.remove('active');
+            }
+          });
+        });
+      });
+    });
+  </script>
+
+  <!-- MODULE JS -->
   <script type="module" src="js/guru-mapel.js"></script>
+  <script type="module" src="js/rekap-absensi-mapel.js"></script>
 </body>
 </html>
