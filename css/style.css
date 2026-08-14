@@ -503,12 +503,12 @@ tr:nth-child(even) {
 .rekap-card {
   background: var(--white);
   border: 1px solid var(--border);
-  border-radius: 22px;
-  padding: 16px 20px;
-  display: grid;
-  grid-template-columns: minmax(280px, 1.5fr) auto 120px;
-  gap: 18px;
+  border-radius: 14px;
+  padding: 10px 12px;
+  display: flex; /* Menggunakan flexbox horizontal */
   align-items: center;
+  justify-content: space-between;
+  gap: 8px;
   transition: 0.25s;
 }
 
@@ -953,40 +953,198 @@ tr:nth-child(even) {
   table { min-width: 650px; }
   th, td { font-size: 13px; padding: 8px; }
 
+ @media (max-width: 768px) {
+
+  /* Card container Ramping 1 Baris */
   .rekap-card {
-    grid-template-columns: 1fr;
-    gap: 14px;
-    padding: 16px;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    padding: 10px 12px !important;
+    gap: 8px !important;
+    background: #ffffff !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 12px !important;
+    grid-template-columns: none !important; /* Matikan grid */
   }
 
+  /* Section Kanan, Tengah, Kiri pas & berurutan */
+  .rekap-left {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    flex: 1 1 auto !important;
+    min-width: 0 !important; /* Mencegah nama merusak layout */
+  }
+
+  .rekap-avatar {
+    width: 34px !important;
+    height: 34px !important;
+    min-width: 34px !important;
+    font-size: 11px !important;
+    position: static !important; /* Matikan penumpukan absolute */
+  }
+
+  .rekap-user {
+    display: flex !important;
+    flex-direction: column !important;
+    min-width: 0 !important;
+  }
+
+  .rekap-user h3 {
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    margin: 0 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important; /* Nama panjang dipotong (...) */
+  }
+
+  .rekap-user p {
+    font-size: 10px !important;
+    color: var(--text-muted) !important;
+    margin: 0 !important;
+    white-space: nowrap !important;
+  }
+
+  /* Badge H, S, I, A bersebelahan & tidak menimpa */
   .rekap-center {
-    grid-template-columns: repeat(4, 1fr);
-    gap: 8px;
+    display: flex !important;
+    align-items: center !important;
+    gap: 3px !important;
+    flex-shrink: 0 !important;
+    grid-template-columns: none !important; /* Matikan grid */
+    width: auto !important;
   }
 
   .rekap-badge {
-    width: 100%;
-    height: 60px;
-    padding: 4px;
+    position: static !important;
+    width: auto !important;
+    height: auto !important;
+    padding: 3px 6px !important;
+    font-size: 10px !important;
+    font-weight: 700 !important;
+    border-radius: 6px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
   }
 
+  .rekap-badge-content {
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 2px !important;
+    line-height: 1 !important;
+  }
+
+  .rekap-badge-content span,
+  .rekap-badge-content strong {
+    font-size: 10px !important;
+  }
+
+  /* Persentase Lingkaran di Ujung Kanan */
   .rekap-right {
-    padding-top: 10px;
-    border-top: 1px solid var(--border);
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+    width: auto !important;
+    padding-top: 0 !important;
+    border-top: none !important;
+    flex-shrink: 0 !important;
   }
 
-  .guru-box {
-    width: 100%;
-    justify-content: space-between;
-    padding: 12px;
+  .persen-circle {
+    width: 36px !important;
+    height: 36px !important;
+    min-width: 36px !important;
   }
 
-  .stat-cards-grid {
-    grid-template-columns: repeat(2, 1fr);
+  .persen-circle::after {
+    width: 26px !important;
+    height: 26px !important;
   }
 
-  .modal-content {
-    width: 92% !important;
-    padding: 18px !important;
+  .persen-circle span {
+    font-size: 9px !important;
+    font-weight: 700 !important;
   }
+}
+/* ==========================================
+   FIX REKAP ABSEN MOBILE (1 BARIS RAPI)
+   ========================================== */
+.rekap-card-mobile {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 8px 10px;
+  margin-bottom: 8px;
+  gap: 6px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+}
+
+/* Kiri: Nama & Total Pertemuan */
+.rekap-info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0; /* Mencegah nama panjang merusak layout */
+}
+
+.nama-siswa {
+  font-size: 12px;
+  font-weight: 700;
+  color: #0f172a;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; /* Nama panjang terpotong rapi dengan (...) */
+}
+
+.total-pertemuan {
+  font-size: 10px;
+  color: #64748b;
+  margin-top: 1px;
+}
+
+/* Tengah: Ringkasan Absen H, S, I, A */
+.rekap-stats {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  flex-shrink: 0;
+}
+
+.badge-item {
+  font-size: 10px;
+  padding: 3px 5px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.badge-item strong {
+  font-weight: 800;
+}
+
+.badge-item.hadir { background: #dcfce7; color: #15803d; }
+.badge-item.sakit { background: #fef9c3; color: #a16207; }
+.badge-item.izin  { background: #dbeafe; color: #1d4ed8; }
+.badge-item.alpa  { background: #fee2e2; color: #b91c1c; }
+
+/* Kanan: Persentase */
+.rekap-persen {
+  font-size: 11px;
+  font-weight: 800;
+  color: #15803d;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  padding: 4px 6px;
+  border-radius: 8px;
+  flex-shrink: 0;
+  min-width: 42px;
+  text-align: center;
 }

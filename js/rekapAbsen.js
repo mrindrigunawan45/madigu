@@ -260,149 +260,54 @@ async function loadRekapAbsen() {
 function renderTable() {
 
   if (!absenData.length) {
-
     table.innerHTML = `
-
       <div class="empty-state">
-
         Tidak ada data absen
-
       </div>
-
     `
-
     return
-
   }
 
+  // Urutkan siswa A-Z
+  const sortedData = [...absenData].sort((a, b) => 
+    (a.nama || '').localeCompare(b.nama || '')
+  )
+
   table.innerHTML = `
-
     <div class="rekap-modern">
+      ${sortedData.map(item => {
 
-      ${absenData.map(item => {
-
-        const persen =
-
-          ((item.hadir / item.total) * 100)
-
-          .toFixed(1)
+        const persen = item.total > 0 
+          ? ((item.hadir / item.total) * 100).toFixed(0) 
+          : '0'
 
         return `
+          <div class="rekap-card-mobile">
 
-          <div class="rekap-card">
-
-            <div class="rekap-left">
-
-              <div class="rekap-avatar">
-
-                ${item.nama
-                  .split(' ')
-                  .map(n => n[0])
-                  .slice(0,2)
-                  .join('')}
-
-              </div>
-
-              <div class="rekap-user">
-
-                <h3>${item.nama}</h3>
-
-                <p>
-
-                  Total Pertemuan:
-                  ${item.total}
-
-                </p>
-
-              </div>
-
+            <!-- 1. NAMA & TOTAL -->
+            <div class="rekap-info">
+              <span class="nama-siswa">${item.nama}</span>
+              <span class="total-pertemuan">Pertemuan: ${item.total}</span>
             </div>
 
-            <div class="rekap-center">
-
-              <div class="rekap-badge hadir">
-
-                <div class="rekap-badge-content">
-
-                  <span>H</span>
-
-                  <strong>
-                    ${item.hadir}
-                  </strong>
-
-                </div>
-
-              </div>
-
-              <div class="rekap-badge sakit">
-
-                <div class="rekap-badge-content">
-
-                  <span>S</span>
-
-                  <strong>
-                    ${item.sakit}
-                  </strong>
-
-                </div>
-
-              </div>
-
-              <div class="rekap-badge izin">
-
-                <div class="rekap-badge-content">
-
-                  <span>I</span>
-
-                  <strong>
-                    ${item.izin}
-                  </strong>
-
-                </div>
-
-              </div>
-
-              <div class="rekap-badge alpa">
-
-                <div class="rekap-badge-content">
-
-                  <span>A</span>
-
-                  <strong>
-                    ${item.alpa}
-                  </strong>
-
-                </div>
-
-              </div>
-
+            <!-- 2. BADGE H, S, I, A -->
+            <div class="rekap-stats">
+              <span class="badge-item hadir">H <strong>${item.hadir}</strong></span>
+              <span class="badge-item sakit">S <strong>${item.sakit}</strong></span>
+              <span class="badge-item izin">I <strong>${item.izin}</strong></span>
+              <span class="badge-item alpa">A <strong>${item.alpa}</strong></span>
             </div>
 
-            <div class="rekap-right">
-
-              <div
-                class="persen-circle"
-                style="--percent:${persen};"
-              >
-
-                <span>
-                  ${persen}%
-                </span>
-
-              </div>
-
+            <!-- 3. PERSENTASE -->
+            <div class="rekap-persen">
+              ${persen}%
             </div>
 
           </div>
-
         `
-
       }).join('')}
-
     </div>
-
   `
-
 }
 
 // =======================

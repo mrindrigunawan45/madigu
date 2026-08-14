@@ -83,7 +83,7 @@ function initNavigation() {
 }
 
 // =====================
-// SUB-TAB TOGGLE (RESET STATE SAAT BERPINDAH)
+// SUB-TAB TOGGLE
 // =====================
 function initSubTabNilai() {
   const subtabBtns = document.querySelectorAll('.btn-subtab')
@@ -91,10 +91,8 @@ function initSubTabNilai() {
 
   subtabBtns.forEach(btn => {
     btn.addEventListener('click', (e) => {
-      // Prevent behavior bawaan agar tidak lompat / reload
       e.preventDefault()
 
-      // Reset Style Tombol
       subtabBtns.forEach(b => {
         b.style.background = 'white'
         b.style.color = '#0d8a73'
@@ -110,23 +108,18 @@ function initSubTabNilai() {
       })
       document.getElementById(targetId)?.classList.remove('hidden')
 
-      // Jika ingin me-reset tampilan dropdown ke opsi default saat pindah tab
       if (targetId === 'subtab-entry') {
         groupJenisPenilaian?.classList.remove('hidden')
 
-        // Reset dropdown ke opsi pertama (Pilih Kelas & TP1)
         if (nilaiKelas) nilaiKelas.selectedIndex = 0
         if (jenisPenilaian) jenisPenilaian.selectedIndex = 0
 
-        // Muat ulang tabel berdasarkan filter default
         loadSiswaNilai(nilaiKelas?.value)
       } else if (targetId === 'subtab-ledger') {
         groupJenisPenilaian?.classList.add('hidden')
 
-        // Reset dropdown kelas ke opsi pertama
         if (nilaiKelas) nilaiKelas.selectedIndex = 0
 
-        // Muat ledger berdasarkan kelas default
         loadLedgerNilai(nilaiKelas?.value)
       }
     })
@@ -393,7 +386,7 @@ function renderRekapCard(siswa, absensi) {
 }
 
 // =====================
-// EXPORT REKAP ABSENSI (EXCELJS)
+// EXPORT REKAP ABSENSI
 // =====================
 async function exportRekapToExcel() {
   if (!currentAbsenData.length) return alert('Belum ada data rekap!')
@@ -474,7 +467,7 @@ async function exportRekapToExcel() {
 }
 
 // =====================
-// LOAD SISWA & FETCH NILAI EKSISTING (FIXED)
+// LOAD SISWA & FETCH NILAI EKSISTING
 // =====================
 async function loadSiswaNilai(classId = nilaiKelas?.value) {
   if (!tbodyInputNilai) return
@@ -484,7 +477,6 @@ async function loadSiswaNilai(classId = nilaiKelas?.value) {
     return
   }
 
-  // Mengambil kode jenis penilaian (misal: TP1)
   const jenisValue = jenisPenilaian?.value?.trim() || ''
   let jenisKode = jenisValue
   const match = jenisValue.match(/\(([^)]+)\)/)
@@ -493,7 +485,6 @@ async function loadSiswaNilai(classId = nilaiKelas?.value) {
   }
 
   try {
-    // 1. Ambil Data Siswa berdasarkan kelas
     const { data: siswa, error: errSiswa } = await supabase
       .from('siswa')
       .select('id, nama_siswa')
@@ -509,7 +500,6 @@ async function loadSiswaNilai(classId = nilaiKelas?.value) {
 
     const siswaIds = siswa.map(s => s.id)
 
-    // 2. Fetch nilai tersimpan mengurutkan via ID Siswa (sama seperti mekanisme Ledger)
     let nilaiMap = {}
     if (jenisKode && siswaIds.length > 0) {
       const { data: nilaiData, error: errNilai } = await supabase
@@ -525,7 +515,6 @@ async function loadSiswaNilai(classId = nilaiKelas?.value) {
       }
     }
 
-    // 3. Render tabel & isi input nilai eksisting
     let rowsHTML = ''
     siswa.forEach((item, index) => {
       const nilaiTersimpan = (nilaiMap[item.id] !== undefined && nilaiMap[item.id] !== null) ? nilaiMap[item.id] : ''
@@ -556,7 +545,7 @@ async function loadSiswaNilai(classId = nilaiKelas?.value) {
 }
 
 // =====================
-// SIMPAN NILAI KE SUPABASE & REFRESH AUTOMATIS
+// SIMPAN NILAI KE SUPABASE
 // =====================
 async function simpanNilai() {
   const btnSimpan = document.getElementById('btnSimpanNilai')
@@ -609,8 +598,6 @@ async function simpanNilai() {
     if (error) throw error
 
     alert('✅ Data nilai berhasil disimpan!')
-
-    // Refresh tampilan tabel agar nilai yang tersimpan langsung muncul di input
     await loadSiswaNilai(classId)
 
   } catch (err) {
@@ -624,7 +611,6 @@ async function simpanNilai() {
   }
 }
 
-// Event Listener Simpan Nilai
 document.getElementById('btnSimpanNilai')?.addEventListener('click', (e) => {
   e.preventDefault()
   simpanNilai()
@@ -660,9 +646,9 @@ async function loadKelasOptions(schoolId) {
   }
 }
 
-// =====================
-// LOAD SISWA ABSENSI
-// =====================
+// ==========================================
+// LOAD SISWA ABSENSI (RESPONSIF MOBILE & LAPTOP)
+// ==========================================
 async function loadSiswaByKelas(classId) {
   if (!classId) {
     containerAbsensi?.classList.add('hidden')
@@ -688,20 +674,52 @@ async function loadSiswaByKelas(classId) {
       dataAbsensi = {}
 
       siswa.forEach(item => {
+        // DEFAULT OTOMATIS: Semua siswa langsung 'H' (Hadir)
         dataAbsensi[item.id] = 'H'
 
         const card = document.createElement('div')
         card.className = 'siswa-card'
-        card.style.cssText = 'background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; border-left: 4px solid #0d8a73; margin-bottom: 8px;'
         
+        // CSS Responsif langsung di inline style / class
+        card.style.cssText = `
+          background: #ffffff;
+          border: 1px solid #e2e8f0;
+          border-left: 5px solid #16a34a;
+          border-radius: 12px;
+          padding: 14px 18px;
+          margin-bottom: 12px;
+          box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+          display: flex;
+          flex-wrap: wrap;
+          align-items: center;
+          justify-content: space-between;
+          gap: 12px;
+        `
+
         card.innerHTML = `
-          <div class="siswa-info" style="display: flex; align-items: center; gap: 10px;">
-            <div class="avatar-initial" style="width: 32px; height: 32px; flex-shrink: 0; background: #2563eb; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.8rem;">
+          <!-- KIRI: Avatar & Nama Siswa -->
+          <div style="display: flex; align-items: center; gap: 12px; flex: 1; min-width: 220px;">
+            <div style="
+              width: 40px; height: 40px; border-radius: 50%; 
+              background: #e0f2fe; color: #0369a1; 
+              font-weight: 700; font-size: 14px; 
+              display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+            ">
               ${getInitial(item.nama_siswa)}
             </div>
-            <div class="siswa-nama" style="font-weight: 600; color: #1f2937; font-size: 0.9rem;">${item.nama_siswa}</div>
+            <div style="font-weight: 700; font-size: 15px; color: #1e293b; line-height: 1.3;">
+              ${item.nama_siswa}
+            </div>
           </div>
-          <div class="status-group" data-siswa-id="${item.id}">
+
+          <!-- KANAN: Grid 4 Tombol Status -->
+          <div class="status-group" data-siswa-id="${item.id}" style="
+            display: grid; 
+            grid-template-columns: repeat(4, 1fr); 
+            gap: 8px; 
+            width: 100%; 
+            max-width: 320px;
+          ">
             <button type="button" class="btn-status active" data-status="H">Hadir</button>
             <button type="button" class="btn-status" data-status="S">Sakit</button>
             <button type="button" class="btn-status" data-status="I">Izin</button>
@@ -712,8 +730,6 @@ async function loadSiswaByKelas(classId) {
       })
 
       attachStatusEvents()
-      
-      // Auto Scroll smooth ke daftar absensi begitu kelas dipilih
       containerAbsensi?.scrollIntoView({ behavior: 'smooth' })
     } else {
       containerAbsensi?.classList.remove('hidden')
@@ -722,6 +738,70 @@ async function loadSiswaByKelas(classId) {
   } catch (err) {
     console.error('Error loadSiswaByKelas:', err)
   }
+}
+
+// ==========================================
+// EVENT STATUS ABSENSI (WARNA DYNAMIC)
+// ==========================================
+function attachStatusEvents() {
+  const applyBtnStyle = (btn, status, isActive) => {
+    const baseStyle = `
+      padding: 8px 0;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.2s ease;
+    `
+    if (!isActive) {
+      btn.style.cssText = baseStyle + `background: #f8fafc; border: 1px solid #cbd5e1; color: #64748b;`
+      return
+    }
+
+    switch (status) {
+      case 'H':
+        btn.style.cssText = baseStyle + `background: #16a34a; border: 1px solid #15803d; color: #ffffff; box-shadow: 0 2px 4px rgba(22, 163, 74, 0.2);`
+        break
+      case 'S':
+        btn.style.cssText = baseStyle + `background: #ca8a04; border: 1px solid #a16207; color: #ffffff; box-shadow: 0 2px 4px rgba(202, 138, 4, 0.2);`
+        break
+      case 'I':
+        btn.style.cssText = baseStyle + `background: #2563eb; border: 1px solid #1d4ed8; color: #ffffff; box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2);`
+        break
+      case 'A':
+        btn.style.cssText = baseStyle + `background: #dc2626; border: 1px solid #b91c1c; color: #ffffff; box-shadow: 0 2px 4px rgba(220, 38, 38, 0.2);`
+        break
+    }
+  }
+
+  document.querySelectorAll('.status-group').forEach(group => {
+    const siswaId = group.dataset.siswaId
+    const buttons = group.querySelectorAll('.btn-status')
+    const card = group.closest('.siswa-card')
+
+    buttons.forEach(btn => {
+      const status = btn.dataset.status
+      applyBtnStyle(btn, status, status === 'H')
+    })
+
+    buttons.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault()
+        const selectedStatus = btn.dataset.status
+
+        buttons.forEach(b => applyBtnStyle(b, b.dataset.status, false))
+        applyBtnStyle(btn, selectedStatus, true)
+
+        if (card) {
+          const borderColors = { H: '#16a34a', S: '#ca8a04', I: '#2563eb', A: '#dc2626' }
+          card.style.borderLeftColor = borderColors[selectedStatus] || '#cbd5e1'
+        }
+
+        dataAbsensi[siswaId] = selectedStatus
+      })
+    })
+  })
 }
 
 // =====================
@@ -1088,37 +1168,6 @@ async function loadLedgerNilai(classId) {
 }
 
 // =====================
-// EVENT STATUS ABSENSI
-// =====================
-function attachStatusEvents() {
-  document.querySelectorAll('.status-group').forEach(group => {
-    const siswaId = group.dataset.siswaId
-    const buttons = group.querySelectorAll('.btn-status')
-
-    buttons.forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        e.preventDefault()
-        buttons.forEach(b => {
-          b.classList.remove('active')
-          b.style.background = '#f3f4f6'
-          b.style.color = '#374151'
-          b.style.borderColor = '#d1d5db'
-          b.style.fontWeight = 'normal'
-        })
-        
-        btn.classList.add('active')
-        btn.style.background = '#0d8a73'
-        btn.style.color = '#ffffff'
-        btn.style.borderColor = '#0d8a73'
-        btn.style.fontWeight = '600'
-        
-        dataAbsensi[siswaId] = btn.dataset.status
-      })
-    })
-  })
-}
-
-// =====================
 // EVENT LISTENERS DROPDOWN KELAS & JENIS PENILAIAN
 // =====================
 jurnalKelas?.addEventListener('change', (e) => {
@@ -1140,11 +1189,10 @@ jenisPenilaian?.addEventListener('change', () => {
 })
 
 // =====================
-// DASHBOARD & HEADER USER (FIXED NAMA & SEKOLAH)
+// DASHBOARD & HEADER USER
 // =====================
 async function loadDashboard() {
   try {
-    // 1. Dapatkan Sesi / Auth User dari Supabase
     const { data: { session } } = await supabase.auth.getSession()
     const user = session?.user
 
@@ -1152,8 +1200,7 @@ async function loadDashboard() {
     let sekolahUser = ''
 
     if (user) {
-      // Query ke tabel 'profiles' menggunakan kolom 'name' dan 'sekolah'
-      const { data: profile, error } = await supabase
+      const { data: profile } = await supabase
         .from('profiles')
         .select('name, sekolah, school_id')
         .eq('id', user.id)
@@ -1165,7 +1212,6 @@ async function loadDashboard() {
       }
     }
 
-    // 2. Fallback dari metadata/session jika query profiles tidak mengembalikan nama
     if (!namaUser) {
       namaUser = currentUser?.profile?.name || 
                  currentUser?.profile?.nama_lengkap || 
@@ -1182,14 +1228,12 @@ async function loadDashboard() {
                     'SD Negeri'
     }
 
-    // 3. Render ke elemen DOM
     if (namaGuru) namaGuru.textContent = namaUser
     if (sekolahInfo) sekolahInfo.textContent = sekolahUser
     if (mapelInfo) mapelInfo.textContent = `Mata Pelajaran: ${currentUser?.header?.mapel || 'PAI'}`
     if (semesterAktifInfo) semesterAktifInfo.textContent = currentUser?.header?.semester || 'Semester 1'
     if (tahunAjaranInfo) tahunAjaranInfo.textContent = currentUser?.header?.tahun_ajaran || 'Tahun Ajaran 2026/2027'
 
-    // 4. Load Option Kelas berdasarkan school_id
     const schoolId = currentUser?.profile?.school_id || currentUser?.profile?.sekolah_id || null
     await loadKelasOptions(schoolId)
     
@@ -1221,7 +1265,7 @@ async function initDashboard() {
   }
 }
 
-// Exec
+// EXECUTE
 initNavigation()
 initSubTabNilai()
 initDashboard()
