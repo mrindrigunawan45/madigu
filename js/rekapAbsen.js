@@ -51,49 +51,35 @@ const downloadBtn =
 let absenData = []
 
 // =======================
-// LOAD MAPEL
+// LOAD MAPEL (SUDAH DIFILTER school_id & A-Z)
 // =======================
 async function loadMapel() {
+  const schoolId = await getSchoolId()
 
-  const { data, error } =
-    await supabaseClient
+  if (!schoolId) {
+    console.error('School ID tidak ditemukan')
+    return
+  }
 
-      .from('mata_pelajaran')
-
-      .select('*')
+  const { data, error } = await supabaseClient
+    .from('mata_pelajaran')
+    .select('*')
+    .eq('school_id', schoolId) // <-- FILTER BERDASARKAN SEKOLAH
+    .order('nama_mapel', { ascending: true }) // <-- SEKALIAN DI-SORT A-Z
 
   if (error) {
-
     console.error(error)
-
     return
-
   }
 
   mapelSelect.innerHTML = ''
-
-  mapelSelect.appendChild(
-
-    new Option(
-      'Pilih Mata Pelajaran',
-      ''
-    )
-
-  )
+  mapelSelect.appendChild(new Option('Pilih Mata Pelajaran', ''))
 
   data.forEach(item => {
-
     mapelSelect.appendChild(
-
-      new Option(
-        item.nama_mapel,
-        item.nama_mapel
-      )
-
+      new Option(item.nama_mapel, item.nama_mapel)
     )
-
   })
-
 }
 
 // =======================
