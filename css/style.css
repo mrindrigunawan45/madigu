@@ -27,7 +27,7 @@ body {
 }
 
 /* ==========================================================================
-   2. LAYOUT & STRUCTURE
+   2. LAYOUT & STRUCTURE (SIDEBAR, HEADER, OVERLAY)
    ========================================================================== */
 .overlay {
   position: fixed;
@@ -53,7 +53,7 @@ body {
   background: var(--white);
   z-index: 999;
   padding: 16px;
-  transition: 0.3s;
+  transition: width 0.3s ease, left 0.3s ease;
   overflow-y: auto;
   box-shadow: var(--shadow);
   display: flex;
@@ -67,24 +67,50 @@ body {
 .sidebar-top {
   width: 100%;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  justify-content: center;
-  padding: 8px 0 12px;
+  justify-content: space-between;
+  padding: 4px 0 16px;
 }
 
 .sidebar-logo {
-  width: 100%;
   display: flex;
-  justify-content: center;
   align-items: center;
 }
 
 .sidebar-logo img {
-  width: 100%;
-  max-width: 135px;
+  max-width: 130px;
   height: auto;
   object-fit: contain;
+}
+
+button#toggleSidebarBtn.toggle-btn {
+  width: 34px !important;
+  height: 34px !important;
+  min-width: 34px !important;
+  max-width: 34px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border-radius: 10px !important;
+  background: #eff6ff !important;
+  color: var(--primary) !important;
+  border: 1px solid #bfdbfe !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  box-shadow: none !important;
+  flex-shrink: 0 !important;
+}
+
+button#toggleSidebarBtn.toggle-btn:hover {
+  background: var(--primary) !important;
+  color: var(--white) !important;
+}
+
+button#toggleSidebarBtn.toggle-btn i {
+  font-size: 14px !important;
+  transition: transform 0.3s ease !important;
 }
 
 .sidebar-menu {
@@ -136,6 +162,7 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  transition: margin-left 0.3s ease, width 0.3s ease;
 }
 
 header {
@@ -196,7 +223,7 @@ main {
 }
 
 /* ==========================================================================
-   3. FORMS & INPUTS
+   3. GENERAL FORMS, INPUTS & BUTTONS
    ========================================================================== */
 .form-group {
   margin-bottom: 18px;
@@ -256,165 +283,7 @@ button:hover {
 }
 
 /* ==========================================================================
-   4. ABSENSI & SISWA COMPONENTS
-   ========================================================================== */
-.siswa-list-container {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-top: 16px;
-}
-
-.siswa-card {
-  background: var(--white);
-  border: 1px solid var(--border);
-  border-left: 5px solid #0d8a73;
-  border-radius: 12px;
-  padding: 14px 20px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
-  gap: 16px;
-}
-
-.siswa-info {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  min-width: 0;
-}
-
-.siswa-avatar,
-.avatar-initial {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #2563eb, #1d4ed8);
-  color: var(--white);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  font-size: 16px;
-  flex-shrink: 0;
-}
-
-.siswa-name,
-.siswa-nama {
-  font-weight: 700;
-  font-size: 1rem;
-  color: #1f2937;
-  word-break: break-word;
-}
-
-.status-group {
-  display: flex;
-  gap: 8px;
-}
-
-.btn-status {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 52px;
-  height: 52px;
-  border-radius: 10px;
-  border: 1px solid var(--border);
-  background: #f9fafb;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  padding: 0;
-}
-
-.btn-status .icon {
-  font-size: 0.9rem;
-  font-weight: 800;
-  color: var(--white);
-  width: 24px;
-  height: 24px;
-  border-radius: 6px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.btn-status .label {
-  font-size: 0.65rem;
-  font-weight: 600;
-  margin-top: 2px;
-  color: #4b5563;
-}
-
-.btn-status[data-status="Hadir"] .icon { background-color: #16a34a; }
-.btn-status[data-status="Sakit"] .icon { background-color: #eab308; }
-.btn-status[data-status="Izin"] .icon { background-color: #2563eb; }
-.btn-status[data-status="Alpa"] .icon { background-color: #dc2626; }
-
-.btn-status.active[data-status="Hadir"] { background-color: #dcfce7; border-color: #16a34a; }
-.btn-status.active[data-status="Sakit"] { background-color: #fef9c3; border-color: #eab308; }
-.btn-status.active[data-status="Izin"] { background-color: #dbeafe; border-color: #2563eb; }
-.btn-status.active[data-status="Alpa"] { background-color: #fee2e2; border-color: #dc2626; }
-
-.absen-modern {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
-}
-
-.absen-card {
-  border: 2px solid var(--border);
-  border-radius: 22px;
-  padding: 20px;
-  cursor: pointer;
-  transition: 0.25s;
-  background: var(--white);
-  position: relative;
-}
-
-.absen-card:hover {
-  transform: translateY(-3px);
-}
-
-.absen-card input {
-  position: absolute;
-  opacity: 0;
-}
-
-.absen-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
-}
-
-.absen-icon {
-  width: 58px;
-  height: 58px;
-  border-radius: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--white);
-  font-size: 28px;
-  font-weight: 700;
-}
-
-.absen-card.hadir .absen-icon { background: #16a34a; }
-.absen-card.hadir:has(input:checked) { border-color: #16a34a; background: #f0fdf4; }
-
-.absen-card.sakit .absen-icon { background: #eab308; }
-.absen-card.sakit:has(input:checked) { border-color: #eab308; background: #fefce8; }
-
-.absen-card.izin .absen-icon { background: #2563eb; }
-.absen-card.izin:has(input:checked) { border-color: #2563eb; background: #eff6ff; }
-
-.absen-card.alpa .absen-icon { background: #ef4444; }
-.absen-card.alpa:has(input:checked) { border-color: #ef4444; background: #fef2f2; }
-
-/* ==========================================================================
-   5. TABLES & RESPONSIVE CONTAINERS
+   4. TABLES & DATA CONTAINERS
    ========================================================================== */
 .table-container,
 .table-responsive {
@@ -439,13 +308,25 @@ td {
   text-align: center;
 }
 
-th {
-  background: var(--primary);
-  color: var(--white);
-  padding: 14px 12px;
-  font-size: 14px;
-  font-weight: 600;
-  white-space: nowrap;
+table th,
+.table-container th,
+#rekap-table th,
+#rekap-jurnal-table th,
+#rekap-absen-table th,
+#rekap-walas-table th {
+  background-color: var(--primary) !important;
+  color: var(--white) !important;
+  font-weight: 700 !important;
+  text-align: center !important;
+  padding: 12px 10px !important;
+  font-size: 13px !important;
+  letter-spacing: 0.5px;
+  border-bottom: 2px solid var(--primary-dark) !important;
+  text-transform: uppercase;
+}
+
+table th * {
+  color: var(--white) !important;
 }
 
 td {
@@ -457,184 +338,235 @@ tr:nth-child(even) {
   background: #f8fafc;
 }
 
-#rekap-jurnal-table th:nth-child(1), #rekap-jurnal-table td:nth-child(1) { width: 100px; white-space: nowrap; }
-#rekap-jurnal-table th:nth-child(2), #rekap-jurnal-table td:nth-child(2) { width: 60px; }
-#rekap-jurnal-table th:nth-child(3), #rekap-jurnal-table td:nth-child(3) { width: 110px; }
-#rekap-jurnal-table th:nth-child(4), #rekap-jurnal-table td:nth-child(4) { text-align: left; min-width: 150px; }
-#rekap-jurnal-table th:nth-child(5), #rekap-jurnal-table td:nth-child(5) { text-align: left; min-width: 120px; }
-#rekap-jurnal-table th:nth-child(6), #rekap-jurnal-table td:nth-child(6) { width: 110px; white-space: nowrap; }
-#rekap-jurnal-table th:nth-child(7), #rekap-jurnal-table td:nth-child(7) { width: 90px; white-space: nowrap; }
-
-.nilai-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  padding: 10px 20px;
-  border-radius: 14px;
-  background: #f8fafc;
-  margin-bottom: 8px;
-}
-
-.nilai-row span {
-  font-weight: 700;
-  font-size: 15px;
-  color: var(--text);
-}
-
-.nilai-row input {
-  width: 110px;
-  padding: 10px 14px;
-  margin-bottom: 0;
-  border-radius: 12px;
-  text-align: center;
+#rekap-jurnal-table td {
+  padding: 14px 12px !important;
+  vertical-align: middle !important;
+  font-size: 13.5px;
+  color: #334155;
 }
 
 /* ==========================================================================
-   6. REKAP & DASHBOARD COMPONENTS
+   5. HALAMAN LOGIN
    ========================================================================== */
-.rekap-modern {
+.login-container {
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  gap: 14px;
-  margin-top: 20px;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background-color: #f8fafc;
 }
 
-.rekap-card {
+.login-card {
+  background: var(--white);
+  width: 100%;
+  max-width: 400px;
+  padding: 36px 32px;
+  border-radius: 20px;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.06);
+  text-align: center;
+  margin: auto;
+}
+
+img.login-logo,
+.login-logo,
+.login-logo img,
+.logo-container img {
+  max-width: 220px !important;
+  width: 100% !important;
+  height: auto !important;
+  margin: 0 auto 20px auto !important;
+  display: block !important;
+}
+
+.login-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #334155;
+  margin-bottom: 24px;
+}
+
+.input-control {
+  width: 100%;
+  padding: 12px 16px;
+  background-color: #f8fafc;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  font-size: 14px;
+  color: #1e293b;
+  outline: none;
+  box-sizing: border-box;
+  transition: all 0.2s ease;
+}
+
+.input-control:focus {
+  border-color: var(--primary);
+  background-color: var(--white);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+.btn-login {
+  width: 100%;
+  padding: 14px;
+  background-color: var(--primary);
+  color: var(--white);
+  border: none;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: all 0.2s ease;
+}
+
+.btn-login:hover {
+  background-color: var(--primary-dark);
+}
+
+/* Catatan: Nilai 18px disesuaikan agar ikon tombol log-in proporsional (bukan 180px typo) */
+.btn-login i {
+  font-size: 18px;
+}
+
+/* ==========================================================================
+   6. ABSENSI WALAS & KARTU SISWA
+   ========================================================================== */
+.walas-form-header {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.siswa-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
   background: var(--white);
   border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 10px 12px;
-  display: flex; /* Menggunakan flexbox horizontal */
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  transition: 0.25s;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  gap: 12px;
 }
 
-.rekap-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
-}
-
-.rekap-left {
+.siswa-info {
   display: flex;
   align-items: center;
-  gap: 14px;
-  min-width: 0;
+  gap: 12px;
 }
 
-.rekap-avatar {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #2563eb, #1d4ed8);
-  color: var(--white);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.siswa-avatar {
+  width: 38px;
+  height: 38px;
+  background: #eff6ff !important;
+  color: #1d4ed8 !important;
+  border: 1px solid #bfdbfe;
   font-weight: 700;
-  font-size: 20px;
-  flex-shrink: 0;
-}
-
-.rekap-user {
-  min-width: 0;
-}
-
-.rekap-user h3 {
-  font-size: 17px;
-  line-height: 1.35;
-  color: var(--text);
-  margin-bottom: 4px;
-  text-align: left;
-  word-break: break-word;
-}
-
-.rekap-user p {
-  color: var(--text-muted);
-  font-size: 14px;
-  text-align: left;
-}
-
-.rekap-center {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 10px;
-  width: 100%;
-}
-
-.rekap-badge {
-  width: 74px;
-  height: 64px;
-  border-radius: 16px;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  border: 1.5px solid var(--border);
-  transition: 0.25s;
-  padding: 8px;
 }
 
-.rekap-badge i { font-size: 18px; }
+.absen-options {
+  display: flex;
+  gap: 8px;
+}
 
-.rekap-badge-content {
+.absen-btn {
+  position: relative;
+  cursor: pointer;
+}
+
+.absen-btn input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.absen-btn .btn-content {
   display: flex;
   flex-direction: column;
   align-items: center;
-  line-height: 1.1;
-}
-
-.rekap-badge-content span { font-size: 13px; font-weight: 700; }
-.rekap-badge-content strong { font-size: 16px; }
-
-.rekap-badge.hadir { background: #f0fdf4; border-color: #22c55e; color: #16a34a; }
-.rekap-badge.sakit { background: #fefce8; border-color: #eab308; color: #ca8a04; }
-.rekap-badge.izin  { background: #eff6ff; border-color: #2563eb; color: #2563eb; }
-.rekap-badge.alpa  { background: #fef2f2; border-color: #ef4444; color: #ef4444; }
-
-.rekap-right {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  width: 100%;
-}
-
-.persen-circle {
-  width: 82px;
-  height: 82px;
-  border-radius: 50%;
-  position: relative;
-  display: flex;
-  align-items: center;
   justify-content: center;
-  flex-shrink: 0;
+  width: 50px;
+  padding: 6px 0;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: #f8fafc;
+  transition: all 0.2s ease;
 }
 
-.persen-circle::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  background: conic-gradient(#22c55e calc(var(--percent) * 1%), #dcfce7 0%);
+/* Warna Status Radio Absensi */
+.absen-btn.status-h input[type="radio"]:checked + .btn-content {
+  background: #10b981 !important;
+  border-color: #10b981 !important;
+  color: var(--white) !important;
 }
 
-.persen-circle::after {
-  content: '';
-  position: absolute;
-  width: 60px;
-  height: 60px;
-  background: var(--white);
-  border-radius: 50%;
+.absen-btn.status-s input[type="radio"]:checked + .btn-content {
+  background: #f59e0b !important;
+  border-color: #f59e0b !important;
+  color: var(--white) !important;
 }
 
-.persen-circle span {
-  position: relative;
-  z-index: 2;
-  font-size: 17px;
-  font-weight: 700;
-  color: var(--text);
+.absen-btn.status-i input[type="radio"]:checked + .btn-content {
+  background: #0284c7 !important;
+  border-color: #0284c7 !important;
+  color: var(--white) !important;
+}
+
+.absen-btn.status-a input[type="radio"]:checked + .btn-content {
+  background: #ef4444 !important;
+  border-color: #ef4444 !important;
+  color: var(--white) !important;
+}
+
+.absen-btn.status-h:hover .btn-content { border-color: #10b981; }
+.absen-btn.status-s:hover .btn-content { border-color: #f59e0b; }
+.absen-btn.status-i:hover .btn-content { border-color: #0284c7; }
+.absen-btn.status-a:hover .btn-content { border-color: #ef4444; }
+
+.sticky-save-bar {
+  position: sticky;
+  bottom: 16px;
+  z-index: 90;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  padding: 12px 20px;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.sticky-save-bar .save-info {
+  font-size: 13px;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.sticky-save-bar button {
+  margin: 0;
+  width: auto;
+  padding: 10px 24px;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
 .guru-box {
@@ -657,494 +589,611 @@ tr:nth-child(even) {
 
 .guru-item span { font-size: 12px; color: var(--text-muted); }
 .guru-item strong { font-size: 16px; color: var(--text); }
-.guru-divider { width: 1px; height: 38px; background: var(--border); }
-
-.stat-cards-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
-}
-
-.stat-card {
-  padding: 12px 16px;
-  border-radius: 10px;
-  text-align: center;
-  color: #fff;
-  font-weight: bold;
-}
-
-.stat-card h4 {
-  font-size: 12px;
-  margin-bottom: 4px;
-  opacity: 0.9;
-  text-transform: uppercase;
-}
-
-.stat-card span { font-size: 22px; }
-
-.hadir-bg { background-color: #10b981; }
-.sakit-bg { background-color: #f59e0b; }
-.izin-bg  { background-color: #3b82f6; }
-.alpa-bg  { background-color: #ef4444; }
-
-.badge {
-  padding: 4px 8px;
-  border-radius: 6px;
-  color: var(--white);
-  font-size: 12px;
-  font-weight: bold;
-}
-
-.badge-success { background-color: #10b981; }
-.badge-warning { background-color: #f59e0b; }
-.badge-info    { background-color: #3b82f6; }
-.badge-danger  { background-color: #ef4444; }
 
 /* ==========================================================================
-   7. MODAL & MISC
+   7. REKAP ABSEN & AKSI JURNAL
    ========================================================================== */
-.login-page {
-  min-height: 100vh;
-  display: flex;
+.aksi-jurnal {
+  display: flex !important;
   align-items: center;
   justify-content: center;
-  background: var(--bg);
+  gap: 6px !important;
 }
 
-.login-container {
-  width: 100%;
-  padding: 20px;
-  display: flex;
-  justify-content: center;
+.aksi-jurnal .edit-btn,
+.aksi-jurnal .delete-btn {
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 6px !important;
+  border: none !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  font-size: 13px !important;
+  transition: all 0.2s ease !important;
+  box-shadow: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
 }
 
-.login-card {
-  width: 100%;
-  max-width: 420px;
-  background: var(--white);
-  border-radius: 28px;
-  padding: 40px;
-  box-shadow: var(--shadow);
+.aksi-jurnal .edit-btn {
+  background-color: #fef3c7 !important;
+  color: #d97706 !important;
 }
 
-.login-logo {
-  width: 220px;
-  display: block;
-  margin: 0 auto 24px;
+.aksi-jurnal .delete-btn {
+  background-color: #fee2e2 !important;
+  color: #dc2626 !important;
 }
 
-.login-card h1 { text-align: center; margin-bottom: 24px; }
-.login-btn { width: 100%; }
-
-.modal {
-  display: none;
-  position: fixed;
-  z-index: 1000;
-  inset: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  align-items: center;
-  justify-content: center;
+.aksi-jurnal .edit-btn:hover {
+  background-color: #f59e0b !important;
+  color: var(--white) !important;
 }
 
-.modal.hidden { display: none; }
-
-.modal-content {
-  background-color: var(--white);
-  padding: 24px;
-  border-radius: 16px;
-  width: 90%;
-  max-width: 450px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-  animation: fadeIn 0.2s ease-in-out;
+.aksi-jurnal .delete-btn:hover {
+  background-color: #ef4444 !important;
+  color: var(--white) !important;
 }
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: scale(0.95); }
-  to { opacity: 1; transform: scale(1); }
-}
-
-.modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 1px solid #eee;
-  padding-bottom: 12px;
-  margin-bottom: 16px;
-}
-
-.modal-header h3 { margin: 0; font-size: 1.15rem; color: #333; }
-
-.close-modal {
-  font-size: 24px;
-  font-weight: bold;
-  cursor: pointer;
-  color: #aaa;
-}
-
-.close-modal:hover { color: #000; }
-
-.list-tidak-hadir { list-style: none; padding: 0; margin: 0; }
-.list-tidak-hadir li {
-  padding: 12px 0;
-  border-bottom: 1px solid #f0f0f0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.status-badge {
-  padding: 4px 8px;
-  border-radius: 6px;
-  font-size: 0.8rem;
-  font-weight: bold;
-}
-
-.status-badge.S { background-color: #fef3c7; color: #d97706; }
-.status-badge.I { background-color: #e0f2fe; color: #0284c7; }
-.status-badge.A { background-color: #fee2e2; color: #dc2626; }
 
 .lihat-absen-btn {
-  background-color: var(--primary);
-  color: var(--white);
-  border: none;
-  padding: 8px 16px;
-  border-radius: 20px;
-  font-weight: 600;
-  font-size: 14px;
+  background-color: #eff6ff !important;
+  color: var(--primary) !important;
+  border: 1px solid #bfdbfe !important;
+  padding: 6px 14px !important;
+  border-radius: 20px !important;
+  font-weight: 600 !important;
+  font-size: 12px !important;
   cursor: pointer;
-  transition: background-color 0.2s ease, transform 0.1s ease;
-  display: inline-block;
-  width: auto;
+  transition: all 0.2s ease;
 }
 
 .lihat-absen-btn:hover {
-  background-color: var(--primary-dark);
-  transform: scale(1.03);
+  background-color: var(--primary) !important;
+  color: var(--white) !important;
 }
 
-.empty-state {
-  padding: 40px;
-  text-align: center;
+/* Rekap Mobile Grid */
+.rekap-modern {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.rekap-card-mobile {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 12px;
+  transition: all 0.2s ease;
+}
+
+.rekap-card-mobile:hover {
+  border-color: #bfdbfe;
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.08);
+  transform: translateY(-2px);
+}
+
+.rekap-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+  border-bottom: 1px dashed #f1f5f9;
+  padding-bottom: 8px;
+}
+
+.nama-siswa {
+  font-weight: 700;
+  color: #1e293b;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.total-pertemuan {
+  font-size: 12px;
   color: var(--text-muted);
+  background: #f8fafc;
+  padding: 2px 8px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  white-space: nowrap;
+}
+
+.rekap-stats {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.badge-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 6px 4px;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.badge-item strong {
+  font-size: 14px;
+  margin-top: 2px;
+}
+
+.badge-item.hadir { background-color: #dcfce7; color: #15803d; }
+.badge-item.sakit { background-color: #fef9c3; color: #a16207; }
+.badge-item.izin  { background-color: #e0f2fe; color: #0369a1; }
+.badge-item.alpa  { background-color: #fee2e2; color: #b91c1c; }
+
+.rekap-persen {
+  align-self: flex-end;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--primary);
+  background-color: #eff6ff;
+  padding: 4px 12px;
+  border-radius: 20px;
+  border: 1px solid #bfdbfe;
+  letter-spacing: 0.3px;
 }
 
 /* ==========================================================================
-   8. MEDIA QUERIES (DESKTOP & TABLET)
+   8. MEDIA QUERIES & RESPONSIVE DESIGN
    ========================================================================== */
-@media (min-width: 1024px) {
+@media (min-width: 769px) {
   .sidebar { left: 0; }
   .overlay { display: none; }
   .menu-btn { display: none; }
+  
   .content-wrapper {
     margin-left: 280px;
     width: calc(100% - 280px);
   }
-  main { padding: 34px; }
-  .card { padding: 28px; }
-  .sidebar-menu button { font-size: 14px; padding: 10px 14px; }
-  .header-title h1 { font-size: 30px; }
-  .sidebar-logo img { max-width: 150px; }
+
+  /* Mode Collapsed Sidebar */
+  aside.sidebar.collapsed {
+    width: 76px !important;
+    padding: 16px 10px !important;
+  }
+
+  aside.sidebar.collapsed .sidebar-logo,
+  aside.sidebar.collapsed .sidebar-menu button span {
+    display: none !important;
+  }
+
+  aside.sidebar.collapsed .sidebar-top {
+    justify-content: center !important;
+  }
+
+  aside.sidebar.collapsed .sidebar-menu button {
+    justify-content: center !important;
+    padding: 12px 0 !important;
+  }
+
+  aside.sidebar.collapsed .sidebar-menu button i {
+    font-size: 18px !important;
+    margin: 0 !important;
+  }
+
+  aside.sidebar.collapsed #toggleSidebarBtn i {
+    transform: rotate(180deg) !important;
+  }
+
+  body.has-collapsed-sidebar .content-wrapper {
+    margin-left: 76px !important;
+    width: calc(100% - 76px) !important;
+  }
 }
 
-@media (max-width: 1023px) {
+@media (max-width: 768px) {
   .sidebar { left: -290px; }
   .sidebar.active { left: 0; }
-}
 
-/* ==========================================================================
-   9. MEDIA QUERIES (MOBILE OPTIMIZATIONS)
-   ========================================================================== */
-@media (max-width: 768px) {
   header {
     height: 74px;
     padding: 0 16px;
-    gap: 14px;
   }
 
   .menu-btn {
     width: 46px;
     height: 46px;
-    border-radius: 14px;
     font-size: 20px;
   }
 
-  .header-title h1 { font-size: 20px; line-height: 1.2; }
-  .header-title p { font-size: 12px; }
+  button#toggleSidebarBtn {
+    display: flex !important;
+  }
 
   main {
     padding: 14px;
-    padding-bottom: 100px;
+  }
+}
+/* ==========================================================================
+   8. MEDIA QUERIES & RESPONSIVE DESIGN (MOBILE & TABLET FIXES)
+   ========================================================================== */
+
+/* --- Tampilan Desktop & Tablet Large --- */
+@media (min-width: 769px) {
+  .sidebar { left: 0; }
+  .overlay { display: none; }
+  .menu-btn { display: none; }
+  
+  .content-wrapper {
+    margin-left: 280px;
+    width: calc(100% - 280px);
   }
 
-  .card, .tab-section {
-    padding: 16px !important;
-    border-radius: 20px;
-    margin-bottom: 14px !important;
+  /* Mode Collapsed Sidebar */
+  aside.sidebar.collapsed {
+    width: 76px !important;
+    padding: 16px 10px !important;
   }
 
-  .sidebar {
-    width: 260px;
+  aside.sidebar.collapsed .sidebar-logo,
+  aside.sidebar.collapsed .sidebar-menu button span {
+    display: none !important;
+  }
+
+  aside.sidebar.collapsed .sidebar-top {
+    justify-content: center !important;
+  }
+
+  aside.sidebar.collapsed .sidebar-menu button {
+    justify-content: center !important;
+    padding: 12px 0 !important;
+  }
+
+  aside.sidebar.collapsed .sidebar-menu button i {
+    font-size: 18px !important;
+    margin: 0 !important;
+  }
+
+  aside.sidebar.collapsed #toggleSidebarBtn i {
+    transform: rotate(180deg) !important;
+  }
+
+  body.has-collapsed-sidebar .content-wrapper {
+    margin-left: 76px !important;
+    width: calc(100% - 76px) !important;
+  }
+}
+
+/* --- Tampilan Mobile & HP (<= 768px) --- */
+@media (max-width: 768px) {
+  .sidebar { 
+    left: -290px;
+    width: 270px;
+  }
+  
+  .sidebar.active { 
+    left: 0; 
+  }
+
+  /* Tombol melipat/menutup sidebar di HP */
+  button#toggleSidebarBtn {
+    display: flex !important;
+  }
+
+  header {
+    height: 68px;
+    padding: 0 16px;
+    gap: 12px;
+  }
+
+  .menu-btn {
+    width: 42px;
+    height: 42px;
+    font-size: 18px;
+    border-radius: 10px;
+  }
+
+  .header-title h1 {
+    font-size: 18px;
+  }
+
+  .header-title p {
+    font-size: 12px;
+  }
+
+  main {
+    padding: 12px;
+  }
+
+  .card {
+    border-radius: 18px;
     padding: 16px;
+    margin-bottom: 16px;
   }
 
-  .form-group { margin-bottom: 12px !important; }
-
+  /* Optimalisasi Input & Button di HP */
   input,
   select,
   textarea,
   .form-control {
-    padding: 12px 14px !important;
-    font-size: 14px !important;
-    border-radius: 12px !important;
+    padding: 12px 14px;
+    font-size: 14px;
+    border-radius: 12px;
     margin-bottom: 12px;
   }
 
   button {
-    width: 100%;
-    border-radius: 14px;
-    padding: 14px;
-    font-size: 15px;
+    padding: 12px 18px;
+    font-size: 14px;
+    border-radius: 12px;
   }
 
+  /* Kartu Absensi Siswa agar tidak melimpah ke kanan */
   .siswa-card {
-    flex-direction: column !important;
-    align-items: stretch !important;
-    gap: 12px !important;
-    padding: 14px !important;
-  }
-
-  .siswa-card .status-group {
-    display: grid !important;
-    grid-template-columns: repeat(4, 1fr) !important;
-    gap: 6px !important;
-    width: 100% !important;
-  }
-
-  .btn-status {
-    width: 100% !important;
-    height: 48px !important;
-  }
-
-  .absen-modern {
-    grid-template-columns: repeat(4, 1fr);
-    gap: 6px;
-  }
-
-  .absen-card {
-    min-height: 70px;
-    padding: 8px 4px;
-    border-radius: 14px;
-  }
-
-  .absen-icon {
-    width: 38px;
-    height: 38px;
-    font-size: 18px;
-  }
-
-  .nilai-row {
     flex-direction: column;
-    align-items: stretch;
+    align-items: flex-start;
     gap: 10px;
+    padding: 12px;
   }
 
-  .nilai-row input { width: 100%; }
-
-  table { min-width: 650px; }
-  th, td { font-size: 13px; padding: 8px; }
-
- @media (max-width: 768px) {
-
-  /* Card container Ramping 1 Baris */
-  .rekap-card {
-    display: flex !important;
-    flex-direction: row !important;
-    align-items: center !important;
-    justify-content: space-between !important;
-    padding: 10px 12px !important;
-    gap: 8px !important;
-    background: #ffffff !important;
-    border: 1px solid var(--border) !important;
-    border-radius: 12px !important;
-    grid-template-columns: none !important; /* Matikan grid */
+  .siswa-info {
+    width: 100%;
   }
 
-  /* Section Kanan, Tengah, Kiri pas & berurutan */
-  .rekap-left {
-    display: flex !important;
-    align-items: center !important;
-    gap: 8px !important;
-    flex: 1 1 auto !important;
-    min-width: 0 !important; /* Mencegah nama merusak layout */
+  .absen-options {
+    width: 100%;
+    justify-content: space-between;
   }
 
-  .rekap-avatar {
-    width: 34px !important;
-    height: 34px !important;
-    min-width: 34px !important;
-    font-size: 11px !important;
-    position: static !important; /* Matikan penumpukan absolute */
+  .absen-btn {
+    flex: 1;
   }
 
-  .rekap-user {
-    display: flex !important;
-    flex-direction: column !important;
-    min-width: 0 !important;
+  .absen-btn .btn-content {
+    width: 100%;
+    padding: 8px 0;
   }
 
-  .rekap-user h3 {
-    font-size: 12px !important;
-    font-weight: 700 !important;
-    margin: 0 !important;
-    white-space: nowrap !important;
-    overflow: hidden !important;
-    text-overflow: ellipsis !important; /* Nama panjang dipotong (...) */
+  /* Sticky Save Bar di Bawah Layar Mobile */
+  .sticky-save-bar {
+    padding: 10px 14px;
+    bottom: 10px;
+    border-radius: 12px;
   }
 
-  .rekap-user p {
-    font-size: 10px !important;
-    color: var(--text-muted) !important;
-    margin: 0 !important;
-    white-space: nowrap !important;
+  .sticky-save-bar .save-info {
+    font-size: 11px;
   }
 
-  /* Badge H, S, I, A bersebelahan & tidak menimpa */
-  .rekap-center {
-    display: flex !important;
-    align-items: center !important;
-    gap: 3px !important;
-    flex-shrink: 0 !important;
-    grid-template-columns: none !important; /* Matikan grid */
-    width: auto !important;
-  }
-
-  .rekap-badge {
-    position: static !important;
-    width: auto !important;
-    height: auto !important;
-    padding: 3px 6px !important;
-    font-size: 10px !important;
-    font-weight: 700 !important;
-    border-radius: 6px !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-  }
-
-  .rekap-badge-content {
-    display: flex !important;
-    flex-direction: row !important;
-    gap: 2px !important;
-    line-height: 1 !important;
-  }
-
-  .rekap-badge-content span,
-  .rekap-badge-content strong {
-    font-size: 10px !important;
-  }
-
-  /* Persentase Lingkaran di Ujung Kanan */
-  .rekap-right {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: flex-end !important;
-    width: auto !important;
-    padding-top: 0 !important;
-    border-top: none !important;
-    flex-shrink: 0 !important;
-  }
-
-  .persen-circle {
-    width: 36px !important;
-    height: 36px !important;
-    min-width: 36px !important;
-  }
-
-  .persen-circle::after {
-    width: 26px !important;
-    height: 26px !important;
-  }
-
-  .persen-circle span {
-    font-size: 9px !important;
-    font-weight: 700 !important;
+  .sticky-save-bar button {
+    padding: 8px 16px;
+    font-size: 13px;
   }
 }
-/* ==========================================
-   FIX REKAP ABSEN MOBILE (1 BARIS RAPI)
-   ========================================== */
-.rekap-card-mobile {
+
+/* --- Tampilan HP Sangat Kecil (<= 380px) --- */
+@media (max-width: 380px) {
+  .rekap-modern {
+    grid-template-columns: 1fr;
+  }
+
+  .header-title h1 {
+    font-size: 16px;
+  }
+}
+
+/* ==========================================================================
+   STICKY COLUMN FOR TABLE (KOLOM NAMA TETAP FIX SAAT SCROLL)
+   ========================================================================== */
+
+/* 1. Kunci posisi header NAMA (th) dan isi NAMA (td) di kolom pertama */
+.table-container table th:first-child,
+.table-container table td:first-child,
+.table-responsive table th:first-child,
+.table-responsive table td:first-child {
+  position: sticky;
+  left: 0;
+  z-index: 10;
+  background-color: var(--white); /* Mencegah teks di belakangnya kelihatan menumpuk */
+}
+
+/* 2. Warna khusus untuk Header "NAMA" agar tetap biru saat di-scroll */
+.table-container table th:first-child,
+.table-responsive table th:first-child {
+  background-color: var(--primary) !important;
+  z-index: 11; /* Z-index lebih tinggi agar berada di atas td */
+}
+
+/* 3. Baris genap (zebra striping) agar warna latar kolom sticky tetap sesuai */
+.table-container table tr:nth-child(even) td:first-child,
+.table-responsive table tr:nth-child(even) td:first-child {
+  background-color: #f8fafc;
+}
+
+/* 4. Beri bayangan tipis (shadow) di kanan kolom nama agar makin estetik */
+.table-container table th:first-child::after,
+.table-container table td:first-child::after,
+.table-responsive table th:first-child::after,
+.table-responsive table td:first-child::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: -5px;
+  bottom: 0;
+  width: 5px;
+  background: linear-gradient(to right, rgba(0, 0, 0, 0.08), transparent);
+  pointer-events: none;
+}
+/* ==========================================================================
+   STICKY 2 KOLOM (NO & NAMA) UNTUK REKAP WALAS
+   ========================================================================== */
+
+/* 1. Kolom 1 (NO) - Menempel paling kiri (left: 0) */
+#rekap-walas-table th:nth-child(1),
+#rekap-walas-table td:nth-child(1) {
+  position: sticky;
+  left: 0;
+  z-index: 10;
+  background-color: var(--white);
+  width: 40px;
+  min-width: 40px;
+}
+
+/* 2. Kolom 2 (NAMA SISWA) - Menempel tepat di sebelah kanan kolom NO (left: 40px) */
+#rekap-walas-table th:nth-child(2),
+#rekap-walas-table td:nth-child(2) {
+  position: sticky;
+  left: 40px; /* Jarak sesuai lebar kolom NO */
+  z-index: 10;
+  background-color: var(--white);
+}
+
+/* 3. Header Biru untuk Kolom 1 & 2 (Z-Index Lebih Tinggi) */
+#rekap-walas-table th:nth-child(1),
+#rekap-walas-table th:nth-child(2) {
+  background-color: var(--primary) !important;
+  z-index: 12;
+}
+
+/* 4. Penyesuaian Baris Genap (Zebra Striping) */
+#rekap-walas-table tr:nth-child(even) td:nth-child(1),
+#rekap-walas-table tr:nth-child(even) td:nth-child(2) {
+  background-color: #f8fafc;
+}
+
+/* 5. Bayangan Soft di Sebelah Kanan Kolom NAMA SISWA */
+#rekap-walas-table th:nth-child(2)::after,
+#rekap-walas-table td:nth-child(2)::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: -5px;
+  bottom: 0;
+  width: 5px;
+  background: linear-gradient(to right, rgba(0, 0, 0, 0.08), transparent);
+  pointer-events: none;
+}
+/* ==========================================================================
+   ALIGNMENT NAMA SISWA RATA KIRI
+   ========================================================================== */
+
+/* 1. Rata kiri untuk Header & Isi Kolom Nama di Tabel Umum / Rekap Nilai */
+.table-container table th:first-child,
+.table-container table td:first-child,
+.table-responsive table th:first-child,
+.table-responsive table td:first-child {
+  text-align: left !important;
+  padding-left: 14px !important;
+}
+
+/* 2. Rata kiri khusus Kolom NAMA SISWA (Kolom ke-2) di Tabel Rekap Walas */
+#rekap-walas-table th:nth-child(2),
+#rekap-walas-table td:nth-child(2) {
+  text-align: left !important;
+  padding-left: 14px !important;
+}
+
+/* 3. Kolom Nomor (NO) di Rekap Walas tetap Rata Tengah */
+#rekap-walas-table th:nth-child(1),
+#rekap-walas-table td:nth-child(1) {
+  text-align: center !important;
+}
+/* ==========================================================================
+   MODAL DETAIL TIDAK HADIR
+   ========================================================================== */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.5);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 9999;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.modal-card {
+  background: var(--white);
+  width: 100%;
+  max-width: 420px;
+  border-radius: 20px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  animation: modalPop 0.25s ease-out;
+}
+
+@keyframes modalPop {
+  from { opacity: 0; transform: scale(0.95) translateY(10px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.modal-header {
+  padding: 18px 20px;
+  border-bottom: 1px solid var(--border);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
-  padding: 8px 10px;
-  margin-bottom: 8px;
-  gap: 6px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.03);
 }
 
-/* Kiri: Nama & Total Pertemuan */
-.rekap-info {
+.modal-header h3 {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.close-modal-btn {
+  background: transparent !important;
+  color: var(--text-muted) !important;
+  font-size: 24px !important;
+  padding: 0 !important;
+  line-height: 1;
+  cursor: pointer;
+  border: none;
+}
+
+.close-modal-btn:hover {
+  color: var(--text) !important;
+}
+
+.modal-body {
+  padding: 16px 20px;
+  max-height: 350px;
+  overflow-y: auto;
+}
+
+.list-tidak-hadir {
+  list-style: none;
+  padding: 0;
+  margin: 0;
   display: flex;
   flex-direction: column;
-  flex: 1;
-  min-width: 0; /* Mencegah nama panjang merusak layout */
+  gap: 10px;
 }
 
-.nama-siswa {
+.list-tidak-hadir li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: #f8fafc;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  font-size: 14px;
+}
+
+.status-badge {
+  padding: 4px 10px;
+  border-radius: 20px;
   font-size: 12px;
   font-weight: 700;
-  color: #0f172a;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis; /* Nama panjang terpotong rapi dengan (...) */
+  letter-spacing: 0.3px;
 }
 
-.total-pertemuan {
-  font-size: 10px;
-  color: #64748b;
-  margin-top: 1px;
-}
-
-/* Tengah: Ringkasan Absen H, S, I, A */
-.rekap-stats {
-  display: flex;
-  align-items: center;
-  gap: 3px;
-  flex-shrink: 0;
-}
-
-.badge-item {
-  font-size: 10px;
-  padding: 3px 5px;
-  border-radius: 6px;
-  display: flex;
-  align-items: center;
-  gap: 2px;
-}
-
-.badge-item strong {
-  font-weight: 800;
-}
-
-.badge-item.hadir { background: #dcfce7; color: #15803d; }
-.badge-item.sakit { background: #fef9c3; color: #a16207; }
-.badge-item.izin  { background: #dbeafe; color: #1d4ed8; }
-.badge-item.alpa  { background: #fee2e2; color: #b91c1c; }
-
-/* Kanan: Persentase */
-.rekap-persen {
-  font-size: 11px;
-  font-weight: 800;
-  color: #15803d;
-  background: #f0fdf4;
-  border: 1px solid #bbf7d0;
-  padding: 4px 6px;
-  border-radius: 8px;
-  flex-shrink: 0;
-  min-width: 42px;
-  text-align: center;
-}
+.status-badge.S { background-color: #fef9c3; color: #a16207; } /* Sakit */
+.status-badge.I { background-color: #e0f2fe; color: #0369a1; } /* Izin */
+.status-badge.A { background-color: #fee2e2; color: #b91c1c; } /* Alpa */

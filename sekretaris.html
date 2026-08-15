@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Absen Sekretaris</title>
+  
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <style>
+    body {
+      background-color: #f1f5f9;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      margin: 0;
+      padding-bottom: 90px;
+    }
+
+    .mobile-header {
+      background: #2563eb;
+      color: white;
+      padding: 20px 16px;
+      border-bottom-left-radius: 20px;
+      border-bottom-right-radius: 20px;
+      box-shadow: 0 4px 10px rgba(37, 99, 235, 0.2);
+    }
+
+    .role-badge {
+      background: rgba(255, 255, 255, 0.2);
+      font-size: 11px;
+      padding: 3px 10px;
+      border-radius: 12px;
+      text-transform: uppercase;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    .mobile-header h2 {
+      margin: 8px 0 2px 0;
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .mobile-header p {
+      margin: 0;
+      font-size: 13px;
+      opacity: 0.9;
+    }
+
+    .mobile-tabs {
+      display: flex;
+      background: #ffffff;
+      margin: 16px;
+      padding: 4px;
+      border-radius: 12px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      background: transparent;
+      font-size: 13px;
+      font-weight: 600;
+      color: #64748b;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .tab-btn.active {
+      background: #2563eb;
+      color: white;
+    }
+
+    .date-box {
+      margin: 0 16px 12px 16px;
+      background: white;
+      padding: 12px 14px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+
+    .date-box label {
+      font-size: 13px;
+      font-weight: 700;
+      color: #334155;
+    }
+
+    .date-box input {
+      border: 1px solid #cbd5e1;
+      padding: 8px 10px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      outline: none;
+    }
+
+    /* CARD SISWA */
+    .siswa-card-mobile {
+      background: white;
+      margin: 8px 16px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+      border: 1px solid #e2e8f0;
+    }
+
+    .siswa-nama {
+      font-weight: 700;
+      font-size: 13px;
+      color: #0f172a;
+      flex: 1;
+      padding-right: 8px;
+    }
+
+    .status-options {
+      display: flex;
+      gap: 4px;
+    }
+
+    .status-btn {
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      border: 1px solid #cbd5e1;
+      background: #f8fafc;
+      font-weight: 800;
+      font-size: 12px;
+      color: #64748b;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .status-btn.selected-H { background: #22c55e; color: white; border-color: #22c55e; }
+    .status-btn.selected-S { background: #eab308; color: white; border-color: #eab308; }
+    .status-btn.selected-I { background: #3b82f6; color: white; border-color: #3b82f6; }
+    .status-btn.selected-A { background: #ef4444; color: white; border-color: #ef4444; }
+
+    .btn-simpan-fixed {
+      position: fixed;
+      bottom: 16px;
+      left: 16px;
+      right: 16px;
+      background: #2563eb;
+      color: white;
+      padding: 14px;
+      border: none;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 700;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .logout-btn-header {
+      float: right;
+      background: rgba(255,255,255,0.2);
+      border: none;
+      color: white;
+      padding: 6px 10px;
+      border-radius: 8px;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    /* HISTORI CARD */
+    .histori-card {
+      background: white;
+      padding: 14px;
+      border-radius: 12px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+    }
+
+    .histori-info h4 {
+      margin: 0 0 4px 0;
+      font-size: 14px;
+      color: #0f172a;
+    }
+
+    .histori-info p {
+      margin: 0;
+      font-size: 11px;
+      color: #64748b;
+    }
+
+    .btn-edit-histori {
+      background: #eff6ff;
+      color: #2563eb;
+      border: 1px solid #bfdbfe;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .empty-placeholder {
+      text-align: center;
+      padding: 40px 20px;
+      color: #94a3b8;
+      background: white;
+      margin: 0 16px;
+      border-radius: 12px;
+      border: 1px dashed #cbd5e1;
+    }
+
+    .empty-placeholder i {
+      font-size: 32px;
+      margin-bottom: 8px;
+      color: #cbd5e1;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <div class="mobile-header">
+    <button class="logout-btn-header" id="logoutBtn"><i class="fa-solid fa-right-from-bracket"></i> Keluar</button>
+    <span class="role-badge">Sekretaris Kelas</span>
+    <h2 id="sekretaris-nama">Memuat...</h2>
+    <p id="sekretaris-detail">Mengecek data...</p>
+  </div>
+
+  <!-- TAB SWITCHER -->
+  <div class="mobile-tabs">
+    <button class="tab-btn active" id="btn-tab-absen"><i class="fa-solid fa-pen-to-square"></i> Absen</button>
+    <button class="tab-btn" id="btn-tab-histori"><i class="fa-solid fa-clock-rotate-left"></i> Histori</button>
+  </div>
+
+  <!-- TAB 1: ABSENSI -->
+  <div id="tab-absen">
+    <div class="date-box">
+      <label for="tgl-absen">Tanggal Absen:</label>
+      <input type="date" id="tgl-absen">
+    </div>
+
+    <!-- LIST SISWA -->
+    <div id="list-siswa">
+      <div class="empty-placeholder">
+        <i class="fa-regular fa-calendar-check"></i>
+        <div>Silakan pilih <strong>Tanggal Absen</strong> di atas untuk memunculkan daftar siswa.</div>
+      </div>
+    </div>
+
+    <button class="btn-simpan-fixed" id="btnSimpanAbsen" style="display: none;">
+      <i class="fa-solid fa-floppy-disk"></i> Simpan Absensi
+    </button>
+  </div>
+
+  <!-- TAB 2: HISTORI -->
+  <div id="tab-histori" style="display: none;">
+    <div id="list-histori" style="margin: 16px;">
+      <!-- Histori tanggal muncul di sini -->
+    </div>
+  </div>
+
+  <!-- SCRIPT -->
+  <script type="module" src="js/sekretaris.js"></script>
+
+</body>
+</html>

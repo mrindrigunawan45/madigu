@@ -44,8 +44,11 @@ if (loginForm) {
     const role = profile.role
     console.log('ROLE USER:', role)
 
-    // REDIRECT PERALIAN HALAMAN BERDASARKAN ROLE
-    if (role === 'agen') {
+    // REDIRECT PERALIHAN HALAMAN BERDASARKAN ROLE
+    if (role === 'sekretaris') {
+      window.location.href = 'sekretaris.html'
+      return
+    } else if (role === 'agen') {
       window.location.href = 'lapor.html'
       return
     } else if (role === 'bk') {
@@ -79,8 +82,11 @@ async function checkAuth() {
     data: { session }
   } = await supabaseClient.auth.getSession()
 
-  // Jika belum login tapi mencoba akses dashboard
-  if (!session && window.location.pathname.includes('dashboard')) {
+  // Ambil halaman saat ini
+  const currentPath = window.location.pathname
+
+  // Jika belum login tapi mencoba akses halaman yang diproteksi
+  if (!session && (currentPath.includes('dashboard') || currentPath.includes('sekretaris.html') || currentPath.includes('lapor.html'))) {
     window.location.href = 'index.html'
   }
 }

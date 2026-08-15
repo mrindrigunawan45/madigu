@@ -1,5 +1,4 @@
 import { supabaseClient } from './supabase.js'
-import { resetForm, clearElement } from './utils.js'
 
 async function getSchoolId() {
   const { data: { user } } = await supabaseClient.auth.getUser()
@@ -27,45 +26,76 @@ if (tanggalWalas) {
   tanggalWalas.value = new Date().toISOString().split('T')[0]
 }
 
-// Load Dropdown Kelas
-async function loadKelasWalas() {
-  const schoolId = await getSchoolId()
-  const { data, error } = await supabaseClient
-    .from('siswa')
-    .select('kelas')
-    .eq('school_id', schoolId)
+// Load Kelas Khusus Wali Kelas yang Sedang Login
+export async function loadKelasWalas() {
+  if (!kelasWalasSelect || !siswaWalasContainer) return;
 
-  if (error) {
-    console.error(error)
+  const { data: { user } } = await supabaseClient.auth.getUser()
+  if (!user) return
+
+  // Tampilkan loading indikator
+  siswaWalasContainer.innerHTML = `<p style="padding: 12px; color: #64748b; text-align: center;">Memuat data siswa...</p>`;
+
+  // 1. Ambil class_id dari profile user
+  const { data: profile, error: profileError } = await supabaseClient
+    .from('profiles')
+    .select('class_id, school_id')
+    .eq('id', user.id)
+    .single()
+
+  if (profileError || !profile || !profile.class_id) {
+    console.error('User bukan Walas atau tidak punya class_id', profileError)
+    kelasWalasSelect.innerHTML = '<option value="">Bukan Wali Kelas</option>'
+    siswaWalasContainer.innerHTML = `<p style="padding: 12px; color: #ef4444; text-align: center;">Anda belum diset sebagai Wali Kelas.</p>`;
     return
   }
 
-  const kelasUnik = [...new Set(data.map(item => item.kelas).filter(Boolean))].sort()
+  // 2. Ambil nama kelas siswa berdasarkan class_id tersebut
+  const { data: siswaDataSample, error: siswaError } = await supabaseClient
+    .from('siswa')
+    .select('kelas')
+    .eq('class_id', profile.class_id)
+    .limit(1)
 
-  kelasWalasSelect.innerHTML = '<option value="">Pilih Kelas</option>'
-  kelasUnik.forEach(kelas => {
-    kelasWalasSelect.appendChild(new Option(kelas, kelas))
-  })
+  if (siswaError || !siswaDataSample || siswaDataSample.length === 0) {
+    console.error('Data kelas tidak ditemukan', siswaError)
+    kelasWalasSelect.innerHTML = '<option value="">Kelas Tidak Ditemukan</option>'
+    siswaWalasContainer.innerHTML = `<p style="padding: 12px; color: #ef4444; text-align: center;">Data kelas tidak ditemukan di database.</p>`;
+    return
+  }
+
+  const namaKelas = siswaDataSample[0].kelas
+
+  // 3. Set dropdown dan kunci
+  kelasWalasSelect.innerHTML = `<option value="${namaKelas}" selected>${namaKelas}</option>`
+  
+  // Otomatis load daftar siswanya
+  await loadSiswaByKelas(namaKelas)
 }
 
-// Event saat Kelas Dipilih
-kelasWalasSelect?.addEventListener('change', async () => {
-  const kelas = kelasWalasSelect.value
+// Helper untuk Render/Load Siswa berdasarkan Nama Kelas
+async function loadSiswaByKelas(kelas) {
   if (!kelas) {
     siswaWalasContainer.innerHTML = ''
     return
   }
 
   const schoolId = await getSchoolId()
-  const { data, error } = await supabaseClient
+  
+  let query = supabaseClient
     .from('siswa')
     .select('*')
     .eq('kelas', kelas)
-    .eq('school_id', schoolId)
-    .order('nama_siswa', { ascending: true })
 
-  if (error) {
-    console.error(error)
+  if (schoolId) {
+    query = query.eq('school_id', schoolId)
+  }
+
+  const { data, error } = await query.order('nama_siswa', { ascending: true })
+
+  if (error || !data || data.length === 0) {
+    console.error("Gagal load siswa:", error)
+    siswaWalasContainer.innerHTML = `<p style="padding: 12px; color: #ef4444; text-align: center;">Siswa tidak ditemukan untuk kelas ${kelas}.</p>`;
     return
   }
 
@@ -73,53 +103,62 @@ kelasWalasSelect?.addEventListener('change', async () => {
   siswaWalasContainer.innerHTML = ''
 
   data.forEach((item, index) => {
+    const namaSiswa = item.nama_siswa || item.nama || 'Siswa'
+    const initials = namaSiswa.split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase()
+
     siswaWalasContainer.innerHTML += `
       <div class="siswa-card">
         <div class="siswa-info">
           <div class="siswa-avatar">
-            ${item.nama_siswa.split(' ').map(n => n[0]).slice(0, 2).join('')}
+            ${initials}
           </div>
           <div class="siswa-name">
-            <h4>${item.nama_siswa}</h4>
+            <h4>${namaSiswa}</h4>
           </div>
         </div>
 
-        <div class="absen-modern">
-          <label class="absen-card hadir">
+        <div class="absen-options">
+          <label class="absen-btn status-h">
             <input type="radio" name="absen-walas-${index}" value="H" checked>
-            <div class="absen-content">
-              <div class="absen-icon">H</div>
-              <span>Hadir</span>
-            </div>
+            <span class="btn-content">
+              <strong>H</strong>
+              <small>Hadir</small>
+            </span>
           </label>
 
-          <label class="absen-card sakit">
+          <label class="absen-btn status-s">
             <input type="radio" name="absen-walas-${index}" value="S">
-            <div class="absen-content">
-              <div class="absen-icon">S</div>
-              <span>Sakit</span>
-            </div>
+            <span class="btn-content">
+              <strong>S</strong>
+              <small>Sakit</small>
+            </span>
           </label>
 
-          <label class="absen-card izin">
+          <label class="absen-btn status-i">
             <input type="radio" name="absen-walas-${index}" value="I">
-            <div class="absen-content">
-              <div class="absen-icon">I</div>
-              <span>Izin</span>
-            </div>
+            <span class="btn-content">
+              <strong>I</strong>
+              <small>Izin</small>
+            </span>
           </label>
 
-          <label class="absen-card alpa">
+          <label class="absen-btn status-a">
             <input type="radio" name="absen-walas-${index}" value="A">
-            <div class="absen-content">
-              <div class="absen-icon">A</div>
-              <span>Alpa</span>
-            </div>
+            <span class="btn-content">
+              <strong>A</strong>
+              <small>Alpa</small>
+            </span>
           </label>
         </div>
       </div>
     `
   })
+}
+
+// Event saat Kelas Dipilih Manual
+kelasWalasSelect?.addEventListener('change', async () => {
+  const kelas = kelasWalasSelect.value
+  await loadSiswaByKelas(kelas)
 })
 
 // Simpan Data Absen Walas
@@ -131,16 +170,22 @@ saveWalasBtn?.addEventListener('click', async () => {
     return
   }
 
+  if (siswaData.length === 0) {
+    alert('Tidak ada data siswa untuk disimpan!')
+    return
+  }
+
   const catatan = document.getElementById('catatan-walas')?.value || ''
 
   const payload = siswaData.map((item, index) => {
-    const status = document.querySelector(`input[name="absen-walas-${index}"]:checked`).value
+    const radioChecked = document.querySelector(`input[name="absen-walas-${index}"]:checked`)
+    const status = radioChecked ? radioChecked.value : 'H'
     return {
       user_id: user.id,
       tanggal: tanggalWalas.value,
       kelas: kelasWalasSelect.value,
       catatan: catatan,
-      nama: item.nama_siswa,
+      nama: item.nama_siswa || item.nama,
       nisn: item.nisn || '',
       status: status
     }
@@ -163,11 +208,14 @@ saveWalasBtn?.addEventListener('click', async () => {
   }
 
   alert('Absensi Walas berhasil disimpan!')
-  resetForm(['kelas-walas', 'catatan-walas'])
-  clearElement('list-siswa-walas')
-  siswaData = []
-  tanggalWalas.value = new Date().toISOString().split('T')[0]
+  if (document.getElementById('catatan-walas')) {
+    document.getElementById('catatan-walas').value = ''
+  }
+  loadKelasWalas()
 })
 
-// Init
+// Run saat pertama load
 loadKelasWalas()
+
+// Ekspor ke window
+window.loadKelasWalas = loadKelasWalas;

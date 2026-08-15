@@ -43,29 +43,55 @@ if (rekapModeSelect) {
 }
 
 // ==========================================
-// 2. LOAD DROPDOWN KELAS
+// 2. LOAD DROPDOWN KELAS (KHUSUS WALAS LOGGED IN)
 // ==========================================
 async function loadKelasWalas() {
-  const schoolId = await getSchoolId()
-  if (!schoolId) return
+  const { data: { user } } = await supabaseClient.auth.getUser()
+  if (!user) return
 
-  const { data, error } = await supabaseClient
-    .from('siswa')
-    .select('kelas')
-    .eq('school_id', schoolId)
+  // 1. Ambil class_id dari profiles
+  const { data: profile, error: profileError } = await supabaseClient
+    .from('profiles')
+    .select('class_id')
+    .eq('id', user.id)
+    .single()
 
-  if (error) {
-    console.error('Error loading kelas:', error)
+  if (profileError || !profile || !profile.class_id) {
+    console.error('User bukan Walas atau tidak punya class_id')
+    rekapKelasSelect.innerHTML = '<option value="">Bukan Wali Kelas</option>'
     return
   }
 
-  const kelasUnik = [...new Set(data.map(item => item.kelas).filter(k => k && k.trim() !== ''))]
-  kelasUnik.sort((a, b) => a.localeCompare(b, undefined, { numeric: true }))
+  // 2. Ambil nama kelas berdasarkan class_id (atau langsung query ke tabel siswa/kelas)
+  const { data: kelasData, error: kelasError } = await supabaseClient
+    .from('kelas') // Atau jika nama kelas ada di tabel 'siswa', ganti query-nya
+    .select('nama_kelas')
+    .eq('id', profile.class_id)
+    .single()
 
-  rekapKelasSelect.innerHTML = '<option value="">Pilih Kelas</option>'
-  kelasUnik.forEach(kelas => {
-    rekapKelasSelect.appendChild(new Option(kelas, kelas))
-  })
+  let namaKelas = ''
+  if (kelasData) {
+    namaKelas = kelasData.nama_kelas
+  } else {
+    // Fallback jika tidak ada tabel 'kelas', cari dari tabel 'siswa'
+    const { data: siswaData } = await supabaseClient
+      .from('siswa')
+      .select('kelas')
+      .eq('class_id', profile.class_id)
+      .limit(1)
+      .single()
+    if (siswaData) namaKelas = siswaData.kelas
+  }
+
+  if (namaKelas) {
+    // Set opsi dropdown HANYA kelas milik dia & Auto Select
+    rekapKelasSelect.innerHTML = `<option value="${namaKelas}" selected>${namaKelas}</option>`
+    
+    // Trigger load rekap secara otomatis
+    loadRekapWalas()
+  } else {
+    rekapKelasSelect.innerHTML = '<option value="">Kelas tidak ditemukan</option>'
+  }
 }
 
 // ==========================================

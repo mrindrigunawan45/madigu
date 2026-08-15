@@ -2,842 +2,497 @@
 <html lang="id">
 
 <head>
-
   <link rel="manifest" href="manifest.json">
-
-  <meta
-    name="theme-color"
-    content="#2563eb"
-  />
-  
+  <meta name="theme-color" content="#2563eb" />
   <meta charset="UTF-8" />
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  />
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dashboard MaDiGU</title>
 
-  <link
-    rel="stylesheet"
-    href="css/style.css"
-  />
-
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
-  />
-
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
   <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
-
 </head>
 
 <script>
-
 if ('serviceWorker' in navigator) {
-
-  navigator.serviceWorker.register(
-    '/service-worker.js'
-  )
-
+  navigator.serviceWorker.register('/service-worker.js');
 }
-
 </script>
 
 <body>
 
   <!-- OVERLAY -->
-
-  <div
-    class="overlay"
-    id="overlay"
-  ></div>
+  <div class="overlay" id="overlay"></div>
 
   <!-- SIDEBAR -->
-
-  <aside
-    class="sidebar"
-    id="sidebar"
-  >
+  <aside class="sidebar" id="sidebar">
 
     <div class="sidebar-top">
-
       <div class="sidebar-logo">
-
-        <img
-          src="https://drive.google.com/thumbnail?id=1FWj7nowDdr3UFBKNbXxp4pOMQ2daCMKw&sz=w500"
-        />
-
+        <img src="https://drive.google.com/thumbnail?id=1FWj7nowDdr3UFBKNbXxp4pOMQ2daCMKw&sz=w500" alt="Logo" />
       </div>
 
+      <!-- TOMBOL TOGGLE SIDEBAR DESKTOP -->
+      <button type="button" id="toggleSidebarBtn" class="toggle-btn">
+        <i class="fa-solid fa-chevron-left"></i>
+      </button>
     </div>
 
     <div class="sidebar-menu">
 
-      <button onclick="showTab('jurnalTab')">
-
+      <button onclick="showTab('jurnalTab')" class="active">
         <i class="fa-solid fa-book"></i>
         <span>Jurnal</span>
-
       </button>
 
       <button onclick="showTab('nilaiTab')">
-
         <i class="fa-solid fa-pen"></i>
         <span>Input Nilai</span>
-
       </button>
 
       <button onclick="showTab('rekapTab')">
-
         <i class="fa-solid fa-chart-line"></i>
         <span>Rekap Nilai</span>
-
       </button>
 
       <button onclick="showTab('rekapJurnalTab')">
-
         <i class="fa-solid fa-book-open"></i>
         <span>Rekap Jurnal</span>
-
       </button>
 
       <button onclick="showTab('rekapAbsenTab')">
-
         <i class="fa-solid fa-user-check"></i>
         <span>Rekap Absen</span>
-
       </button>
 
-      <!-- TAMBAHAN MENU WALAS -->
       <button onclick="showTab('walasTab')">
-
         <i class="fa-solid fa-user-tie"></i>
         <span>Absen Walas</span>
-
       </button>
 
       <button onclick="showTab('rekapWalasTab')">
-
         <i class="fa-solid fa-clipboard-user"></i>
         <span>Rekap Walas</span>
-
       </button>
 
       <button id="logoutBtn">
-
         <i class="fa-solid fa-right-from-bracket"></i>
         <span>Logout</span>
-
       </button>
 
     </div>
 
   </aside>
 
-  <!-- CONTENT -->
-
+  <!-- CONTENT WRAPPER -->
   <div class="content-wrapper">
 
     <!-- HEADER -->
-
     <header>
-
-      <div
-        class="menu-btn"
-        id="menuBtn"
-      >
-
+      <div class="menu-btn" id="menuBtn">
         <i class="fa-solid fa-bars"></i>
-
       </div>
 
       <div class="header-title">
-
-
-        <!-- USER BOX -->
-
         <div class="guru-box">
-
-  <div class="guru-item">
-
-    <span id="welcomeText">
-
-      Selamat Datang
-
-    </span>
-
-    <strong id="schoolText">
-
-      MaDiGU
-
-    </strong>
-
-  </div>
-
-</div>
-
+          <div class="guru-item">
+            <span id="welcomeText">Selamat Datang</span>
+            <strong id="schoolText">MaDiGU</strong>
+          </div>
+        </div>
+      </div>
     </header>
 
-    <!-- MAIN -->
-
+    <!-- MAIN CONTENT -->
     <main>
 
-      <!-- JURNAL -->
-
-      <section
-        class="tab active"
-        id="jurnalTab"
-      >
-
+      <!-- TAB JURNAL -->
+      <section class="tab active" id="jurnalTab">
         <div class="card">
-
-          <input
-            type="date"
-            id="tanggal"
-          />
-
-          <select id="mapel-jurnal">
-
-            <option value="">
-              Pilih Mata Pelajaran
-            </option>
-
-          </select>
-
-          <select id="kelas-jurnal">
-
-            <option value="">
-              Pilih Kelas
-            </option>
-
-          </select>
-
-          <textarea
-            id="materi"
-            placeholder="Materi Pembelajaran"
-          ></textarea>
           
-          <textarea
-            id="catatan-kejadian"
-            placeholder="Catatan Kejadian"
-          ></textarea>
+          <!-- Input Form Header Grid -->
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-bottom: 12px;">
+            <input type="date" id="tanggal" />
+            <select id="mapel-jurnal">
+              <option value="">Pilih Mata Pelajaran</option>
+            </select>
+            <select id="kelas-jurnal">
+              <option value="">Pilih Kelas</option>
+            </select>
+          </div>
 
+          <textarea id="materi" placeholder="Materi Pembelajaran"></textarea>
+          <textarea id="catatan-kejadian" placeholder="Catatan Kejadian (Opsional)"></textarea>
+          
           <div id="list-siswa-jurnal"></div>
 
-          <button id="saveJurnalBtn">
-
-            Simpan Jurnal
-
-          </button>
+          <!-- STICKY SAVE BAR JURNAL -->
+          <div class="sticky-save-bar">
+            <div class="save-info">
+              <i class="fa-solid fa-circle-info" style="color: #2563eb; margin-right: 6px;"></i>
+              Pastikan jurnal & presensi siswa sudah terisi dengan benar.
+            </div>
+            <button id="saveJurnalBtn" class="btn btn-primary">
+              <i class="fa-solid fa-floppy-disk" style="margin-right: 6px;"></i> Simpan Jurnal
+            </button>
+          </div>
 
         </div>
-
       </section>
 
-      <!-- INPUT NILAI -->
-
-      <section
-        class="tab"
-        id="nilaiTab"
-      >
-
+      <!-- TAB INPUT NILAI -->
+      <section class="tab" id="nilaiTab">
         <div class="card">
-
           <select id="mapel-nilai">
-
-            <option value="">
-              Pilih Mata Pelajaran
-            </option>
-
+            <option value="">Pilih Mata Pelajaran</option>
           </select>
-
           <select id="jenis-nilai">
-
-            <option value="s1">S1</option>
-            <option value="s2">S2</option>
-            <option value="s3">S3</option>
-            <option value="s4">S4</option>
-
-            <option value="f1">F1</option>
-            <option value="f2">F2</option>
-            <option value="f3">F3</option>
-            <option value="f4">F4</option>
-
-            <option value="asts">ASTS</option>
-            <option value="asas">ASAS</option>
-
+            <option value="">Pilih Jenis Penilaian</option>
+            <option value="f1">Formatif 1</option>
+            <option value="f2">Formatif 2</option>
+            <option value="f3">Formatif 3</option>
+            <option value="f4">Formatif 4</option>
+            <option value="s1">Sumatif 1</option>
+            <option value="s2">Sumatif 2</option>
+            <option value="s3">Sumatif 3</option>
+            <option value="s4">Sumatif 4</option>
+            <option value="asts">ASTS (Tengah Semester)</option>
+            <option value="asas">ASAS (Akhir Semester)</option>
           </select>
-
           <select id="kelas-nilai">
-
-            <option value="">
-              Pilih Kelas
-            </option>
-
+            <option value="">Pilih Kelas</option>
           </select>
-
           <div id="list-siswa-nilai"></div>
-
-          <button id="saveNilaiBtn">
-
-            Simpan Nilai
-
-          </button>
-
+          <button id="saveNilaiBtn">Simpan Nilai</button>
         </div>
-
       </section>
 
-      <!-- REKAP NILAI -->
-
-      <section
-        class="tab"
-        id="rekapTab"
-      >
-
+      <!-- TAB REKAP NILAI -->
+      <section class="tab" id="rekapTab">
         <div class="card">
-
           <select id="rekap-mapel">
-
-            <option value="">
-              Pilih Mata Pelajaran
-            </option>
-
+            <option value="">Pilih Mata Pelajaran</option>
           </select>
-
           <select id="rekap-kelas">
-
-            <option value="">
-              Pilih Kelas
-            </option>
-
+            <option value="">Pilih Kelas</option>
           </select>
-
-          <button id="downloadExcelBtn">
-
-            Download Excel
-
-          </button>
-
+          <button id="downloadExcelBtn">Download Excel</button>
           <div class="table-container">
-
             <table id="rekap-table"></table>
-
           </div>
-
         </div>
-
       </section>
 
-      <!-- REKAP JURNAL -->
-
-      <section
-        class="tab"
-        id="rekapJurnalTab"
-      >
-
+      <!-- TAB REKAP JURNAL -->
+      <section class="tab" id="rekapJurnalTab">
         <div class="card">
-
-          <select id="rekap-jurnal-mapel">
-
-            <option value="">
-              Pilih Mata Pelajaran
-            </option>
-
-          </select>
-
-          <select id="rekap-jurnal-kelas">
-
-            <option value="">
-              Pilih Kelas
-            </option>
-
-          </select>
-
-          <button id="downloadJurnalBtn">
-
-            Download Excel
-
-          </button>
+          <!-- Filter Atas Sejajar & Compact -->
+          <div style="display: flex; gap: 12px; align-items: center; justify-content: space-between; flex-wrap: wrap; margin-bottom: 16px;">
+            <div style="display: flex; gap: 12px; flex: 1; min-width: 280px; flex-wrap: wrap;">
+              <select id="rekap-jurnal-mapel" style="margin: 0; flex: 1; min-width: 180px;">
+                <option value="">Pilih Mata Pelajaran</option>
+              </select>
+              <select id="rekap-jurnal-kelas" style="margin: 0; flex: 1; min-width: 120px;">
+                <option value="">Pilih Kelas</option>
+              </select>
+            </div>
+            <button id="downloadJurnalBtn" class="btn btn-primary" style="margin: 0; width: auto; padding: 10px 20px; display: inline-flex; align-items: center; gap: 8px;">
+              <i class="fa-solid fa-file-excel"></i> Download Excel
+            </button>
+          </div>
 
           <div class="table-container">
-
             <table id="rekap-jurnal-table"></table>
-
           </div>
-
         </div>
-
       </section>
 
-      <!-- REKAP ABSEN -->
-
-      <section
-        class="tab"
-        id="rekapAbsenTab"
-      >
-
+      <!-- TAB REKAP ABSEN -->
+      <section class="tab" id="rekapAbsenTab">
         <div class="card">
-          <select id="rekap-absen-mapel">
+          
+          <!-- Filter Top Bar Sejajar & Compact -->
+          <div style="display: flex; gap: 12px; align-items: center; justify-content: space-between; flex-wrap: wrap; margin-bottom: 20px;">
+            <div style="display: flex; gap: 12px; flex: 1; min-width: 280px; flex-wrap: wrap;">
+              <select id="rekap-absen-mapel" style="margin: 0; flex: 1; min-width: 180px;">
+                <option value="">Pilih Mata Pelajaran</option>
+              </select>
+              <select id="rekap-absen-kelas" style="margin: 0; flex: 1; min-width: 120px;">
+                <option value="">Pilih Kelas</option>
+              </select>
+            </div>
+            <button id="downloadAbsenBtn" class="btn btn-primary" style="margin: 0; width: auto; padding: 10px 20px; display: inline-flex; align-items: center; gap: 8px;">
+              <i class="fa-solid fa-file-excel"></i> Download Excel
+            </button>
+          </div>
 
-            <option value="">
-              Pilih Mata Pelajaran
-            </option>
-
-          </select>
-
-          <select id="rekap-absen-kelas">
-
-            <option value="">
-              Pilih Kelas
-            </option>
-
-          </select>
-
-          <button id="downloadAbsenBtn">
-
-            Download Excel
-
-          </button>
-
+          <!-- Container Rekap -->
           <div id="rekap-absen-table"></div>
 
         </div>
-
       </section>
 
-      <!-- ABSEN WALAS -->
-
-      <section
-        class="tab"
-        id="walasTab"
-      >
-
+      <!-- TAB ABSEN WALAS -->
+      <section class="tab" id="walasTab">
         <div class="card">
+          
+          <!-- Grid Form Header -->
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-bottom: 12px;">
+            <input type="date" id="tanggal-walas" />
+            <select id="kelas-walas">
+              <option value="">Pilih Kelas</option>
+            </select>
+          </div>
 
-          <input
-            type="date"
-            id="tanggal-walas"
-          />
-
-          <select id="kelas-walas">
-
-            <option value="">
-              Pilih Kelas
-            </option>
-
-          </select>
-
-          <textarea
-            id="catatan-walas"
-            placeholder="Catatan Wali Kelas / Pembinaan"
-          ></textarea>
-
+          <textarea id="catatan-walas" placeholder="Catatan Wali Kelas / Pembinaan"></textarea>
+          
           <div id="list-siswa-walas"></div>
 
-          <button id="saveWalasBtn">
-
-            Simpan Absen Walas
-
-          </button>
+          <!-- STICKY SAVE BAR WALAS -->
+          <div class="sticky-save-bar">
+            <div class="save-info">
+              <i class="fa-solid fa-circle-info" style="color: #2563eb; margin-right: 6px;"></i>
+              Pastikan semua status absensi siswa sudah sesuai sebelum menyimpan.
+            </div>
+            <button id="saveWalasBtn" class="btn btn-primary">
+              <i class="fa-solid fa-floppy-disk" style="margin-right: 6px;"></i> Simpan Absen Walas
+            </button>
+          </div>
 
         </div>
-
       </section>
 
-      <!-- REKAP WALAS -->
-<section class="tab" id="rekapWalasTab">
-  <div class="card">
-    
-    <!-- Top Action Bar (Header & Download) -->
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;">
-      <div>
-        <h3 style="margin: 0; font-size: 18px; font-weight: 700; color: #0f172a;">Rekap Absensi Wali Kelas</h3>
-        <p style="margin: 2px 0 0 0; font-size: 13px; color: #64748b;">Pantau riwayat absensi harian siswa dan ringkasan kehadirannya.</p>
-      </div>
-      
-      <button id="downloadWalasBtn" class="btn btn-primary" style="display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; background: #2563eb; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 13px;">
-        <i class="fa-solid fa-file-excel"></i> Download Excel
-      </button>
-    </div>
+      <!-- TAB REKAP WALAS -->
+      <section class="tab" id="rekapWalasTab">
+        <div class="card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;">
+            <div>
+              <h3 style="margin: 0; font-size: 18px; font-weight: 700; color: #0f172a;">Rekap Absensi Wali Kelas</h3>
+              <p style="margin: 2px 0 0 0; font-size: 13px; color: #64748b;">Pantau riwayat absensi harian siswa dan ringkasan kehadirannya.</p>
+            </div>
+            <button id="downloadWalasBtn" class="btn btn-primary" style="display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; background: #2563eb; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 13px;">
+              <i class="fa-solid fa-file-excel"></i> Download Excel
+            </button>
+          </div>
 
-    <!-- Filter Bar Control -->
-<div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px; flex-wrap: wrap;">
-  <!-- Pilih Kelas -->
-  <select id="rekap-walas-kelas" class="form-control" style="width: auto; min-width: 140px; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; background-color: #fff;">
-    <option value="">Pilih Kelas</option>
-  </select>
+          <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px; flex-wrap: wrap;">
+            <select id="rekap-walas-kelas" class="form-control" style="width: auto; min-width: 140px; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; background-color: #fff;">
+              <option value="">Pilih Kelas</option>
+            </select>
+            <!-- Mode Tampilan (Default: Opsi "Mode Rekap") -->
+            <select id="rekap-walas-mode" class="form-control" style="width: auto; min-width: 220px; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; background-color: #fff;">
+              <option value="" disabled selected>-- Pilih Mode Rekap --</option>
+              <option value="ringkasan">Mode Ringkasan (Total)</option>
+              <option value="matriks">Mode Matriks (Per Tanggal)</option>
+            </select>
+            <select id="rekap-walas-bulan" class="form-control" style="width: auto; min-width: 150px; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; background-color: #fff;">
+              <option value="semua" selected>Semua Bulan</option>
+              <option value="01">Januari</option>
+              <option value="02">Februari</option>
+              <option value="03">Maret</option>
+              <option value="04">April</option>
+              <option value="05">Mei</option>
+              <option value="06">Juni</option>
+              <option value="07">Juli</option>
+              <option value="08">Agustus</option>
+              <option value="09">September</option>
+              <option value="10">Oktober</option>
+              <option value="11">November</option>
+              <option value="12">Desember</option>
+            </select>
+          </div>
 
-  <!-- Mode Tampilan (Default: Ringkasan Total) -->
-  <select id="rekap-walas-mode" class="form-control" style="width: auto; min-width: 220px; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; background-color: #fff;">
-    <option value="ringkasan" selected>Mode Ringkasan (Total)</option>
-    <option value="matriks">Mode Matriks (Per Tanggal)</option>
-  </select>
-
-  <!-- Pilih Bulan (Default: Semua Bulan) -->
-  <select id="rekap-walas-bulan" class="form-control" style="width: auto; min-width: 150px; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; background-color: #fff;">
-    <option value="semua" selected>Semua Bulan</option>
-    <option value="01">Januari</option>
-    <option value="02">Februari</option>
-    <option value="03">Maret</option>
-    <option value="04">April</option>
-    <option value="05">Mei</option>
-    <option value="06">Juni</option>
-    <option value="07">Juli</option>
-    <option value="08">Agustus</option>
-    <option value="09">September</option>
-    <option value="10">Oktober</option>
-    <option value="11">November</option>
-    <option value="12">Desember</option>
-  </select>
-</div>
-
-    <!-- Container Output Tabel -->
-    <div id="rekap-walas-table">
-      <div style="padding: 32px; text-align: center; color: #64748b; background: white; border-radius: 12px; border: 1px solid #e2e8f0;">
-        Silahkan pilih kelas untuk menampilkan data rekapitulasi absensi.
-      </div>
-    </div>
-
-  </div>
-</section>
+          <div id="rekap-walas-table">
+            <div style="padding: 32px; text-align: center; color: #64748b; background: white; border-radius: 12px; border: 1px solid #e2e8f0;">
+              Silahkan pilih kelas untuk menampilkan data rekapitulasi absensi.
+            </div>
+          </div>
+        </div>
+      </section>
 
     </main>
-
   </div>
 
-  <!-- SIDEBAR SCRIPT -->
-
-  <script>
-
-    const menuBtn =
-      document.getElementById('menuBtn')
-
-    const sidebar =
-      document.getElementById('sidebar')
-
-    const overlay =
-      document.getElementById('overlay')
-
-    menuBtn.onclick = () => {
-
-      sidebar.classList.toggle('active')
-
-      overlay.classList.toggle('active')
-
-    }
-
-    overlay.onclick = () => {
-
-      sidebar.classList.remove('active')
-
-      overlay.classList.remove('active')
-
-    }
-
-    function showTab(tabId) {
-    
-      if (tabId === 'nilaiTab') {
-
-  document.getElementById(
-    'mapel-nilai'
-  ).selectedIndex = 0
-
-  document.getElementById(
-    'jenis-nilai'
-  ).selectedIndex = 0
-
-  document.getElementById(
-    'kelas-nilai'
-  ).selectedIndex = 0
-
-  document.getElementById(
-    'list-siswa-nilai'
-  ).innerHTML = ''
-
-}
-if (tabId === 'jurnalTab') {
-
-  document.getElementById(
-    'mapel-jurnal'
-  ).selectedIndex = 0
-
-  document.getElementById(
-    'kelas-jurnal'
-  ).selectedIndex = 0
-
-  document.getElementById(
-    'materi'
-  ).value = ''
-
-  const catatanKejadian =
-  document.getElementById(
-    'catatan-kejadian'
-  )
-
-  if(catatanKejadian){
-
-    catatanKejadian.value = ''
-
-  }
-
-  document.getElementById(
-    'list-siswa-jurnal'
-  ).innerHTML = ''
-
-}
-  // =========================
-// RESET INPUT NILAI
-// =========================
-
-const mapelNilai =
-  document.getElementById('mapel-nilai')
-
-const jenisNilai =
-  document.getElementById('jenis-nilai')
-
-const kelasNilai =
-  document.getElementById('kelas-nilai')
-
-const listSiswaNilai =
-  document.getElementById('list-siswa-nilai')
-
-if (
-  mapelNilai &&
-  jenisNilai &&
-  kelasNilai &&
-  listSiswaNilai
-) {
-
-  mapelNilai.selectedIndex = 0
-
-  jenisNilai.selectedIndex = 0
-
-  kelasNilai.selectedIndex = 0
-
-  listSiswaNilai.innerHTML = ''
-
-}
-
-  // =========================
-// RESET REKAP WALAS
-// =========================
-if (tabId === 'rekapWalasTab') {
-  const rekapWalasKelas = document.getElementById('rekap-walas-kelas')
-  const rekapWalasMode = document.getElementById('rekap-walas-mode')
-  const rekapWalasBulan = document.getElementById('rekap-walas-bulan')
-  const rekapWalasTable = document.getElementById('rekap-walas-table')
-
-  if (rekapWalasKelas) rekapWalasKelas.selectedIndex = 0
-  if (rekapWalasMode) rekapWalasMode.value = 'ringkasan'
-  if (rekapWalasBulan) rekapWalasBulan.value = 'semua'
-  
-  if (rekapWalasTable) {
-    rekapWalasTable.innerHTML = `
-      <div style="padding: 32px; text-align: center; color: #64748b; background: white; border-radius: 12px; border: 1px solid #e2e8f0;">
-        Silahkan pilih kelas untuk menampilkan data rekapitulasi absensi.
+  <!-- MODAL DETAIL SISWA TIDAK HADIR (UPDATED) -->
+  <div id="modalAbsen" class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Daftar Siswa Tidak Hadir</h3>
+        <button type="button" class="close-modal-btn" onclick="closeModalAbsen()">&times;</button>
       </div>
-    `
-  }
-}
+      <div class="modal-body">
+        <ul id="listTidakHadir" class="list-tidak-hadir"></ul>
+      </div>
+    </div>
+  </div>
 
-  // =========================
-  // RESET WALAS
-  // =========================
+  <!-- SIDEBAR CONTROL SCRIPT -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const menuBtn = document.getElementById('menuBtn');
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('overlay');
+      const toggleSidebarBtn = document.getElementById('toggleSidebarBtn');
 
-  if (tabId === 'walasTab') {
+      // Auto load status collapsed
+      if (localStorage.getItem('sidebarCollapsed') === 'true') {
+        sidebar?.classList.add('collapsed');
+        document.body.classList.add('has-collapsed-sidebar');
+      }
 
-    const kelasWalas = document.getElementById('kelas-walas')
-    const catatanWalas = document.getElementById('catatan-walas')
-    const listSiswaWalas = document.getElementById('list-siswa-walas')
-    const tglWalas = document.getElementById('tanggal-walas')
+      // Action Tombol Toggle (Desktop)
+      if (toggleSidebarBtn) {
+        toggleSidebarBtn.onclick = (e) => {
+          e.preventDefault();
+          sidebar.classList.toggle('collapsed');
+          document.body.classList.toggle('has-collapsed-sidebar');
 
-    if (kelasWalas) kelasWalas.selectedIndex = 0
-    if (catatanWalas) catatanWalas.value = ''
-    if (listSiswaWalas) listSiswaWalas.innerHTML = ''
-    if (tglWalas) tglWalas.value = new Date().toISOString().split('T')[0]
+          const isCollapsed = sidebar.classList.contains('collapsed');
+          localStorage.setItem('sidebarCollapsed', isCollapsed);
+        };
+      }
 
-  }
+      // Action Mobile Burger Menu
+      if (menuBtn) {
+        menuBtn.onclick = () => {
+          sidebar.classList.toggle('active');
+          overlay.classList.toggle('active');
+        };
+      }
 
-  // =========================
-  // RESET REKAP WALAS
-  // =========================
+      if (overlay) {
+        overlay.onclick = () => {
+          sidebar.classList.remove('active');
+          overlay.classList.remove('active');
+        };
+      }
+    });
 
-  if (tabId === 'rekapWalasTab') {
+    // Fungsi Switch Tab Menu
+    function showTab(tabId) {
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('overlay');
 
-    const rekapWalasKelas = document.getElementById('rekap-walas-kelas')
-    const rekapWalasTable = document.getElementById('rekap-walas-table')
+      if (tabId === 'nilaiTab') {
+        document.getElementById('mapel-nilai').selectedIndex = 0;
+        document.getElementById('jenis-nilai').selectedIndex = 0;
+        document.getElementById('kelas-nilai').selectedIndex = 0;
+        document.getElementById('list-siswa-nilai').innerHTML = '';
+      }
 
-    if (rekapWalasKelas) rekapWalasKelas.selectedIndex = 0
-    if (rekapWalasTable) rekapWalasTable.innerHTML = ''
+      if (tabId === 'jurnalTab') {
+        document.getElementById('mapel-jurnal').selectedIndex = 0;
+        document.getElementById('kelas-jurnal').selectedIndex = 0;
+        document.getElementById('materi').value = '';
+        const catatanKejadian = document.getElementById('catatan-kejadian');
+        if(catatanKejadian) catatanKejadian.value = '';
+        document.getElementById('list-siswa-jurnal').innerHTML = '';
+      }
 
-  }
+      if (tabId === 'rekapTab') {
+        const rekapMapel = document.getElementById('rekap-mapel');
+        const rekapKelas = document.getElementById('rekap-kelas');
+        const rekapTable = document.getElementById('rekap-table');
+        if (rekapMapel) rekapMapel.selectedIndex = 0;
+        if (rekapKelas) rekapKelas.selectedIndex = 0;
+        if (rekapTable) rekapTable.innerHTML = '';
+      }
 
-  // =========================
-  // TAB SWITCH
-  // =========================
+      if (tabId === 'rekapWalasTab') {
+        const rekapWalasKelas = document.getElementById('rekap-walas-kelas');
+        const rekapWalasMode = document.getElementById('rekap-walas-mode');
+        const rekapWalasBulan = document.getElementById('rekap-walas-bulan');
+        const rekapWalasTable = document.getElementById('rekap-walas-table');
 
-  document
-    .querySelectorAll('.tab')
-    .forEach(tab => {
+        if (rekapWalasKelas) rekapWalasKelas.selectedIndex = 0;
+        if (rekapWalasMode) rekapWalasMode.value = '';
+        if (rekapWalasBulan) rekapWalasBulan.value = 'semua';
+        
+        if (rekapWalasTable) {
+          rekapWalasTable.innerHTML = `
+            <div style="padding: 32px; text-align: center; color: #64748b; background: white; border-radius: 12px; border: 1px solid #e2e8f0;">
+              Silahkan pilih kelas dan mode rekap untuk menampilkan data rekapitulasi absensi.
+            </div>
+          `;
+        }
+      }
 
-      tab.classList.remove('active')
+      if (tabId === 'walasTab') {
+        const catatanWalas = document.getElementById('catatan-walas');
+        const tglWalas = document.getElementById('tanggal-walas');
 
-    })
+        if (catatanWalas) catatanWalas.value = '';
+        if (tglWalas) {
+          const today = new Date();
+          const year = today.getFullYear();
+          const month = String(today.getMonth() + 1).padStart(2, '0');
+          const day = String(today.getDate()).padStart(2, '0');
+  
+          tglWalas.value = `${year}-${month}-${day}`;
+        }
 
-  document
-    .getElementById(tabId)
-    .classList.add('active')
+        if (window.loadKelasWalas) {
+          window.loadKelasWalas();
+        }
+      }
 
-  // RESET ACTIVE MENU
+      // TAB SWITCH
+      document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+      document.getElementById(tabId)?.classList.add('active');
 
-document
-  .querySelectorAll('.sidebar-menu button')
-  .forEach(btn => {
+      // RESET ACTIVE MENU
+      document.querySelectorAll('.sidebar-menu button').forEach(btn => btn.classList.remove('active'));
+      const activeButton = document.querySelector(`[onclick="showTab('${tabId}')"]`);
+      if (activeButton) activeButton.classList.add('active');
 
-    btn.classList.remove('active')
-
-  })
-
-// ACTIVE CURRENT MENU
-
-const activeButton =
-  document.querySelector(
-
-    `[onclick="showTab('${tabId}')"]`
-
-  )
-
-if (activeButton) {
-
-  activeButton.classList.add('active')
-
-}
-    sidebar.classList.remove('active')
-
-  overlay.classList.remove('active')
-
-}
-
+      sidebar?.classList.remove('active');
+      overlay?.classList.remove('active');
+    }
   </script>
 
-  
-  <!-- MODULE -->
-
-  <script
-    type="module"
-    src="js/auth.js"
-  ></script>
-
-  <script
-    type="module"
-    src="js/jurnal.js"
-  ></script>
-
-  <script
-    type="module"
-    src="js/nilai.js"
-  ></script>
-
-  <script
-    type="module"
-    src="js/rekapNilai.js"
-  ></script>
-
-  <script
-    type="module"
-    src="js/rekapJurnal.js"
-  ></script>
-
-  <script
-    type="module"
-    src="js/rekapAbsen.js"
-  ></script>
-
-  <script
-    type="module"
-    src="js/walas.js"
-  ></script>
-
-  <script
-    type="module"
-    src="js/rekapWalas.js"
-  ></script>
+  <!-- MODULE SCRIPTS -->
+  <script type="module" src="js/auth.js"></script>
+  <script type="module" src="js/jurnal.js"></script>
+  <script type="module" src="js/nilai.js"></script>
+  <script type="module" src="js/rekapNilai.js"></script>
+  <script type="module" src="js/rekapJurnal.js"></script>
+  <script type="module" src="js/rekapAbsen.js"></script>
+  <script type="module" src="js/walas.js"></script>
+  <script type="module" src="js/rekapWalas.js"></script>
 
   <script type="module">
+    import { supabaseClient } from './js/supabase.js'
 
-import { supabaseClient }
-from './js/supabase.js'
+    async function loadUserInfo() {
+      const { data: { user } } = await supabaseClient.auth.getUser()
+      if (!user) return
 
-async function loadUserInfo() {
+      const { data: profile, error } = await supabaseClient
+        .from('profiles')
+        .select('name, sekolah, role, class_id')
+        .eq('email', user.email)
+        .single()
 
-  // USER LOGIN
-  const {
-    data: { user }
-  } = await supabaseClient.auth.getUser()
+      if (error || !profile) return
 
-  if (!user) return
+      document.getElementById('welcomeText').innerText = `Selamat Datang, ${profile.name}`
+      document.getElementById('schoolText').innerText = profile.sekolah
 
-  // PROFILE
-  const {
-    data: profile,
-    error
-  } = await supabaseClient
+      const btnWalas = document.querySelector(`[onclick="showTab('walasTab')"]`)
+      const btnRekapWalas = document.querySelector(`[onclick="showTab('rekapWalasTab')"]`)
 
-    .from('profiles')
+      const isWalas = profile.role === 'guru' || profile.role === 'guru_sd' || profile.class_id !== null
 
-    .select('name, sekolah')
+      if (isWalas) {
+        if (btnWalas) btnWalas.style.display = 'flex'
+        if (btnRekapWalas) btnRekapWalas.style.display = 'flex'
+      } else {
+        if (btnWalas) btnWalas.style.display = 'none'
+        if (btnRekapWalas) btnRekapWalas.style.display = 'none'
+      }
+    }
 
-    .eq('email', user.email)
-
-    .single()
-
-  if (error || !profile) {
-
-  console.log('PROFILE ERROR:', error)
-
-  console.log('USER LOGIN:', user)
-
-  console.log('PROFILE:', profile)
-
-  return
-
-}
-
-  // TAMPILKAN
-  document.getElementById(
-    'welcomeText'
-  ).innerText =
-
-    `Selamat Datang, ${profile.name}`
-
-  document.getElementById(
-    'schoolText'
-  ).innerText =
-
-    profile.sekolah
-
-}
-
-loadUserInfo()
-
-</script>
-
-<!-- MODAL DETAIL SISWA TIDAK HADIR -->
-<div id="modalAbsen" class="modal" style="display: none;">
-  <div class="modal-content">
-    <div class="modal-header">
-      <h3>Daftar Siswa Tidak Hadir</h3>
-      <span class="close-modal" onclick="closeModalAbsen()">&times;</span>
-    </div>
-    <div class="modal-body">
-      <ul id="listTidakHadir" class="list-tidak-hadir"></ul>
-    </div>
-  </div>
-</div>
-
+    loadUserInfo()
+  </script>
 </body>
-
 </html>

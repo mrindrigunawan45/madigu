@@ -1,0 +1,46 @@
+<div class="mobile-header">
+  <div class="user-info">
+    <span class="role-badge">Sekretaris Kelas</span>
+    <h2 id="sekretaris-nama">Loading...</h2>
+    <p id="sekretaris-kelas-sekolah">-</p>
+  </div>
+</div>
+
+<!-- NAVIGATION TAB MOBILE -->
+<div class="mobile-tabs">
+  <button class="tab-btn active" onclick="switchMobileTab('absen')">📝 Absen Hari Ini</button>
+  <button class="tab-btn" onclick="switchMobileTab('histori')">📜 Histori & Rekap</button>
+</div>
+
+<!-- CONTAINER CONTENT -->
+<div class="mobile-content">
+  
+  <!-- TAB 1: FORM ABSEN HARI INI -->
+  <div id="tab-absen" class="tab-content active">
+    <div class="date-picker-box">
+      <label>Tanggal Absen:</label>
+      <input type="date" id="tgl-absen" class="mobile-input">
+    </div>
+
+    <!-- Container List Siswa untuk di-tap -->
+    <div id="list-siswa-mobile" class="list-siswa-container">
+      <!-- Siswa akan di-render di sini via JS -->
+    </div>
+
+    <!-- Tombol Simpan Melayang / Fixed di Bawah -->
+    <button class="btn-simpan-mobile" onclick="simpanAbsenSekretaris()">
+      💾 Simpan Absensi
+    </button>
+  </div>
+
+  <!-- TAB 2: HISTORI & REKAP -->
+  <div id="tab-histori" class="tab-content" style="display: none;">
+    <div class="histori-box">
+      <h3>Histori Tanggal Diisi</h3>
+      <div id="list-histori-tanggal">
+        <!-- List tanggal yang sudah diisi -->
+      </div>
+    </div>
+  </div>
+
+</div>

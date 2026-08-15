@@ -1,41 +1,154 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta name="theme-color" content="#2563eb" />
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Login MaDiGU</title>
+  <title>Login - MaDiGU</title>
   
-  <link rel="stylesheet" href="css/style.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-  <link rel="icon" href="data:,">
+
+  <style>
+    /* RESET & BASE STYLES */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: #f1f5f9; /* Background abu-abu soft */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    /* CARD CONTAINER UTAMA */
+    .login-card {
+      background: #ffffff;
+      width: 100%;
+      max-width: 420px;
+      padding: 40px 32px;
+      border-radius: 24px;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
+      text-align: center;
+    }
+
+    /* LOGO */
+    .login-logo {
+      max-width: 130px !important;
+      height: auto !important;
+      margin: 0 auto 20px auto !important;
+      display: block !important;
+    }
+
+    /* JUDUL */
+    .login-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: #0f172a;
+      margin-bottom: 28px;
+    }
+
+    /* FORM INPUT */
+    .form-group {
+      margin-bottom: 16px;
+      text-align: left;
+    }
+
+    .input-control {
+      width: 100%;
+      padding: 14px 16px;
+      background-color: #eff6ff; /* Soft blue background */
+      border: 1px solid #dbeafe;
+      border-radius: 12px;
+      font-size: 14px;
+      color: #1e293b;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    .input-control:focus {
+      border-color: #2563eb;
+      background-color: #ffffff;
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+    }
+
+    /* TOMBOL LOG IN */
+    .btn-login {
+      width: 100%;
+      padding: 14px;
+      background-color: #2563eb;
+      color: #ffffff;
+      border: none;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 8px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-login:hover {
+      background-color: #1d4ed8;
+      transform: translateY(-1px);
+    }
+
+    .btn-login:active {
+      transform: translateY(0);
+    }
+  </style>
 </head>
+<body>
 
-<body class="login-page">
+  <!-- KARTU LOGIN PUTIH -->
+  <div class="login-card">
+    
+    <img 
+  src="img/logo.png" 
+  alt="MaDiGu" 
+  class="login-logo" 
+  style="max-width: 420px; width: 100%; height: auto; display: block; margin: 0 auto 20px auto;" 
+/>
+    
+    <!-- JUDUL -->
+    <h2 class="login-title">Login MaDiGu</h2>
 
-  <div class="login-container">
-    <div class="login-card">
-      <img src="img/logo.png" alt="MaDiGu" class="login-logo" />
-      <h1>Login MaDiGu</h1>
+    <!-- FORM INPUT -->
+    <form id="loginForm">
+      <div class="form-group">
+        <input 
+          type="email" 
+          id="email" 
+          class="input-control" 
+          placeholder="Email" 
+          required 
+        />
+      </div>
 
-      <form id="loginForm">
-        <div class="form-group">
-          <input type="email" id="email" placeholder="Email" required />
-        </div>
+      <div class="form-group">
+        <input 
+          type="password" 
+          id="password" 
+          class="input-control" 
+          placeholder="Password" 
+          required 
+        />
+      </div>
 
-        <div class="form-group">
-          <input type="password" id="password" placeholder="Password" required />
-        </div>
+      <button type="submit" class="btn-login">
+        <i class="fa-solid fa-right-to-bracket"></i> Masuk
+      </button>
+    </form>
 
-        <button type="submit" class="login-btn">
-          <i class="fa-solid fa-right-to-bracket"></i> Masuk
-        </button>
-      </form>
-    </div>
   </div>
 
-  <!-- SCRIPT AUTHENTICATION MAIN -->
   <script type="module" src="js/auth.js"></script>
-
 </body>
 </html>
