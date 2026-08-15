@@ -3,6 +3,7 @@ import { supabaseClient } from './supabase.js'
 let currentProfile = null
 let listSiswaData = []
 let absenState = {} // Status H/S/I/A per nama/id siswa
+let limitHistori = 5 // Menyimpan batasan awal jumlah histori yang ditampilkan
 
 document.addEventListener('DOMContentLoaded', async () => {
   // Biarkan input tanggal KOSONG saat awal buka
@@ -60,8 +61,8 @@ async function initSekretaris() {
   const elNama = document.getElementById('sekretaris-nama')
   const elDetail = document.getElementById('sekretaris-detail')
   if (elNama) elNama.innerText = profile.name || profile.kelas || 'Sekretaris'
-  if (elDetail) elDetail.innerText = `${profile.sekolah || ''} | Kelas: ${profile.kelas || profile.class_id || '-'}`
-
+  if (elDetail) elDetail.innerText = profile.sekolah || ''
+  
   // Fetch Master Siswa
   if (profile.class_id || profile.kelas) {
     await fetchMasterSiswa(profile.class_id, profile.kelas)
@@ -231,15 +232,14 @@ async function simpanAbsensi() {
   } else {
     alert('✅ Absensi berhasil disimpan!')
 
-    // ==========================================
     // RESET HALAMAN KE PENGATURAN AWAL
-    // ==========================================
     if (tglInput) {
       tglInput.value = '' // Kosongkan input tanggal
-      tglInput.dispatchEvent(new Event('change')) // Trigger event change untuk reset daftar siswa & sembunyikan tombol simpan
+      tglInput.dispatchEvent(new Event('change')) // Trigger event change
     }
   }
 }
+
 // TAB & HISTORI LOGIC
 function switchTab(tab) {
   const tabAbsen = document.getElementById('tab-absen')
@@ -261,15 +261,19 @@ function switchTab(tab) {
   }
 }
 
-async function loadHistoriAbsen() {
+async function loadHistoriAbsen(isLoadMore = false) {
   const container = document.getElementById('list-histori')
   if (!container) return
 
-  container.innerHTML = `
-    <div style="text-align:center; padding: 20px; color: #64748b;">
-      <i class="fa-solid fa-spinner fa-spin"></i> Memuat histori...
-    </div>
-  `
+  // Reset limit ke 5 jika pertama kali tab histori diklik
+  if (!isLoadMore) {
+    limitHistori = 5
+    container.innerHTML = `
+      <div style="text-align:center; padding: 20px; color: #64748b;">
+        <i class="fa-solid fa-spinner fa-spin"></i> Memuat histori...
+      </div>
+    `
+  }
 
   const namaKelas = currentProfile.kelas || '9C'
 
@@ -300,8 +304,11 @@ async function loadHistoriAbsen() {
   })
 
   const listTanggal = Object.keys(summaryPerTanggal)
+  
+  // Slice array histori sesuai limit saat ini
+  const displayedTanggal = listTanggal.slice(0, limitHistori)
 
-  container.innerHTML = listTanggal.map(tgl => {
+  let htmlCards = displayedTanggal.map(tgl => {
     const st = summaryPerTanggal[tgl]
     const dateFormatted = new Date(tgl).toLocaleDateString('id-ID', {
       day: 'numeric',
@@ -321,6 +328,42 @@ async function loadHistoriAbsen() {
       </div>
     `
   }).join('')
+
+  // Jika jumlah data melebihi limit, tampilkan tombol Load More
+  if (listTanggal.length > limitHistori) {
+    const sisaData = listTanggal.length - limitHistori
+    htmlCards += `
+      <div style="text-align: center; margin-top: 16px; margin-bottom: 24px;">
+        <button id="btnLoadMoreHistori" style="
+          background: #ffffff;
+          border: 1px solid #cbd5e1;
+          color: #2563eb;
+          padding: 10px 20px;
+          border-radius: 10px;
+          font-size: 13px;
+          font-weight: 700;
+          cursor: pointer;
+          box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+        ">
+          <i class="fa-solid fa-chevron-down"></i> Tampilkan Lebih Banyak (${sisaData})
+        </button>
+      </div>
+    `
+  }
+
+  container.innerHTML = htmlCards
+
+  // Event listener tombol Load More
+  const btnLoadMore = document.getElementById('btnLoadMoreHistori')
+  if (btnLoadMore) {
+    btnLoadMore.addEventListener('click', () => {
+      limitHistori += 5 // Tambah 5 item lagi setiap diklik
+      loadHistoriAbsen(true)
+    })
+  }
 }
 
 // Fungsi EDIT dari Histori

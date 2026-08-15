@@ -35,15 +35,34 @@
       letter-spacing: 0.5px;
     }
 
-    .mobile-header h2 {
-      margin: 8px 0 2px 0;
-      font-size: 20px;
+    /* Container Logo & Informasi */
+    .header-profile-box {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .header-logo {
+      width: 44px;
+      height: 44px;
+      object-fit: contain;
+      background: #ffffff;
+      border-radius: 50%;
+      padding: 3px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+      flex-shrink: 0;
+    }
+
+    .header-info h2 {
+      margin: 0;
+      font-size: 18px;
       font-weight: 700;
     }
 
-    .mobile-header p {
-      margin: 0;
-      font-size: 13px;
+    .header-info p {
+      margin: 2px 0 0 0;
+      font-size: 12px;
       opacity: 0.9;
     }
 
@@ -82,6 +101,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
+      gap: 8px;
       box-shadow: 0 1px 3px rgba(0,0,0,0.05);
     }
 
@@ -89,6 +109,7 @@
       font-size: 13px;
       font-weight: 700;
       color: #334155;
+      white-space: nowrap;
     }
 
     .date-box input {
@@ -219,7 +240,7 @@
     .empty-placeholder {
       text-align: center;
       padding: 40px 20px;
-      color: #94a3b8;
+      color: #64748b;
       background: white;
       margin: 0 16px;
       border-radius: 12px;
@@ -239,14 +260,21 @@
   <div class="mobile-header">
     <button class="logout-btn-header" id="logoutBtn"><i class="fa-solid fa-right-from-bracket"></i> Keluar</button>
     <span class="role-badge">Sekretaris Kelas</span>
-    <h2 id="sekretaris-nama">Memuat...</h2>
-    <p id="sekretaris-detail">Mengecek data...</p>
+    
+    <div class="header-profile-box">
+      <!-- LOGO -->
+      <img src="img/logo.png" alt="Logo Sekolah" class="header-logo" />
+      <div class="header-info">
+        <h2 id="sekretaris-nama">Memuat...</h2>
+        <p id="sekretaris-detail">Mengecek data...</p>
+      </div>
+    </div>
   </div>
 
   <!-- TAB SWITCHER -->
   <div class="mobile-tabs">
-    <button class="tab-btn active" id="btn-tab-absen"><i class="fa-solid fa-pen-to-square"></i> Absen</button>
-    <button class="tab-btn" id="btn-tab-histori"><i class="fa-solid fa-clock-rotate-left"></i> Histori</button>
+    <button class="tab-btn active" id="btn-tab-absen"><i class="fa-solid fa-pen-to-square"></i> Absen Hari Ini</button>
+    <button class="tab-btn" id="btn-tab-histori"><i class="fa-solid fa-clock-rotate-left"></i> Histori & Rekap</button>
   </div>
 
   <!-- TAB 1: ABSENSI -->
