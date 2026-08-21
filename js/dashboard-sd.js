@@ -194,6 +194,62 @@ async function initDashboard() {
   }
 }
 
+// ==========================================
+// HANDLE TOGGLE SIDEBAR MOBILE (3 GARIS)
+// ==========================================
+document.addEventListener('DOMContentLoaded', () => {
+  const menuToggle = document.getElementById('menuToggle');
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('overlay');
+
+  if (menuToggle && sidebar && overlay) {
+    // Buka / Tutup Sidebar saat tombol ☰ diklik
+    menuToggle.addEventListener('click', () => {
+      sidebar.classList.toggle('show');
+      overlay.classList.toggle('show');
+    });
+
+    // Tutup Sidebar jika area transparan (overlay) diklik
+    overlay.addEventListener('click', () => {
+      sidebar.classList.remove('show');
+      overlay.classList.remove('show');
+    });
+
+    // Tutup Sidebar otomatis saat menu diklik
+    document.querySelectorAll('#sidebar nav a').forEach(link => {
+      link.addEventListener('click', () => {
+        sidebar.classList.remove('show');
+        overlay.classList.remove('show');
+      });
+    });
+  }
+});
 // Exec
 initNavigation()
+// EVENT LISTENER TOMBOL MENU 3 GARIS (MOBILE)
+const menuToggle = document.getElementById('menuToggle');
+const sidebar = document.getElementById('sidebar');
+const overlay = document.getElementById('overlay');
+
+if (menuToggle && sidebar && overlay) {
+  // Buka / Tutup Sidebar saat tombol ☰ diklik
+  menuToggle.addEventListener('click', () => {
+    sidebar.classList.toggle('show');
+    overlay.classList.toggle('show');
+  });
+
+  // Tutup Sidebar jika area latar belakang diklik
+  overlay.addEventListener('click', () => {
+    sidebar.classList.remove('show');
+    overlay.classList.remove('show');
+  });
+
+  // Tutup Sidebar otomatis saat salah satu menu diklik
+  document.querySelectorAll('#sidebar nav a').forEach(item => {
+    item.addEventListener('click', () => {
+      sidebar.classList.remove('show');
+      overlay.classList.remove('show');
+    });
+  });
+}
 initDashboard()
