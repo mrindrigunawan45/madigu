@@ -1,8 +1,8 @@
 import { supabase } from './config.js'
 import { loadCurrentUser, getCurrentUser } from './session.js'
 import { loadSiswa } from './absensi-sd.js'
-import { initRekapAbsensi } from './rekap-absensi-sd.js' // <-- 1. DITAMBAHKAN DI SINI
-import { initJurnal } from './jurnal-sd.js' // <-- Tambahkan ini
+import { initRekapAbsensi } from './rekap-absensi-sd.js'
+import { initJurnal } from './jurnal-sd.js'
 
 // =====================
 // ELEMENT DOM
@@ -39,7 +39,7 @@ function initNavigation() {
 
   menus.forEach(menu => {
     menu.addEventListener('click', e => {
-      e.preventDefault() // Mencegah reload/freeze page!
+      e.preventDefault()
 
       menus.forEach(item => item.classList.remove('active'))
       menu.classList.add('active')
@@ -53,17 +53,15 @@ function initNavigation() {
         targetPage.classList.remove('hidden')
       }
 
-      // Jika menu yang diklik adalah 'absensi', panggil fungsi loadSiswa
+      // Trigger modul spesifik saat tab diklik
       if (menu.dataset.page === 'absensi') {
         loadSiswa()
       }
 
-      // Jika menu yang diklik adalah 'rekapAbsensi', panggil fungsi initRekapAbsensi
       if (menu.dataset.page === 'rekapAbsensi') {
         initRekapAbsensi()
       }
 
-      // Sesuai dengan data-page="jurnal" di HTML
       if (menu.dataset.page === 'jurnal') {
         initJurnal()
       }
@@ -74,6 +72,7 @@ function initNavigation() {
     })
   })
 }
+
 // =====================
 // DASHBOARD DATA
 // =====================
@@ -90,8 +89,9 @@ async function loadDashboard() {
     if (siswaError) console.error('Siswa Error:', siswaError)
     if (jumlahSiswa) jumlahSiswa.textContent = siswa?.length || 0
 
-    // 2. ABSENSI HARI INI
-    const today = new Date().toISOString().split('T')[0]
+    // 2. ABSENSI HARI INI (Format Tanggal Lokal Komputer)
+    const d = new Date()
+    const today = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
 
     const { data: absensi, error: absensiError } = await supabase
       .from('absensi')
@@ -101,10 +101,18 @@ async function loadDashboard() {
 
     if (absensiError) console.error('Absensi Error:', absensiError)
 
-    const hadir = absensi?.filter(x => x.status === 'Hadir').length || 0
-    const sakit = absensi?.filter(x => x.status === 'Sakit').length || 0
-    const izin = absensi?.filter(x => x.status === 'Izin').length || 0
-    const alpa = absensi?.filter(x => x.status === 'Alpa' || x.status === 'Alfa').length || 0
+    // Perhitungan status fleksibel (Abaikan kapitalisasi & dukung kode H/S/I/A)
+    let hadir = 0, sakit = 0, izin = 0, alpa = 0
+
+    if (absensi && absensi.length > 0) {
+      absensi.forEach(x => {
+        const st = (x.status || '').trim().toUpperCase()
+        if (st === 'HADIR' || st === 'H') hadir++
+        else if (st === 'SAKIT' || st === 'S') sakit++
+        else if (st === 'IZIN' || st === 'I') izin++
+        else if (st === 'ALPA' || st === 'ALFA' || st === 'A') alpa++
+      })
+    }
 
     // Update elemen DOM
     if (hadirHariIni) hadirHariIni.textContent = hadir
@@ -153,7 +161,7 @@ async function loadDashboard() {
 // LOGOUT
 // =====================
 document.getElementById('logoutBtn')?.addEventListener('click', async (e) => {
-  e.preventDefault() // PENTING: Jangan hapus ini agar tidak crash/freeze
+  e.preventDefault()
   try {
     await supabase.auth.signOut()
   } catch (err) {
@@ -175,18 +183,17 @@ async function initDashboard() {
       return
     }
 
-    currentClass = currentUser.kelas
+    // Penanganan Kelas (Array maupun Single Object)
+    currentClass = Array.isArray(currentUser.kelas) ? currentUser.kelas[0] : currentUser.kelas
 
-   // ✅ KODE BARU:
-  if (namaGuru && currentUser.profile?.name) {
-    namaGuru.textContent = currentUser.profile.name
-  }
+    if (namaGuru && currentUser.profile?.name) {
+      namaGuru.textContent = currentUser.profile.name
+    }
 
-  // Tambahkan 3 baris ini untuk menampilkan nama sekolah dari tabel profiles:
-  const sekolahInfo = document.getElementById('sekolahInfo')
-  if (sekolahInfo && currentUser.profile?.sekolah) {
-    sekolahInfo.textContent = currentUser.profile.sekolah
-  }
+    const sekolahInfo = document.getElementById('sekolahInfo')
+    if (sekolahInfo && currentUser.profile?.sekolah) {
+      sekolahInfo.textContent = currentUser.profile.sekolah
+    }
 
     await loadDashboard()
   } catch (err) {
@@ -194,62 +201,6 @@ async function initDashboard() {
   }
 }
 
-// ==========================================
-// HANDLE TOGGLE SIDEBAR MOBILE (3 GARIS)
-// ==========================================
-document.addEventListener('DOMContentLoaded', () => {
-  const menuToggle = document.getElementById('menuToggle');
-  const sidebar = document.getElementById('sidebar');
-  const overlay = document.getElementById('overlay');
-
-  if (menuToggle && sidebar && overlay) {
-    // Buka / Tutup Sidebar saat tombol ☰ diklik
-    menuToggle.addEventListener('click', () => {
-      sidebar.classList.toggle('show');
-      overlay.classList.toggle('show');
-    });
-
-    // Tutup Sidebar jika area transparan (overlay) diklik
-    overlay.addEventListener('click', () => {
-      sidebar.classList.remove('show');
-      overlay.classList.remove('show');
-    });
-
-    // Tutup Sidebar otomatis saat menu diklik
-    document.querySelectorAll('#sidebar nav a').forEach(link => {
-      link.addEventListener('click', () => {
-        sidebar.classList.remove('show');
-        overlay.classList.remove('show');
-      });
-    });
-  }
-});
 // Exec
 initNavigation()
-// EVENT LISTENER TOMBOL MENU 3 GARIS (MOBILE)
-const menuToggle = document.getElementById('menuToggle');
-const sidebar = document.getElementById('sidebar');
-const overlay = document.getElementById('overlay');
-
-if (menuToggle && sidebar && overlay) {
-  // Buka / Tutup Sidebar saat tombol ☰ diklik
-  menuToggle.addEventListener('click', () => {
-    sidebar.classList.toggle('show');
-    overlay.classList.toggle('show');
-  });
-
-  // Tutup Sidebar jika area latar belakang diklik
-  overlay.addEventListener('click', () => {
-    sidebar.classList.remove('show');
-    overlay.classList.remove('show');
-  });
-
-  // Tutup Sidebar otomatis saat salah satu menu diklik
-  document.querySelectorAll('#sidebar nav a').forEach(item => {
-    item.addEventListener('click', () => {
-      sidebar.classList.remove('show');
-      overlay.classList.remove('show');
-    });
-  });
-}
 initDashboard()
