@@ -4,20 +4,33 @@ import {
   clearElement
 } from './utils.js'
 
+// Track status perubahan data yang belum disimpan
+let isFormDirty = false
+
+// Registrasi fungsi proteksi ke window agar bisa diakses saat pindah tab di dashboard.html
+window.checkUnsavedNilai = function() {
+  if (isFormDirty) {
+    return confirm("Ada nilai yang belum kamu simpan! Yakin ingin pindah tab?")
+  }
+  return true
+}
+
+// Proteksi tambahan saat user reload halaman atau tutup browser/tab
+window.addEventListener('beforeunload', (e) => {
+  if (isFormDirty) {
+    e.preventDefault()
+    e.returnValue = ''
+  }
+})
+
 // =======================
 // GET SCHOOL ID
 // =======================
 async function getSchoolId() {
-  const {
-    data: { user }
-  } = await supabaseClient.auth.getUser()
-
+  const { data: { user } } = await supabaseClient.auth.getUser()
   if (!user) return null
 
-  const {
-    data: profile,
-    error
-  } = await supabaseClient
+  const { data: profile, error } = await supabaseClient
     .from('profiles')
     .select('school_id')
     .eq('id', user.id)
@@ -31,33 +44,29 @@ async function getSchoolId() {
   return profile.school_id
 }
 
-const tanggal = document.getElementById('tanggal')
-const kelasSelect = document.getElementById('kelas-jurnal')
-const mapelSelect = document.getElementById('mapel-jurnal')
-const siswaContainer = document.getElementById('list-siswa-jurnal')
-const saveBtn = document.getElementById('saveJurnalBtn')
+const kelasSelect = document.getElementById('kelas-nilai')
+const mapelSelect = document.getElementById('mapel-nilai')
+const jenisSelect = document.getElementById('jenis-nilai')
+const siswaContainer = document.getElementById('list-siswa-nilai')
+const saveBtn = document.getElementById('saveNilaiBtn')
 
 let siswaData = []
 
-// =======================
-// DEFAULT TANGGAL (WAKTU LOKAL)
-// =======================
-// Fungsi Helper Tanggal Lokal
-function setDefaultTanggal() {
-  if (!tanggal) return
-  const today = new Date()
-  const year = today.getFullYear()
-  const month = String(today.getMonth() + 1).padStart(2, '0')
-  const day = String(today.getDate()).padStart(2, '0')
-  tanggal.value = `${year}-${month}-${day}`
+// Helper: Cek apakah nilai valid (bukan null, undefined, atau string kosong)
+function isValidNilai(val) {
+  return val !== null && val !== undefined && val !== '' && !isNaN(val)
 }
 
-// =======================
-// LOAD MAPEL
-// =======================
+// Helper: Memproses input form agar jika kosong disimpan NULL, bukan 0
+function parseNilaiInput(val) {
+  if (val === null || val === undefined || String(val).trim() === '') {
+    return null
+  }
+  return Number(val)
+}
+
 async function loadMapel() {
   const schoolId = await getSchoolId()
-
   const { data, error } = await supabaseClient
     .from('mata_pelajaran')
     .select('*')
@@ -72,16 +81,14 @@ async function loadMapel() {
   mapelSelect.appendChild(new Option('Pilih Mata Pelajaran', ''))
 
   data.forEach(item => {
-    mapelSelect.appendChild(new Option(item.nama_mapel, item.nama_mapel))
+    mapelSelect.appendChild(
+      new Option(item.nama_mapel, item.nama_mapel)
+    )
   })
 }
 
-// =======================
-// LOAD KELAS
-// =======================
 async function loadKelas() {
   const schoolId = await getSchoolId()
-  
   const { data, error } = await supabaseClient
     .from('siswa')
     .select('kelas')
@@ -108,161 +115,169 @@ async function loadKelas() {
   })
 }
 
-// =======================
-// SAAT KELAS DIPILIH
-// =======================
-kelasSelect?.addEventListener('change', async () => {
-  const kelas = kelasSelect.value
-  if (!kelas) {
-    siswaContainer.innerHTML = ''
-    return
-  }
-
+async function loadSiswaDanNilai() {
   const schoolId = await getSchoolId()
+  const { data: { user } } = await supabaseClient.auth.getUser()
 
-  const { data, error } = await supabaseClient
+  if (!kelasSelect.value || !mapelSelect.value || !jenisSelect.value) return
+
+  // Reset status form dirty jika ganti filter kelas/mapel/jenis
+  isFormDirty = false
+
+  // Ambil daftar siswa A-Z
+  const { data: siswa, error: siswaError } = await supabaseClient
     .from('siswa')
     .select('*')
-    .eq('kelas', kelas)
+    .eq('kelas', kelasSelect.value)
     .eq('school_id', schoolId)
     .order('nama_siswa', { ascending: true })
 
-  if (error) {
-    console.error(error)
+  if (siswaError) {
+    console.error(siswaError)
     return
   }
 
-  siswaData = data
+  siswaData = siswa
+
+  const { data: nilaiExisting, error: nilaiError } = await supabaseClient
+    .from('nilai')
+    .select('*')
+    .eq('user_id', user.id)
+    .eq('kelas', kelasSelect.value)
+    .eq('mapel', mapelSelect.value)
+
+  if (nilaiError) {
+    console.error(nilaiError)
+    return
+  }
+
   siswaContainer.innerHTML = ''
 
-  data.forEach((item, index) => {
-    const namaSiswa = item.nama_siswa || item.nama || 'Siswa'
-    const initials = namaSiswa.split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase()
+  siswa.forEach((item, index) => {
+    const existing = nilaiExisting.find(n => n.siswa === item.nama_siswa)
+    const oldValue = existing?.[jenisSelect.value]
+
+    const displayValue = isValidNilai(oldValue) ? oldValue : ''
 
     siswaContainer.innerHTML += `
-      <div class="siswa-card">
-        <div class="siswa-info">
-          <div class="siswa-avatar">
-            ${initials}
-          </div>
-          <div class="siswa-name">
-            <h4>${namaSiswa}</h4>
-          </div>
-        </div>
-
-        <div class="absen-options">
-          <label class="absen-btn status-h">
-            <input type="radio" name="absen-${index}" value="H" checked>
-            <span class="btn-content">
-              <strong>H</strong>
-              <small>Hadir</small>
-            </span>
-          </label>
-
-          <label class="absen-btn status-s">
-            <input type="radio" name="absen-${index}" value="S">
-            <span class="btn-content">
-              <strong>S</strong>
-              <small>Sakit</small>
-            </span>
-          </label>
-
-          <label class="absen-btn status-i">
-            <input type="radio" name="absen-${index}" value="I">
-            <span class="btn-content">
-              <strong>I</strong>
-              <small>Izin</small>
-            </span>
-          </label>
-
-          <label class="absen-btn status-a">
-            <input type="radio" name="absen-${index}" value="A">
-            <span class="btn-content">
-              <strong>A</strong>
-              <small>Alpa</small>
-            </span>
-          </label>
-        </div>
+      <div class="nilai-row">
+        <span>${item.nama_siswa}</span>
+        <input
+          type="number"
+          id="nilai-${index}"
+          class="input-nilai-item"
+          value="${displayValue}"
+          placeholder="Nilai (kosongkan jika tidak ada)"
+        >
       </div>
     `
   })
-})
 
-// =======================
-// SIMPAN JURNAL
-// =======================
-saveBtn?.addEventListener('click', async () => {
-  const { data: { user } } = await supabaseClient.auth.getUser()
-
-  if (!tanggal?.value || !kelasSelect?.value || !mapelSelect?.value) {
-  alert('Lengkapi data terlebih dahulu')
-  return
+  // Pasang pendeteksi: Begitu user mulai ngetik/ngubah nilai, set isFormDirty = true
+  document.querySelectorAll('.input-nilai-item').forEach(input => {
+    input.addEventListener('input', () => {
+      isFormDirty = true
+    })
+  })
 }
 
-  if (siswaData.length === 0) {
-    alert('Tidak ada siswa untuk disimpan')
+kelasSelect.addEventListener('change', loadSiswaDanNilai)
+mapelSelect.addEventListener('change', loadSiswaDanNilai)
+jenisSelect.addEventListener('change', loadSiswaDanNilai)
+
+saveBtn.addEventListener('click', async () => {
+  const { data: { user } } = await supabaseClient.auth.getUser()
+
+  if (!kelasSelect.value || !mapelSelect.value || !jenisSelect.value) {
+    alert('Lengkapi data terlebih dahulu')
     return
   }
 
-  const materi = document.getElementById('materi')?.value || ''
-  const catatanKejadian = document.getElementById('catatan-kejadian')?.value || ''
+  saveBtn.disabled = true
+  saveBtn.innerHTML = 'Menyimpan...'
 
-  const payload = siswaData.map((item, index) => {
-    const radioChecked = document.querySelector(`input[name="absen-${index}"]:checked`)
-    const status = radioChecked ? radioChecked.value : 'H'
+  const payload = []
 
-    return {
+  for (const [index, item] of siswaData.entries()) {
+    const rawInputValue = document.getElementById(`nilai-${index}`)?.value
+    const nilaiInput = parseNilaiInput(rawInputValue)
+
+    const { data: existing } = await supabaseClient
+      .from('nilai')
+      .select('*')
+      .eq('user_id', user.id)
+      .eq('siswa', item.nama_siswa)
+      .eq('kelas', kelasSelect.value)
+      .eq('mapel', mapelSelect.value)
+      .maybeSingle()
+
+    const merged = {
       user_id: user.id,
-      tanggal: tanggal.value,
+      siswa: item.nama_siswa,
       kelas: kelasSelect.value,
       mapel: mapelSelect.value,
-      materi: materi,
-      catatan_kejadian: catatanKejadian,
-      nama: item.nama_siswa || item.nama,
-      status: status
+
+      s1: existing?.s1 ?? null,
+      s2: existing?.s2 ?? null,
+      s3: existing?.s3 ?? null,
+      s4: existing?.s4 ?? null,
+
+      f1: existing?.f1 ?? null,
+      f2: existing?.f2 ?? null,
+      f3: existing?.f3 ?? null,
+      f4: existing?.f4 ?? null,
+
+      asts: existing?.asts ?? null,
+      asas: existing?.asas ?? null,
+
+      [jenisSelect.value]: nilaiInput
     }
-  })
 
-  saveBtn.innerText = 'Menyimpan...'
-  saveBtn.disabled = true
+    const semuaNilaiDiisi = [
+      merged.s1, merged.s2, merged.s3, merged.s4,
+      merged.f1, merged.f2, merged.f3, merged.f4,
+      merged.asts, merged.asas
+    ].filter(isValidNilai).map(Number)
 
-  const result = await supabaseClient
-    .from('jurnal')
-    .insert(payload)
+    if (semuaNilaiDiisi.length > 0) {
+      const total = semuaNilaiDiisi.reduce((a, b) => a + b, 0)
+      merged.nilai_akhir = Number((total / semuaNilaiDiisi.length).toFixed(2))
+    } else {
+      merged.nilai_akhir = null
+    }
 
-  saveBtn.innerText = 'Simpan Jurnal'
+    payload.push(merged)
+  }
+
+  const { error } = await supabaseClient
+    .from('nilai')
+    .upsert(payload, {
+      onConflict: 'user_id,siswa,kelas,mapel'
+    })
+
   saveBtn.disabled = false
+  saveBtn.innerHTML = 'Simpan Nilai'
 
-  if (result.error) {
-    console.error(result.error)
-    alert('Gagal menyimpan: ' + result.error.message)
+  if (error) {
+    console.error(error)
+    alert(error.message)
     return
   }
 
-  alert('Jurnal berhasil disimpan')
+  // Reset status dirty setelah berhasil disimpan
+  isFormDirty = false
+
+  alert('Nilai berhasil disimpan!')
 
   resetForm([
-    'mapel-jurnal',
-    'kelas-jurnal',
-    'materi',
-    'catatan-kejadian'
+    'mapel-nilai',
+    'jenis-nilai',
+    'kelas-nilai'
   ])
 
-  clearElement('list-siswa-jurnal')
-
+  clearElement('list-siswa-nilai')
   siswaData = []
-  if (tanggal) {
-    const today = new Date()
-    const year = today.getFullYear()
-    const month = String(today.getMonth() + 1).padStart(2, '0')
-    const day = String(today.getDate()).padStart(2, '0')
-    
-    tanggal.value = `${year}-${month}-${day}`
-  }
 })
 
-// =======================
-// INIT
-// =======================
 loadMapel()
 loadKelas()

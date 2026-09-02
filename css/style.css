@@ -1197,3 +1197,14 @@ img.login-logo,
 .status-badge.S { background-color: #fef9c3; color: #a16207; } /* Sakit */
 .status-badge.I { background-color: #e0f2fe; color: #0369a1; } /* Izin */
 .status-badge.A { background-color: #fee2e2; color: #b91c1c; } /* Alpa */
+
+/* Hilangkan tombol panah atas/bawah pada input type number */
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
+
+input[type=number] {
+  -moz-appearance: textfield; /* Untuk Firefox */
+}

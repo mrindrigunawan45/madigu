@@ -306,7 +306,7 @@
     </main>
   </div>
 
-  <!-- MODAL DETAIL SISWA TIDAK HADIR (UPDATED) -->
+  <!-- MODAL DETAIL SISWA TIDAK HADIR -->
   <div id="modalAbsen" class="modal-overlay">
     <div class="modal-card">
       <div class="modal-header">
@@ -319,129 +319,139 @@
     </div>
   </div>
 
-  <!-- SIDEBAR CONTROL SCRIPT -->
+  <!-- SIDEBAR CONTROL & TAB NAVIGATION SCRIPT -->
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const menuBtn = document.getElementById('menuBtn');
-      const sidebar = document.getElementById('sidebar');
-      const overlay = document.getElementById('overlay');
-      const toggleSidebarBtn = document.getElementById('toggleSidebarBtn');
+  document.addEventListener('DOMContentLoaded', () => {
+    const menuBtn = document.getElementById('menuBtn');
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
+    const toggleSidebarBtn = document.getElementById('toggleSidebarBtn');
 
-      // Auto load status collapsed
-      if (localStorage.getItem('sidebarCollapsed') === 'true') {
-        sidebar?.classList.add('collapsed');
-        document.body.classList.add('has-collapsed-sidebar');
-      }
-
-      // Action Tombol Toggle (Desktop)
-      if (toggleSidebarBtn) {
-        toggleSidebarBtn.onclick = (e) => {
-          e.preventDefault();
-          sidebar.classList.toggle('collapsed');
-          document.body.classList.toggle('has-collapsed-sidebar');
-
-          const isCollapsed = sidebar.classList.contains('collapsed');
-          localStorage.setItem('sidebarCollapsed', isCollapsed);
-        };
-      }
-
-      // Action Mobile Burger Menu
-      if (menuBtn) {
-        menuBtn.onclick = () => {
-          sidebar.classList.toggle('active');
-          overlay.classList.toggle('active');
-        };
-      }
-
-      if (overlay) {
-        overlay.onclick = () => {
-          sidebar.classList.remove('active');
-          overlay.classList.remove('active');
-        };
-      }
-    });
-
-    // Fungsi Switch Tab Menu
-    function showTab(tabId) {
-      const sidebar = document.getElementById('sidebar');
-      const overlay = document.getElementById('overlay');
-
-      if (tabId === 'nilaiTab') {
-        document.getElementById('mapel-nilai').selectedIndex = 0;
-        document.getElementById('jenis-nilai').selectedIndex = 0;
-        document.getElementById('kelas-nilai').selectedIndex = 0;
-        document.getElementById('list-siswa-nilai').innerHTML = '';
-      }
-
-      if (tabId === 'jurnalTab') {
-        document.getElementById('mapel-jurnal').selectedIndex = 0;
-        document.getElementById('kelas-jurnal').selectedIndex = 0;
-        document.getElementById('materi').value = '';
-        const catatanKejadian = document.getElementById('catatan-kejadian');
-        if(catatanKejadian) catatanKejadian.value = '';
-        document.getElementById('list-siswa-jurnal').innerHTML = '';
-      }
-
-      if (tabId === 'rekapTab') {
-        const rekapMapel = document.getElementById('rekap-mapel');
-        const rekapKelas = document.getElementById('rekap-kelas');
-        const rekapTable = document.getElementById('rekap-table');
-        if (rekapMapel) rekapMapel.selectedIndex = 0;
-        if (rekapKelas) rekapKelas.selectedIndex = 0;
-        if (rekapTable) rekapTable.innerHTML = '';
-      }
-
-      if (tabId === 'rekapWalasTab') {
-        const rekapWalasKelas = document.getElementById('rekap-walas-kelas');
-        const rekapWalasMode = document.getElementById('rekap-walas-mode');
-        const rekapWalasBulan = document.getElementById('rekap-walas-bulan');
-        const rekapWalasTable = document.getElementById('rekap-walas-table');
-
-        if (rekapWalasKelas) rekapWalasKelas.selectedIndex = 0;
-        if (rekapWalasMode) rekapWalasMode.value = '';
-        if (rekapWalasBulan) rekapWalasBulan.value = 'semua';
-        
-        if (rekapWalasTable) {
-          rekapWalasTable.innerHTML = `
-            <div style="padding: 32px; text-align: center; color: #64748b; background: white; border-radius: 12px; border: 1px solid #e2e8f0;">
-              Silahkan pilih kelas dan mode rekap untuk menampilkan data rekapitulasi absensi.
-            </div>
-          `;
-        }
-      }
-
-      if (tabId === 'walasTab') {
-        const catatanWalas = document.getElementById('catatan-walas');
-        const tglWalas = document.getElementById('tanggal-walas');
-
-        if (catatanWalas) catatanWalas.value = '';
-        if (tglWalas) {
-          const today = new Date();
-          const year = today.getFullYear();
-          const month = String(today.getMonth() + 1).padStart(2, '0');
-          const day = String(today.getDate()).padStart(2, '0');
-  
-          tglWalas.value = `${year}-${month}-${day}`;
-        }
-
-        if (window.loadKelasWalas) {
-          window.loadKelasWalas();
-        }
-      }
-
-      // TAB SWITCH
-      document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
-      document.getElementById(tabId)?.classList.add('active');
-
-      // RESET ACTIVE MENU
-      document.querySelectorAll('.sidebar-menu button').forEach(btn => btn.classList.remove('active'));
-      const activeButton = document.querySelector(`[onclick="showTab('${tabId}')"]`);
-      if (activeButton) activeButton.classList.add('active');
-
-      sidebar?.classList.remove('active');
-      overlay?.classList.remove('active');
+    if (localStorage.getItem('sidebarCollapsed') === 'true') {
+      sidebar?.classList.add('collapsed');
+      document.body.classList.add('has-collapsed-sidebar');
     }
-  </script>
+
+    if (toggleSidebarBtn) {
+      toggleSidebarBtn.onclick = (e) => {
+        e.preventDefault();
+        sidebar.classList.toggle('collapsed');
+        document.body.classList.toggle('has-collapsed-sidebar');
+        localStorage.setItem('sidebarCollapsed', sidebar.classList.contains('collapsed'));
+      };
+    }
+
+    if (menuBtn) {
+      menuBtn.onclick = () => {
+        sidebar.classList.toggle('active');
+        overlay.classList.toggle('active');
+      };
+    }
+
+    if (overlay) {
+      overlay.onclick = () => {
+        sidebar.classList.remove('active');
+        overlay.classList.remove('active');
+      };
+    }
+  });
+
+  function showTab(tabId) {
+    const activeTab = document.querySelector('.tab.active');
+
+    // CEK PERUBAHAN DATA NILAI
+    if (activeTab && activeTab.id === 'nilaiTab' && tabId !== 'nilaiTab') {
+      const inputs = document.querySelectorAll('#list-siswa-nilai input[type="number"]');
+      let adaPerubahan = false;
+
+      inputs.forEach(input => {
+        if (input.dataset.dirty === 'true') {
+          adaPerubahan = true;
+        }
+      });
+
+      if (adaPerubahan) {
+        const yakin = confirm("Ada perubahan nilai yang belum kamu simpan! Yakin ingin pindah tab?");
+        if (!yakin) return; // Batal pindah jika user pilih Cancel
+      }
+    }
+
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
+
+    if (tabId === 'nilaiTab') {
+      document.getElementById('mapel-nilai').selectedIndex = 0;
+      document.getElementById('jenis-nilai').selectedIndex = 0;
+      document.getElementById('kelas-nilai').selectedIndex = 0;
+      document.getElementById('list-siswa-nilai').innerHTML = '';
+    }
+
+    if (tabId === 'jurnalTab') {
+      document.getElementById('mapel-jurnal').selectedIndex = 0;
+      document.getElementById('kelas-jurnal').selectedIndex = 0;
+      document.getElementById('materi').value = '';
+      const catatanKejadian = document.getElementById('catatan-kejadian');
+      if(catatanKejadian) catatanKejadian.value = '';
+      document.getElementById('list-siswa-jurnal').innerHTML = '';
+    }
+
+    if (tabId === 'rekapTab') {
+      const rekapMapel = document.getElementById('rekap-mapel');
+      const rekapKelas = document.getElementById('rekap-kelas');
+      const rekapTable = document.getElementById('rekap-table');
+      if (rekapMapel) rekapMapel.selectedIndex = 0;
+      if (rekapKelas) rekapKelas.selectedIndex = 0;
+      if (rekapTable) rekapTable.innerHTML = '';
+    }
+
+    if (tabId === 'rekapWalasTab') {
+      const rekapWalasKelas = document.getElementById('rekap-walas-kelas');
+      const rekapWalasMode = document.getElementById('rekap-walas-mode');
+      const rekapWalasBulan = document.getElementById('rekap-walas-bulan');
+      const rekapWalasTable = document.getElementById('rekap-walas-table');
+
+      if (rekapWalasKelas) rekapWalasKelas.selectedIndex = 0;
+      if (rekapWalasMode) rekapWalasMode.value = '';
+      if (rekapWalasBulan) rekapWalasBulan.value = 'semua';
+      
+      if (rekapWalasTable) {
+        rekapWalasTable.innerHTML = `
+          <div style="padding: 32px; text-align: center; color: #64748b; background: white; border-radius: 12px; border: 1px solid #e2e8f0;">
+            Silahkan pilih kelas dan mode rekap untuk menampilkan data rekapitulasi absensi.
+          </div>
+        `;
+      }
+    }
+
+    if (tabId === 'walasTab') {
+      const catatanWalas = document.getElementById('catatan-walas');
+      const tglWalas = document.getElementById('tanggal-walas');
+
+      if (catatanWalas) catatanWalas.value = '';
+      if (tglWalas) {
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, '0');
+        const day = String(today.getDate()).padStart(2, '0');
+        tglWalas.value = `${year}-${month}-${day}`;
+      }
+
+      if (window.loadKelasWalas) {
+        window.loadKelasWalas();
+      }
+    }
+
+    document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+    document.getElementById(tabId)?.classList.add('active');
+
+    document.querySelectorAll('.sidebar-menu button').forEach(btn => btn.classList.remove('active'));
+    const activeButton = document.querySelector(`[onclick="showTab('${tabId}')"]`);
+    if (activeButton) activeButton.classList.add('active');
+
+    sidebar?.classList.remove('active');
+    overlay?.classList.remove('active');
+  }
+</script>
 
   <!-- MODULE SCRIPTS -->
   <script type="module" src="js/auth.js"></script>

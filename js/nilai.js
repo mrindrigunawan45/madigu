@@ -146,6 +146,7 @@ async function loadSiswaDanNilai() {
           id="nilai-${index}"
           value="${displayValue}"
           placeholder="Nilai (kosongkan jika tidak ada)"
+          oninput="this.dataset.dirty='true'"
         >
       </div>
     `
