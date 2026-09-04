@@ -445,198 +445,100 @@ img.login-logo,
 }
 
 /* ==========================================================================
-   6. CARD SISWA VERTIKAL (DESAIN PRESISI SESUAI REFERENSI)
+   6. CARD SISWA VERTIKAL (FIX STRUCTURE)
    ========================================================================== */
-.walas-form-header {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 12px;
-  margin-bottom: 16px;
-}
 
-/* Container Card Utama (Tumpuk Vertikal) */
-.siswa-card,
-.siswa-item,
-[id^="list-siswa"] > div {
+/* Card Utama: Berdiri Vertikal */
+.siswa-card {
   display: flex !important;
   flex-direction: column !important;
-  align-items: stretch !important;
-  justify-content: flex-start !important;
   gap: 12px !important;
-  padding: 14px 16px !important;
+  padding: 14px !important;
   margin-bottom: 12px !important;
   background: #ffffff !important;
-  border: 1px solid #e2e8f0 !important;
-  border-left: 5px solid #10b981 !important; /* Garis Hijau di Kiri */
-  border-radius: 14px !important;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03) !important;
+  border: 1px solid #cbd5e1 !important;
+  border-left: 5px solid #10b981 !important;
+  border-radius: 12px !important;
+  width: 100% !important;
   box-sizing: border-box !important;
+}
+
+/* Header Atas: Avatar + Nama Panjang Tanpa Kepotong */
+.siswa-header {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
   width: 100% !important;
 }
 
-/* Baris Atas: Avatar & Nama Siswa */
-.siswa-info,
-.siswa-info-top,
-[id^="list-siswa"] > div > span:first-child {
+.siswa-avatar {
   display: flex !important;
   align-items: center !important;
-  gap: 12px !important;
-  width: 100% !important;
+  justify-content: center !important;
+  width: 36px !important;
+  height: 36px !important;
+  background-color: #dbeafe !important;
+  color: #2563eb !important;
+  font-weight: 700 !important;
+  font-size: 13px !important;
+  border-radius: 50% !important;
+  flex-shrink: 0 !important;
+}
+
+.siswa-nama {
   font-size: 14px !important;
   font-weight: 700 !important;
   color: #0f172a !important;
   white-space: normal !important;
   word-break: break-word !important;
-  line-height: 1.35 !important;
 }
 
-/* Avatar Bulat Biru */
-.siswa-avatar,
-.avatar,
-[id^="list-siswa"] .avatar {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  flex-shrink: 0 !important;
-  width: 40px !important;
-  height: 40px !important;
-  background-color: #2563eb !important;
-  color: #ffffff !important;
-  font-weight: 700 !important;
-  font-size: 13px !important;
-  border-radius: 50% !important;
-  border: none !important;
-}
-
-/* Baris Bawah: Barisan 4 Tombol Presensi (H, S, I, A) */
-.absen-options,
-.siswa-status-options,
-.btn-group-absen,
-[id^="list-siswa"] > div > div:last-child {
+/* Grid Bawah: 4 Tombol Presensi Rapi */
+.absen-options {
   display: grid !important;
-  grid-template-columns: repeat(4, 1fr) !important; /* Bagi 4 Kolom Sama Rata */
-  gap: 8px !important;
+  grid-template-columns: repeat(4, 1fr) !important;
+  gap: 6px !important;
   width: 100% !important;
 }
 
-/* Radio Button / Button Styling */
 .absen-btn {
-  position: relative;
-  cursor: pointer;
-  width: 100% !important;
+  position: relative !important;
+  cursor: pointer !important;
   margin: 0 !important;
 }
 
 .absen-btn input[type="radio"] {
-  position: absolute;
-  opacity: 0;
-  width: 0;
-  height: 0;
+  position: absolute !important;
+  opacity: 0 !important;
+  width: 0 !important;
+  height: 0 !important;
 }
 
-.absen-btn .btn-content,
-[id^="list-siswa"] button {
+.absen-btn .btn-content {
   display: flex !important;
   flex-direction: column !important;
   align-items: center !important;
   justify-content: center !important;
-  width: 100% !important;
-  padding: 8px 4px !important;
+  padding: 6px 2px !important;
   border: 1px solid #cbd5e1 !important;
-  border-radius: 10px !important;
+  border-radius: 8px !important;
   background: #f8fafc !important;
-  font-size: 11px !important;
-  font-weight: 600 !important;
-  transition: all 0.2s ease !important;
-  box-sizing: border-box !important;
+  text-align: center !important;
 }
 
-/* Warna Status Terpilih (Checked Radio) */
-.absen-btn.status-h input[type="radio"]:checked + .btn-content {
-  background: #10b981 !important;
-  border-color: #10b981 !important;
-  color: var(--white) !important;
+.absen-btn .btn-content strong {
+  font-size: 13px !important;
 }
 
-.absen-btn.status-s input[type="radio"]:checked + .btn-content {
-  background: #f59e0b !important;
-  border-color: #f59e0b !important;
-  color: var(--white) !important;
+.absen-btn .btn-content span {
+  font-size: 10px !important;
 }
 
-.absen-btn.status-i input[type="radio"]:checked + .btn-content {
-  background: #0284c7 !important;
-  border-color: #0284c7 !important;
-  color: var(--white) !important;
-}
-
-.absen-btn.status-a input[type="radio"]:checked + .btn-content {
-  background: #ef4444 !important;
-  border-color: #ef4444 !important;
-  color: var(--white) !important;
-}
-
-.absen-btn.status-h:hover .btn-content { border-color: #10b981 !important; }
-.absen-btn.status-s:hover .btn-content { border-color: #f59e0b !important; }
-.absen-btn.status-i:hover .btn-content { border-color: #0284c7 !important; }
-.absen-btn.status-a:hover .btn-content { border-color: #ef4444 !important; }
-
-/* Sticky Save Bar */
-.sticky-save-bar {
-  position: sticky;
-  bottom: 16px;
-  z-index: 90;
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  padding: 12px 20px;
-  border-radius: 12px;
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
-  border: 1px solid rgba(226, 232, 240, 0.8);
-  margin-top: 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-}
-
-.sticky-save-bar .save-info {
-  font-size: 13px;
-  color: var(--text-muted);
-  font-weight: 500;
-}
-
-.sticky-save-bar button {
-  margin: 0;
-  width: auto;
-  padding: 10px 24px;
-  font-size: 14px;
-  font-weight: 600;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.guru-box {
-  display: flex;
-  align-items: center;
-  gap: 18px;
-  margin-top: 10px;
-  padding: 14px 18px;
-  background: var(--white);
-  border-radius: 18px;
-  border: 1px solid var(--border);
-  width: fit-content;
-}
-
-.guru-item {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.guru-item span { font-size: 12px; color: var(--text-muted); }
-.guru-item strong { font-size: 16px; color: var(--text); }
+/* Warna Pilihan Absen */
+.absen-btn.status-h input:checked + .btn-content { background: #10b981 !important; color: #fff !important; border-color: #10b981 !important; }
+.absen-btn.status-s input:checked + .btn-content { background: #0284c7 !important; color: #fff !important; border-color: #0284c7 !important; }
+.absen-btn.status-i input:checked + .btn-content { background: #f59e0b !important; color: #fff !important; border-color: #f59e0b !important; }
+.absen-btn.status-a input:checked + .btn-content { background: #ef4444 !important; color: #fff !important; border-color: #ef4444 !important; }
 
 /* ==========================================================================
    7. REKAP ABSEN & AKSI JURNAL

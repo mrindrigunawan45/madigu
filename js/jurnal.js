@@ -155,50 +155,52 @@ async function loadSiswaJurnal() {
     const initials = getInitials(item.nama_siswa)
 
     html += `
-      <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; gap: 8px; box-shadow: 0 1px 2px rgba(0,0,0,0.03);">
-        <!-- Avatar & Nama -->
-        <div style="display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0;">
+      <!-- Card Siswa Layout Vertikal -->
+      <div style="display: flex; flex-direction: column; padding: 12px 14px; background: #ffffff; border: 1px solid #e2e8f0; border-left: 5px solid #10b981; border-radius: 12px; gap: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.03); width: 100%; box-sizing: border-box;">
+        
+        <!-- BARIS ATAS: Avatar & Nama Lengkap Utuh -->
+        <div style="display: flex; align-items: center; gap: 10px; width: 100%;">
           <div style="width: 36px; height: 36px; border-radius: 50%; background: #eff6ff; color: #2563eb; font-weight: 700; font-size: 13px; display: flex; align-items: center; justify-content: center; border: 1px solid #bfdbfe; flex-shrink: 0;">
             ${initials}
           </div>
-          <span style="font-weight: 700; font-size: 13px; color: #1e293b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${item.nama_siswa}">
+          <span style="font-weight: 700; font-size: 14px; color: #0f172a; white-space: normal; word-break: break-word; line-height: 1.3;" title="${item.nama_siswa}">
             ${item.nama_siswa}
           </span>
         </div>
 
-        <!-- Tombol HSIA Elegant & Colorful -->
-        <div style="display: flex; gap: 5px; flex-shrink: 0;" class="hsia-group">
-          <!-- Hadir (Green) -->
-          <label style="cursor: pointer; margin: 0;">
+        <!-- BARIS BAWAH: Grid 4 Tombol Presensi Rata -->
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; width: 100%; box-sizing: border-box;" class="hsia-group">
+          <!-- Hadir -->
+          <label style="cursor: pointer; margin: 0; width: 100%;">
             <input type="radio" name="absen-${index}" value="H" checked style="display: none;">
-            <div class="hsia-btn" data-value="H" style="width: 42px; height: 42px; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 1px solid #10b981; background: #10b981; color: #ffffff; transition: all 0.2s; box-shadow: 0 1px 3px rgba(16,185,129,0.2);">
+            <div class="hsia-btn" data-value="H" style="width: 100%; min-height: 40px; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 1px solid #10b981; background: #10b981; color: #ffffff; transition: all 0.2s; box-shadow: 0 1px 3px rgba(16,185,129,0.2); box-sizing: border-box;">
               <strong style="font-size: 13px; font-weight: 800; line-height: 1;">H</strong>
               <span style="font-size: 10px; line-height: 1; margin-top: 2px;">Hadir</span>
             </div>
           </label>
 
-          <!-- Sakit (Sky Blue) -->
-          <label style="cursor: pointer; margin: 0;">
+          <!-- Sakit -->
+          <label style="cursor: pointer; margin: 0; width: 100%;">
             <input type="radio" name="absen-${index}" value="S" style="display: none;">
-            <div class="hsia-btn" data-value="S" style="width: 42px; height: 42px; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 1px solid #e2e8f0; background: #f8fafc; color: #0284c7; transition: all 0.2s;">
+            <div class="hsia-btn" data-value="S" style="width: 100%; min-height: 40px; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 1px solid #e2e8f0; background: #f8fafc; color: #0284c7; transition: all 0.2s; box-sizing: border-box;">
               <strong style="font-size: 13px; font-weight: 800; line-height: 1;">S</strong>
               <span style="font-size: 10px; line-height: 1; margin-top: 2px;">Sakit</span>
             </div>
           </label>
 
-          <!-- Izin (Amber/Gold) -->
-          <label style="cursor: pointer; margin: 0;">
+          <!-- Izin -->
+          <label style="cursor: pointer; margin: 0; width: 100%;">
             <input type="radio" name="absen-${index}" value="I" style="display: none;">
-            <div class="hsia-btn" data-value="I" style="width: 42px; height: 42px; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 1px solid #e2e8f0; background: #f8fafc; color: #d97706; transition: all 0.2s;">
+            <div class="hsia-btn" data-value="I" style="width: 100%; min-height: 40px; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 1px solid #e2e8f0; background: #f8fafc; color: #d97706; transition: all 0.2s; box-sizing: border-box;">
               <strong style="font-size: 13px; font-weight: 800; line-height: 1;">I</strong>
               <span style="font-size: 10px; line-height: 1; margin-top: 2px;">Izin</span>
             </div>
           </label>
 
-          <!-- Alpa (Rose/Red) -->
-          <label style="cursor: pointer; margin: 0;">
+          <!-- Alpa -->
+          <label style="cursor: pointer; margin: 0; width: 100%;">
             <input type="radio" name="absen-${index}" value="A" style="display: none;">
-            <div class="hsia-btn" data-value="A" style="width: 42px; height: 42px; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 1px solid #e2e8f0; background: #f8fafc; color: #e11d48; transition: all 0.2s;">
+            <div class="hsia-btn" data-value="A" style="width: 100%; min-height: 40px; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 1px solid #e2e8f0; background: #f8fafc; color: #e11d48; transition: all 0.2s; box-sizing: border-box;">
               <strong style="font-size: 13px; font-weight: 800; line-height: 1;">A</strong>
               <span style="font-size: 10px; line-height: 1; margin-top: 2px;">Alpa</span>
             </div>
