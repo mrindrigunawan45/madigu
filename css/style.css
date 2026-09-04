@@ -282,6 +282,18 @@ button:hover {
   background: var(--primary-dark);
 }
 
+/* Hilangkan panah input type number & kompatibilitas browser */
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
+
+input[type=number] {
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+
 /* ==========================================================================
    4. TABLES & DATA CONTAINERS
    ========================================================================== */
@@ -428,13 +440,12 @@ img.login-logo,
   background-color: var(--primary-dark);
 }
 
-/* Catatan: Nilai 18px disesuaikan agar ikon tombol log-in proporsional (bukan 180px typo) */
 .btn-login i {
   font-size: 18px;
 }
 
 /* ==========================================================================
-   6. ABSENSI WALAS & KARTU SISWA
+   6. CARD SISWA VERTIKAL (DESAIN PRESISI SESUAI REFERENSI)
    ========================================================================== */
 .walas-form-header {
   display: grid;
@@ -443,45 +454,77 @@ img.login-logo,
   margin-bottom: 16px;
 }
 
-.siswa-card {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 12px 16px;
-  background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  margin-bottom: 10px;
-  gap: 12px;
+/* Container Card Utama (Tumpuk Vertikal) */
+.siswa-card,
+.siswa-item,
+[id^="list-siswa"] > div {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: stretch !important;
+  justify-content: flex-start !important;
+  gap: 12px !important;
+  padding: 14px 16px !important;
+  margin-bottom: 12px !important;
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  border-left: 5px solid #10b981 !important; /* Garis Hijau di Kiri */
+  border-radius: 14px !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03) !important;
+  box-sizing: border-box !important;
+  width: 100% !important;
 }
 
-.siswa-info {
-  display: flex;
-  align-items: center;
-  gap: 12px;
+/* Baris Atas: Avatar & Nama Siswa */
+.siswa-info,
+.siswa-info-top,
+[id^="list-siswa"] > div > span:first-child {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  width: 100% !important;
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  color: #0f172a !important;
+  white-space: normal !important;
+  word-break: break-word !important;
+  line-height: 1.35 !important;
 }
 
-.siswa-avatar {
-  width: 38px;
-  height: 38px;
-  background: #eff6ff !important;
-  color: #1d4ed8 !important;
-  border: 1px solid #bfdbfe;
-  font-weight: 700;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+/* Avatar Bulat Biru */
+.siswa-avatar,
+.avatar,
+[id^="list-siswa"] .avatar {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+  width: 40px !important;
+  height: 40px !important;
+  background-color: #2563eb !important;
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  font-size: 13px !important;
+  border-radius: 50% !important;
+  border: none !important;
 }
 
-.absen-options {
-  display: flex;
-  gap: 8px;
+/* Baris Bawah: Barisan 4 Tombol Presensi (H, S, I, A) */
+.absen-options,
+.siswa-status-options,
+.btn-group-absen,
+[id^="list-siswa"] > div > div:last-child {
+  display: grid !important;
+  grid-template-columns: repeat(4, 1fr) !important; /* Bagi 4 Kolom Sama Rata */
+  gap: 8px !important;
+  width: 100% !important;
 }
 
+/* Radio Button / Button Styling */
 .absen-btn {
   position: relative;
   cursor: pointer;
+  width: 100% !important;
+  margin: 0 !important;
 }
 
 .absen-btn input[type="radio"] {
@@ -491,20 +534,24 @@ img.login-logo,
   height: 0;
 }
 
-.absen-btn .btn-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 50px;
-  padding: 6px 0;
-  border: 1px solid #cbd5e1;
-  border-radius: 8px;
-  background: #f8fafc;
-  transition: all 0.2s ease;
+.absen-btn .btn-content,
+[id^="list-siswa"] button {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 100% !important;
+  padding: 8px 4px !important;
+  border: 1px solid #cbd5e1 !important;
+  border-radius: 10px !important;
+  background: #f8fafc !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  transition: all 0.2s ease !important;
+  box-sizing: border-box !important;
 }
 
-/* Warna Status Radio Absensi */
+/* Warna Status Terpilih (Checked Radio) */
 .absen-btn.status-h input[type="radio"]:checked + .btn-content {
   background: #10b981 !important;
   border-color: #10b981 !important;
@@ -529,11 +576,12 @@ img.login-logo,
   color: var(--white) !important;
 }
 
-.absen-btn.status-h:hover .btn-content { border-color: #10b981; }
-.absen-btn.status-s:hover .btn-content { border-color: #f59e0b; }
-.absen-btn.status-i:hover .btn-content { border-color: #0284c7; }
-.absen-btn.status-a:hover .btn-content { border-color: #ef4444; }
+.absen-btn.status-h:hover .btn-content { border-color: #10b981 !important; }
+.absen-btn.status-s:hover .btn-content { border-color: #f59e0b !important; }
+.absen-btn.status-i:hover .btn-content { border-color: #0284c7 !important; }
+.absen-btn.status-a:hover .btn-content { border-color: #ef4444 !important; }
 
+/* Sticky Save Bar */
 .sticky-save-bar {
   position: sticky;
   bottom: 16px;
@@ -654,7 +702,6 @@ img.login-logo,
   color: var(--white) !important;
 }
 
-/* Rekap Mobile Grid */
 .rekap-modern {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -749,77 +796,6 @@ img.login-logo,
 /* ==========================================================================
    8. MEDIA QUERIES & RESPONSIVE DESIGN
    ========================================================================== */
-@media (min-width: 769px) {
-  .sidebar { left: 0; }
-  .overlay { display: none; }
-  .menu-btn { display: none; }
-  
-  .content-wrapper {
-    margin-left: 280px;
-    width: calc(100% - 280px);
-  }
-
-  /* Mode Collapsed Sidebar */
-  aside.sidebar.collapsed {
-    width: 76px !important;
-    padding: 16px 10px !important;
-  }
-
-  aside.sidebar.collapsed .sidebar-logo,
-  aside.sidebar.collapsed .sidebar-menu button span {
-    display: none !important;
-  }
-
-  aside.sidebar.collapsed .sidebar-top {
-    justify-content: center !important;
-  }
-
-  aside.sidebar.collapsed .sidebar-menu button {
-    justify-content: center !important;
-    padding: 12px 0 !important;
-  }
-
-  aside.sidebar.collapsed .sidebar-menu button i {
-    font-size: 18px !important;
-    margin: 0 !important;
-  }
-
-  aside.sidebar.collapsed #toggleSidebarBtn i {
-    transform: rotate(180deg) !important;
-  }
-
-  body.has-collapsed-sidebar .content-wrapper {
-    margin-left: 76px !important;
-    width: calc(100% - 76px) !important;
-  }
-}
-
-@media (max-width: 768px) {
-  .sidebar { left: -290px; }
-  .sidebar.active { left: 0; }
-
-  header {
-    height: 74px;
-    padding: 0 16px;
-  }
-
-  .menu-btn {
-    width: 46px;
-    height: 46px;
-    font-size: 20px;
-  }
-
-  button#toggleSidebarBtn {
-    display: flex !important;
-  }
-
-  main {
-    padding: 14px;
-  }
-}
-/* ==========================================================================
-   8. MEDIA QUERIES & RESPONSIVE DESIGN (MOBILE & TABLET FIXES)
-   ========================================================================== */
 
 /* --- Tampilan Desktop & Tablet Large --- */
 @media (min-width: 769px) {
@@ -832,7 +808,6 @@ img.login-logo,
     width: calc(100% - 280px);
   }
 
-  /* Mode Collapsed Sidebar */
   aside.sidebar.collapsed {
     width: 76px !important;
     padding: 16px 10px !important;
@@ -878,7 +853,6 @@ img.login-logo,
     left: 0; 
   }
 
-  /* Tombol melipat/menutup sidebar di HP */
   button#toggleSidebarBtn {
     display: flex !important;
   }
@@ -914,7 +888,6 @@ img.login-logo,
     margin-bottom: 16px;
   }
 
-  /* Optimalisasi Input & Button di HP */
   input,
   select,
   textarea,
@@ -931,33 +904,6 @@ img.login-logo,
     border-radius: 12px;
   }
 
-  /* Kartu Absensi Siswa agar tidak melimpah ke kanan */
-  .siswa-card {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
-    padding: 12px;
-  }
-
-  .siswa-info {
-    width: 100%;
-  }
-
-  .absen-options {
-    width: 100%;
-    justify-content: space-between;
-  }
-
-  .absen-btn {
-    flex: 1;
-  }
-
-  .absen-btn .btn-content {
-    width: 100%;
-    padding: 8px 0;
-  }
-
-  /* Sticky Save Bar di Bawah Layar Mobile */
   .sticky-save-bar {
     padding: 10px 14px;
     bottom: 10px;
@@ -974,7 +920,6 @@ img.login-logo,
   }
 }
 
-/* --- Tampilan HP Sangat Kecil (<= 380px) --- */
 @media (max-width: 380px) {
   .rekap-modern {
     grid-template-columns: 1fr;
@@ -986,10 +931,8 @@ img.login-logo,
 }
 
 /* ==========================================================================
-   STICKY COLUMN FOR TABLE (KOLOM NAMA TETAP FIX SAAT SCROLL)
+   9. STICKY TABLES (REKAP WALAS & REKAP JURNAL)
    ========================================================================== */
-
-/* 1. Kunci posisi header NAMA (th) dan isi NAMA (td) di kolom pertama */
 .table-container table th:first-child,
 .table-container table td:first-child,
 .table-responsive table th:first-child,
@@ -997,41 +940,23 @@ img.login-logo,
   position: sticky;
   left: 0;
   z-index: 10;
-  background-color: var(--white); /* Mencegah teks di belakangnya kelihatan menumpuk */
+  background-color: var(--white);
+  text-align: left !important;
+  padding-left: 14px !important;
 }
 
-/* 2. Warna khusus untuk Header "NAMA" agar tetap biru saat di-scroll */
 .table-container table th:first-child,
 .table-responsive table th:first-child {
   background-color: var(--primary) !important;
-  z-index: 11; /* Z-index lebih tinggi agar berada di atas td */
+  z-index: 11;
 }
 
-/* 3. Baris genap (zebra striping) agar warna latar kolom sticky tetap sesuai */
 .table-container table tr:nth-child(even) td:first-child,
 .table-responsive table tr:nth-child(even) td:first-child {
   background-color: #f8fafc;
 }
 
-/* 4. Beri bayangan tipis (shadow) di kanan kolom nama agar makin estetik */
-.table-container table th:first-child::after,
-.table-container table td:first-child::after,
-.table-responsive table th:first-child::after,
-.table-responsive table td:first-child::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  right: -5px;
-  bottom: 0;
-  width: 5px;
-  background: linear-gradient(to right, rgba(0, 0, 0, 0.08), transparent);
-  pointer-events: none;
-}
-/* ==========================================================================
-   STICKY 2 KOLOM (NO & NAMA) UNTUK REKAP WALAS
-   ========================================================================== */
-
-/* 1. Kolom 1 (NO) - Menempel paling kiri (left: 0) */
+/* Sticky 2 Kolom Rekap Walas */
 #rekap-walas-table th:nth-child(1),
 #rekap-walas-table td:nth-child(1) {
   position: sticky;
@@ -1040,31 +965,30 @@ img.login-logo,
   background-color: var(--white);
   width: 40px;
   min-width: 40px;
+  text-align: center !important;
 }
 
-/* 2. Kolom 2 (NAMA SISWA) - Menempel tepat di sebelah kanan kolom NO (left: 40px) */
 #rekap-walas-table th:nth-child(2),
 #rekap-walas-table td:nth-child(2) {
   position: sticky;
-  left: 40px; /* Jarak sesuai lebar kolom NO */
+  left: 40px;
   z-index: 10;
   background-color: var(--white);
+  text-align: left !important;
+  padding-left: 14px !important;
 }
 
-/* 3. Header Biru untuk Kolom 1 & 2 (Z-Index Lebih Tinggi) */
 #rekap-walas-table th:nth-child(1),
 #rekap-walas-table th:nth-child(2) {
   background-color: var(--primary) !important;
   z-index: 12;
 }
 
-/* 4. Penyesuaian Baris Genap (Zebra Striping) */
 #rekap-walas-table tr:nth-child(even) td:nth-child(1),
 #rekap-walas-table tr:nth-child(even) td:nth-child(2) {
   background-color: #f8fafc;
 }
 
-/* 5. Bayangan Soft di Sebelah Kanan Kolom NAMA SISWA */
 #rekap-walas-table th:nth-child(2)::after,
 #rekap-walas-table td:nth-child(2)::after {
   content: '';
@@ -1076,33 +1000,9 @@ img.login-logo,
   background: linear-gradient(to right, rgba(0, 0, 0, 0.08), transparent);
   pointer-events: none;
 }
+
 /* ==========================================================================
-   ALIGNMENT NAMA SISWA RATA KIRI
-   ========================================================================== */
-
-/* 1. Rata kiri untuk Header & Isi Kolom Nama di Tabel Umum / Rekap Nilai */
-.table-container table th:first-child,
-.table-container table td:first-child,
-.table-responsive table th:first-child,
-.table-responsive table td:first-child {
-  text-align: left !important;
-  padding-left: 14px !important;
-}
-
-/* 2. Rata kiri khusus Kolom NAMA SISWA (Kolom ke-2) di Tabel Rekap Walas */
-#rekap-walas-table th:nth-child(2),
-#rekap-walas-table td:nth-child(2) {
-  text-align: left !important;
-  padding-left: 14px !important;
-}
-
-/* 3. Kolom Nomor (NO) di Rekap Walas tetap Rata Tengah */
-#rekap-walas-table th:nth-child(1),
-#rekap-walas-table td:nth-child(1) {
-  text-align: center !important;
-}
-/* ==========================================================================
-   MODAL DETAIL TIDAK HADIR
+   10. MODAL DIALOG
    ========================================================================== */
 .modal-overlay {
   display: none;
@@ -1194,17 +1094,6 @@ img.login-logo,
   letter-spacing: 0.3px;
 }
 
-.status-badge.S { background-color: #fef9c3; color: #a16207; } /* Sakit */
-.status-badge.I { background-color: #e0f2fe; color: #0369a1; } /* Izin */
-.status-badge.A { background-color: #fee2e2; color: #b91c1c; } /* Alpa */
-
-/* Hilangkan tombol panah atas/bawah pada input type number */
-input[type=number]::-webkit-inner-spin-button, 
-input[type=number]::-webkit-outer-spin-button { 
-  -webkit-appearance: none; 
-  margin: 0; 
-}
-
-input[type=number] {
-  -moz-appearance: textfield; /* Untuk Firefox */
-}
+.status-badge.S { background-color: #fef9c3; color: #a16207; }
+.status-badge.I { background-color: #e0f2fe; color: #0369a1; }
+.status-badge.A { background-color: #fee2e2; color: #b91c1c; }

@@ -149,50 +149,58 @@ async function loadSiswaJurnal() {
     return
   }
 
-  let html = `<div style="display: flex; flex-direction: column; gap: 10px; margin-top: 16px;">`
+  let html = `<div style="display: flex; flex-direction: column; gap: 8px; margin-top: 16px; width: 100%; box-sizing: border-box;">`
 
   siswaData.forEach((item, index) => {
     const initials = getInitials(item.nama_siswa)
 
     html += `
-      <div style="display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px;">
-        <div style="display: flex; align-items: center; gap: 12px;">
-          <div style="width: 40px; height: 40px; border-radius: 50%; background: #eff6ff; color: #2563eb; font-weight: 700; font-size: 14px; display: flex; align-items: center; justify-content: center; border: 1px solid #bfdbfe;">
+      <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; gap: 8px; box-shadow: 0 1px 2px rgba(0,0,0,0.03);">
+        <!-- Avatar & Nama -->
+        <div style="display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0;">
+          <div style="width: 36px; height: 36px; border-radius: 50%; background: #eff6ff; color: #2563eb; font-weight: 700; font-size: 13px; display: flex; align-items: center; justify-content: center; border: 1px solid #bfdbfe; flex-shrink: 0;">
             ${initials}
           </div>
-          <span style="font-weight: 700; font-size: 14px; color: #1e293b;">${item.nama_siswa}</span>
+          <span style="font-weight: 700; font-size: 13px; color: #1e293b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${item.nama_siswa}">
+            ${item.nama_siswa}
+          </span>
         </div>
 
-        <div style="display: flex; gap: 8px;" class="hsia-group">
-          <label style="cursor: pointer;">
+        <!-- Tombol HSIA Elegant & Colorful -->
+        <div style="display: flex; gap: 5px; flex-shrink: 0;" class="hsia-group">
+          <!-- Hadir (Green) -->
+          <label style="cursor: pointer; margin: 0;">
             <input type="radio" name="absen-${index}" value="H" checked style="display: none;">
-            <div class="hsia-btn" data-value="H" style="width: 52px; height: 48px; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; border: 1px solid #10b981; background: #10b981; color: #ffffff; transition: all 0.2s;">
-              <strong style="font-size: 14px; font-weight: 800;">H</strong>
-              <span>Hadir</span>
+            <div class="hsia-btn" data-value="H" style="width: 42px; height: 42px; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 1px solid #10b981; background: #10b981; color: #ffffff; transition: all 0.2s; box-shadow: 0 1px 3px rgba(16,185,129,0.2);">
+              <strong style="font-size: 13px; font-weight: 800; line-height: 1;">H</strong>
+              <span style="font-size: 10px; line-height: 1; margin-top: 2px;">Hadir</span>
             </div>
           </label>
 
-          <label style="cursor: pointer;">
+          <!-- Sakit (Sky Blue) -->
+          <label style="cursor: pointer; margin: 0;">
             <input type="radio" name="absen-${index}" value="S" style="display: none;">
-            <div class="hsia-btn" data-value="S" style="width: 52px; height: 48px; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; border: 1px solid #e2e8f0; background: #ffffff; color: #475569; transition: all 0.2s;">
-              <strong style="font-size: 14px; font-weight: 800;">S</strong>
-              <span>Sakit</span>
+            <div class="hsia-btn" data-value="S" style="width: 42px; height: 42px; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 1px solid #e2e8f0; background: #f8fafc; color: #0284c7; transition: all 0.2s;">
+              <strong style="font-size: 13px; font-weight: 800; line-height: 1;">S</strong>
+              <span style="font-size: 10px; line-height: 1; margin-top: 2px;">Sakit</span>
             </div>
           </label>
 
-          <label style="cursor: pointer;">
+          <!-- Izin (Amber/Gold) -->
+          <label style="cursor: pointer; margin: 0;">
             <input type="radio" name="absen-${index}" value="I" style="display: none;">
-            <div class="hsia-btn" data-value="I" style="width: 52px; height: 48px; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; border: 1px solid #e2e8f0; background: #ffffff; color: #475569; transition: all 0.2s;">
-              <strong style="font-size: 14px; font-weight: 800;">I</strong>
-              <span>Izin</span>
+            <div class="hsia-btn" data-value="I" style="width: 42px; height: 42px; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 1px solid #e2e8f0; background: #f8fafc; color: #d97706; transition: all 0.2s;">
+              <strong style="font-size: 13px; font-weight: 800; line-height: 1;">I</strong>
+              <span style="font-size: 10px; line-height: 1; margin-top: 2px;">Izin</span>
             </div>
           </label>
 
-          <label style="cursor: pointer;">
+          <!-- Alpa (Rose/Red) -->
+          <label style="cursor: pointer; margin: 0;">
             <input type="radio" name="absen-${index}" value="A" style="display: none;">
-            <div class="hsia-btn" data-value="A" style="width: 52px; height: 48px; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; border: 1px solid #e2e8f0; background: #ffffff; color: #475569; transition: all 0.2s;">
-              <strong style="font-size: 14px; font-weight: 800;">A</strong>
-              <span>Alpa</span>
+            <div class="hsia-btn" data-value="A" style="width: 42px; height: 42px; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 1px solid #e2e8f0; background: #f8fafc; color: #e11d48; transition: all 0.2s;">
+              <strong style="font-size: 13px; font-weight: 800; line-height: 1;">A</strong>
+              <span style="font-size: 10px; line-height: 1; margin-top: 2px;">Alpa</span>
             </div>
           </label>
         </div>
@@ -203,7 +211,7 @@ async function loadSiswaJurnal() {
   html += `</div>`
   containerElem.innerHTML = html
 
-  // Event listener warna tombol HSIA
+  // Event listener switch style tombol HSIA
   containerElem.querySelectorAll('.hsia-group').forEach(group => {
     group.querySelectorAll('input[type="radio"]').forEach(radio => {
       radio.addEventListener('change', (e) => {
@@ -218,23 +226,32 @@ async function loadSiswaJurnal() {
               btn.style.background = '#10b981'
               btn.style.borderColor = '#10b981'
               btn.style.color = '#ffffff'
+              btn.style.boxShadow = '0 1px 3px rgba(16,185,129,0.3)'
             } else if (val === 'S') {
-              btn.style.background = '#3b82f6'
-              btn.style.borderColor = '#3b82f6'
+              btn.style.background = '#0284c7'
+              btn.style.borderColor = '#0284c7'
               btn.style.color = '#ffffff'
+              btn.style.boxShadow = '0 1px 3px rgba(2,132,199,0.3)'
             } else if (val === 'I') {
               btn.style.background = '#f59e0b'
               btn.style.borderColor = '#f59e0b'
               btn.style.color = '#ffffff'
+              btn.style.boxShadow = '0 1px 3px rgba(245,158,11,0.3)'
             } else if (val === 'A') {
-              btn.style.background = '#ef4444'
-              btn.style.borderColor = '#ef4444'
+              btn.style.background = '#e11d48'
+              btn.style.borderColor = '#e11d48'
               btn.style.color = '#ffffff'
+              btn.style.boxShadow = '0 1px 3px rgba(225,29,72,0.3)'
             }
           } else {
-            btn.style.background = '#ffffff'
+            btn.style.background = '#f8fafc'
             btn.style.borderColor = '#e2e8f0'
-            btn.style.color = '#475569'
+            btn.style.boxShadow = 'none'
+
+            if (val === 'H') btn.style.color = '#059669'
+            else if (val === 'S') btn.style.color = '#0284c7'
+            else if (val === 'I') btn.style.color = '#d97706'
+            else if (val === 'A') btn.style.color = '#e11d48'
           }
         })
       })
@@ -265,7 +282,6 @@ if (saveBtn) {
     saveBtn.disabled = true
     saveBtn.innerHTML = 'Menyimpan...'
 
-    // Data persis mengikuti kolom di tabel jurnal: [user_id, tanggal, mapel, kelas, materi, catatan_kejadian, nama, status]
     const payload = siswaData.map((item, index) => {
       const statusSelected = document.querySelector(`input[name="absen-${index}"]:checked`)?.value || 'H'
       return {

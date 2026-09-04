@@ -327,27 +327,39 @@
     const overlay = document.getElementById('overlay');
     const toggleSidebarBtn = document.getElementById('toggleSidebarBtn');
 
+    // Restore state tersimpan dari LocalStorage
     if (localStorage.getItem('sidebarCollapsed') === 'true') {
       sidebar?.classList.add('collapsed');
       document.body.classList.add('has-collapsed-sidebar');
     }
 
+    // Aksi Klik Tombol Panah Minimize Sidebar (<)
     if (toggleSidebarBtn) {
       toggleSidebarBtn.onclick = (e) => {
         e.preventDefault();
-        sidebar.classList.toggle('collapsed');
-        document.body.classList.toggle('has-collapsed-sidebar');
-        localStorage.setItem('sidebarCollapsed', sidebar.classList.contains('collapsed'));
+        
+        if (window.innerWidth > 768) {
+          // Pada Layar Desktop: Toggle Collapse / Minimize
+          sidebar.classList.toggle('collapsed');
+          document.body.classList.toggle('has-collapsed-sidebar');
+          localStorage.setItem('sidebarCollapsed', sidebar.classList.contains('collapsed'));
+        } else {
+          // Pada Layar Mobile: Sembunyikan Sidebar & Overlay
+          sidebar.classList.remove('active');
+          if (overlay) overlay.classList.remove('active');
+        }
       };
     }
 
+    // Aksi Klik Tombol Hamburger Header (Mobile)
     if (menuBtn) {
       menuBtn.onclick = () => {
         sidebar.classList.toggle('active');
-        overlay.classList.toggle('active');
+        if (overlay) overlay.classList.toggle('active');
       };
     }
 
+    // Aksi Klik Overlay Layar
     if (overlay) {
       overlay.onclick = () => {
         sidebar.classList.remove('active');
