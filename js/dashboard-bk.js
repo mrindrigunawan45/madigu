@@ -38,10 +38,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 // ==========================================
-// 1. LOAD PROFILE GURU BK & MODE SEKOLAH (FIXED)
+// 1. LOAD PROFILE GURU BK & MODE SEKOLAH
 // ==========================================
 async function loadBKProfileAndConfig(userId) {
-  // Validasi Mencegah Error 400 Bad Request jika userId undefined/null
   if (!userId) {
     console.warn('userId tidak ditemukan, lewati query profile.');
     return;
@@ -78,7 +77,7 @@ async function loadBKProfileAndConfig(userId) {
 }
 
 // ==========================================
-// 2. LOAD DATA LAPORAN, SISWA & JENIS (FIXED)
+// 2. LOAD DATA LAPORAN, SISWA & JENIS (DENGAN NAMA PELAPOR)
 // ==========================================
 async function loadDashboardData() {
   try {
@@ -89,7 +88,6 @@ async function loadDashboardData() {
       return;
     }
 
-    // Fetch profile tanpa relational join bertingkat (mencegah error 400)
     const { data: profile, error: profileErr } = await supabase
       .from('profiles')
       .select('school_id')
@@ -101,7 +99,6 @@ async function loadDashboardData() {
     if (profile?.school_id) {
       currentSchoolId = profile.school_id;
 
-      // Ambil detail nama & mode sekolah terpisah
       const { data: schoolData } = await supabase
         .from('schools')
         .select('nama_sekolah, mode_kategori')
@@ -115,14 +112,15 @@ async function loadDashboardData() {
       }
     }
 
-    // 2. Fetch data paralel (Siswa, Jenis Laporan, dan Laporan)
+    // 2. Fetch data paralel (Diperbarui dengan join ke profiles via agen_id)
     const [resSiswa, resJenis, resLaporan] = await Promise.all([
       supabase.from('siswa').select('*').eq('school_id', currentSchoolId),
       supabase.from('jenis_laporan').select('*'),
       supabase.from('laporan').select(`
         *,
         siswa (id, nama_siswa, kelas),
-        jenis_laporan (id, nama)
+        jenis_laporan (id, nama),
+        profiles:agen_id (id, name, email)
       `).eq('school_id', currentSchoolId).order('created_at', { ascending: false })
     ]);
 
@@ -430,23 +428,19 @@ function setupNavigation() {
     if (sidebar) sidebar.classList.remove('active');
     if (overlay) overlay.classList.remove('active');
 
-   // Hapus tombol kembali jika navigasi berpindah secara manual via menu sidebar
     const btnBack = document.getElementById('btnBackToRekap');
     if (btnBack) btnBack.remove();
 
-    // 1. RESET INPUT & FILTER JURNAL
     const searchInput = document.getElementById('searchInput');
     const filterStatus = document.getElementById('filterStatus');
 
     if (searchInput) searchInput.value = '';
     if (filterStatus) filterStatus.value = 'all';
 
-    // 2. RESET DROPDOWN & TABEL REKAP KELAS KE TAMPILAN AWAL
     const selectRekap = document.getElementById('rekapClassSelect');
     if (selectRekap) selectRekap.value = '';
     renderRekapTabel('');
 
-    // 3. MUAT ULANG DATA DARI SUPABASE & RENDER BERSIH
     await loadDashboardData();
   }
 
@@ -490,7 +484,7 @@ function setupNavigation() {
 }
 
 // ==========================================
-// 6. RENDER JURNAL & MANUAL SAVE LOGIC
+// 6. RENDER JURNAL & NAMA PELAPOR (DIPERBARUI)
 // ==========================================
 function renderJurnal() {
   const container = document.getElementById('jurnalContainer');
@@ -531,7 +525,9 @@ function renderJurnal() {
     const catatanRaw = item.laporan_lainnya || item.catatan || '';
     const currentStatus = (item.status || 'baru').toLowerCase();
 
-    // Sembunyikan paragraf jika catatan kosong atau hanya berisi "-"
+    // Penanganan Nama Pelapor
+    const namaPelapor = item.profiles?.name || item.profiles?.email || 'Admin/BK';
+
     const hasCatatan = catatanRaw && catatanRaw.trim() !== '-';
     const htmlCatatan = hasCatatan 
       ? `<p style="font-size: 12px; color: #334155; margin-top: 4px; margin-bottom: 6px; line-height: 1.3;">${catatanRaw}</p>`
@@ -565,7 +561,7 @@ function renderJurnal() {
         ${htmlCatatan}
 
         <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px dashed #e2e8f0; padding-top: 6px; margin-top: 4px; font-size: 11px; color: #475569;">
-          <span style="font-weight: 500;">🕒 ${tanggal}</span>
+          <span style="font-weight: 500;">🕒 ${tanggal} &nbsp;•&nbsp; 👤 Pelapor: ${namaPelapor}</span>
           
           <div class="card-actions">
             <button class="btn-action edit" onclick="editLaporan('${item.id}')">✏️ Edit</button>
@@ -579,7 +575,6 @@ function renderJurnal() {
   container.innerHTML = html;
 }
 
-// Menampilkan/menyembunyikan tombol Simpan saat status diubah
 function toggleSaveBtn(laporanId, originalStatus) {
   const selectElem = document.getElementById(`statusSelect-${laporanId}`);
   const btnSave = document.getElementById(`btnSaveStatus-${laporanId}`);
@@ -593,7 +588,6 @@ function toggleSaveBtn(laporanId, originalStatus) {
   }
 }
 
-// Eksekusi Simpan Status Manual ke Supabase
 async function saveStatusManual(laporanId) {
   const selectElem = document.getElementById(`statusSelect-${laporanId}`);
   const btnSave = document.getElementById(`btnSaveStatus-${laporanId}`);
@@ -601,28 +595,24 @@ async function saveStatusManual(laporanId) {
 
   const statusBaru = selectElem.value;
 
-  // Tampilkan indikator loading pada tombol
   if (btnSave) {
     btnSave.disabled = true;
     btnSave.textContent = '⏳ Menyimpan...';
   }
 
   try {
-    // 1. Eksekusi Update ke Supabase
     const { data, error } = await supabase
       .from('laporan')
       .update({ status: statusBaru })
       .eq('id', laporanId)
-      .select(); // Mengembalikan data yang di-update untuk verifikasi
+      .select();
 
     if (error) throw error;
 
-    // Jika data kosong, berarti di-block oleh Policy RLS Supabase
     if (!data || data.length === 0) {
       throw new Error("Izin ditolak oleh Supabase (Aturan RLS belum dikonfigurasi untuk UPDATE).");
     }
 
-    // 2. Update array lokal agar state data konsisten
     const index = allLaporan.findIndex(l => l.id == laporanId);
     if (index !== -1) {
       allLaporan[index].status = statusBaru;
@@ -630,7 +620,6 @@ async function saveStatusManual(laporanId) {
 
     alert('✅ Status berhasil diperbarui!');
 
-    // 3. Render ulang UI & grafik agar statistik langsung ter-update
     renderJurnal();
     renderStatistik();
     renderCharts();
@@ -639,7 +628,6 @@ async function saveStatusManual(laporanId) {
     console.error('Gagal menyimpan status:', err);
     alert('❌ Gagal mengubah status: ' + err.message);
     
-    // Kembalikan tampilan tombol jika gagal
     if (btnSave) {
       btnSave.disabled = false;
       btnSave.textContent = '💾 Simpan';
@@ -648,7 +636,7 @@ async function saveStatusManual(laporanId) {
 }
 
 // ==========================================
-// HELPER WAKTU LOKAL (UNTUK DATETIME-LOCAL)
+// HELPER WAKTU LOKAL
 // ==========================================
 function getCurrentDateTimeLocal() {
   const now = new Date();
@@ -659,27 +647,22 @@ function getCurrentDateTimeLocal() {
 // ==========================================
 // 7. MODAL & CRUD HANDLERS
 // ==========================================
-
-// 1. Populate Dropdown Kelas & Jenis Laporan
 function populateModalDropdowns() {
   const selectKelas = document.getElementById('modalKelas');
   const selectSiswa = document.getElementById('modalSiswaId');
   const selectJenis = document.getElementById('modalJenisId');
 
-  // Populate Dropdown Kelas (Unik & A-Z)
   if (selectKelas) {
     const listKelas = [...new Set(dataSiswaAll.map(s => s.kelas).filter(Boolean))].sort();
     selectKelas.innerHTML = '<option value="">-- Pilih Kelas --</option>' +
       listKelas.map(k => `<option value="${k}">${k}</option>`).join('');
   }
 
-  // Reset Dropdown Siswa
   if (selectSiswa) {
     selectSiswa.innerHTML = '<option value="">-- Pilih Kelas Terlebih Dahulu --</option>';
     selectSiswa.disabled = true;
   }
 
-  // Populate Dropdown Jenis Laporan (Filter Verbal Only jika SMPN36JKT)
   if (selectJenis) {
     let listJenisFiltered = [...allJenisMasalah];
 
@@ -690,7 +673,6 @@ function populateModalDropdowns() {
       );
     }
 
-    // Urutkan A-Z
     listJenisFiltered.sort((a, b) => a.nama.localeCompare(b.nama, 'id'));
 
     selectJenis.innerHTML = '<option value="">-- Pilih Jenis Laporan --</option>' +
@@ -699,7 +681,6 @@ function populateModalDropdowns() {
   }
 }
 
-// 2. Filter Siswa Berdasarkan Kelas (Sorted Ascending)
 function handleKelasChange(selectedKelas, targetSiswaId = null) {
   const selectSiswa = document.getElementById('modalSiswaId');
   if (!selectSiswa) return;
@@ -710,7 +691,6 @@ function handleKelasChange(selectedKelas, targetSiswaId = null) {
     return;
   }
 
-  // Filter siswa berdasarkan kelas & urut nama A-Z
   const siswaTerfilter = dataSiswaAll
     .filter(s => s.kelas === selectedKelas)
     .sort((a, b) => a.nama_siswa.localeCompare(b.nama_siswa, 'id', { sensitivity: 'base' }));
@@ -731,7 +711,6 @@ function handleKelasChange(selectedKelas, targetSiswaId = null) {
   }
 }
 
-// 3. Open Modal Tambah
 function openModalCatatMandiri() {
   document.getElementById('modalTitle').innerText = 'Catat Laporan Mandiri';
   document.getElementById('editLaporanId').value = '';
@@ -739,7 +718,6 @@ function openModalCatatMandiri() {
   
   populateModalDropdowns();
 
-  // Set Tanggal Default Waktu Saat Ini
   const inputTanggal = document.getElementById('modalTanggal');
   if (inputTanggal) {
     inputTanggal.value = getCurrentDateTimeLocal();
@@ -751,7 +729,6 @@ function openModalCatatMandiri() {
   document.getElementById('modalLaporan').classList.remove('hidden');
 }
 
-// 4. Open Modal Edit
 function editLaporan(id) {
   const item = allLaporan.find(l => l.id == id);
   if (!item) return;
@@ -761,7 +738,6 @@ function editLaporan(id) {
   
   populateModalDropdowns();
 
-  // Set Tanggal Kejadian
   const inputTanggal = document.getElementById('modalTanggal');
   if (inputTanggal && item.created_at) {
     const d = new Date(item.created_at);
@@ -769,13 +745,11 @@ function editLaporan(id) {
     inputTanggal.value = d.toISOString().slice(0, 16);
   }
 
-  // Set Kelas & Trigger Siswa
   const kelasSiswa = item.siswa?.kelas || '';
   const selectKelas = document.getElementById('modalKelas');
   if (selectKelas) selectKelas.value = kelasSiswa;
   handleKelasChange(kelasSiswa, item.siswa_id);
 
-  // Set Jenis & Catatan
   const jenisVal = item.jenis_laporan_id ? item.jenis_laporan_id : (item.laporan_lainnya ? 'lainnya' : '');
   document.getElementById('modalJenisId').value = jenisVal;
   document.getElementById('modalLainnya').value = item.laporan_lainnya || '';
@@ -795,7 +769,6 @@ function closeModal() {
   document.getElementById('modalLaporan').classList.add('hidden');
 }
 
-// 5. Handle Submit Form Simpan Laporan
 async function handleSaveLaporan(event) {
   event.preventDefault();
   const id = document.getElementById('editLaporanId').value;
@@ -875,6 +848,7 @@ function exportExcelJurnal() {
       'Kelas': item.siswa?.kelas || '-',
       'Jenis Laporan': item.jenis_laporan?.nama || (item.laporan_lainnya ? 'Lainnya' : 'Lainnya'),
       'Detail Catatan': item.laporan_lainnya || item.catatan || '-',
+      'Pelapor': item.profiles?.name || item.profiles?.email || 'Admin/BK',
       'Status': formattedStatus
     };
   });
@@ -888,6 +862,7 @@ function exportExcelJurnal() {
     { wch: 8 },  // Kelas
     { wch: 20 }, // Jenis Laporan
     { wch: 35 }, // Detail Catatan
+    { wch: 20 }, // Pelapor
     { wch: 12 }  // Status
   ];
 
@@ -910,21 +885,17 @@ function setupJurnalListeners() {
 }
 
 function setupButtonListeners() {
-  // Listener Tombol Export & Tambah Laporan Utama
   document.getElementById('btnExportJurnal')?.addEventListener('click', exportExcelJurnal);
   document.getElementById('btnTambahLaporanBK')?.addEventListener('click', openModalCatatMandiri);
   
-  // Listener Modal Form (Close, Cancel, Submit)
   document.getElementById('btnCloseModal')?.addEventListener('click', closeModal);
   document.getElementById('btnCancelModal')?.addEventListener('click', closeModal);
   document.getElementById('formLaporan')?.addEventListener('submit', handleSaveLaporan);
 
-  // Listener Pilihan Kelas di Modal (Filter Siswa Otomatis)
   document.getElementById('modalKelas')?.addEventListener('change', (e) => {
     handleKelasChange(e.target.value);
   });
 
-  // Listener Pilihan Jenis Laporan di Modal (Toggle Input "Lainnya")
   document.getElementById('modalJenisId')?.addEventListener('change', (e) => {
     const groupLainnya = document.getElementById('groupLainnya');
     if (e.target.value === 'lainnya') {
@@ -934,18 +905,16 @@ function setupButtonListeners() {
     }
   });
 
-  // Listener Rekapitulasi Kelas
   document.getElementById('rekapClassSelect')?.addEventListener('change', (e) => {
     renderRekapTabel(e.target.value);
   });
 
   document.getElementById('btnExportRekap')?.addEventListener('click', exportExcelRekap);
 }
+
 // ==========================================
 // 9. LOGIKA REKAPITULASI KELAS & EXPORT
 // ==========================================
-
-// Populate Dropdown Pilih Kelas di Halaman Rekap
 function populateRekapClassDropdown() {
   const selectRekap = document.getElementById('rekapClassSelect');
   if (!selectRekap) return;
@@ -955,12 +924,10 @@ function populateRekapClassDropdown() {
     listKelas.map(k => `<option value="${k}">Kelas ${k}</option>`).join('');
 }
 
-// Di dalam renderRekapTabel(selectedKelas)
 function renderRekapTabel(selectedKelas) {
   const tbody = document.getElementById('rekapTableBody');
   if (!tbody) return;
 
-  // Pastikan parent dari table memiliki class table-responsive
   const tableElem = tbody.closest('table');
   if (tableElem && !tableElem.parentElement.classList.contains('table-responsive')) {
     const wrapper = document.createElement('div');
@@ -1002,11 +969,11 @@ function renderRekapTabel(selectedKelas) {
     const laporanSiswa = allLaporan.filter(l => l.siswa_id === siswa.id);
     const totalAduan = laporanSiswa.length;
 
-    let badgeStyle = 'background-color: #ecfdf5; color: #047857; border: 1px solid #a7f3d0;'; // Hijau (0)
+    let badgeStyle = 'background-color: #ecfdf5; color: #047857; border: 1px solid #a7f3d0;';
     if (totalAduan === 1) {
-      badgeStyle = 'background-color: #fffbeeb; color: #b45309; border: 1px solid #fde68a;'; // Kuning (1)
+      badgeStyle = 'background-color: #fffbeeb; color: #b45309; border: 1px solid #fde68a;';
     } else if (totalAduan > 1) {
-      badgeStyle = 'background-color: #fef2f2; color: #b91c1c; border: 1px solid #fecaca;'; // Merah (>1)
+      badgeStyle = 'background-color: #fef2f2; color: #b91c1c; border: 1px solid #fecaca;';
     }
 
     let tglTerakhir = '-';
@@ -1060,22 +1027,18 @@ function renderRekapTabel(selectedKelas) {
   tbody.innerHTML = html;
 }
 
-// ISI BARU (SESUAIKAN DENGAN SIMPAN STATE KELAS & TOMBOL KEMBALI):
 window.lihatDetailSiswa = function(siswaId) {
   const siswa = dataSiswaAll.find(s => s.id == siswaId);
   if (!siswa) return;
 
-  // 1. Simpan kelas aktif ke localStorage sebelum pindah tab
   const selectRekap = document.getElementById('rekapClassSelect');
   if (selectRekap && selectRekap.value) {
     localStorage.setItem('lastSelectedKelasRekap', selectRekap.value);
   }
 
-  // 2. Klik nav Jurnal untuk pindah halaman
   const navJurnal = document.getElementById('navJurnal');
   if (navJurnal) navJurnal.click();
 
-  // 3. Pasang filter nama siswa & munculkan tombol kembali
   setTimeout(() => {
     const searchInput = document.getElementById('searchInput');
     if (searchInput) {
@@ -1087,7 +1050,6 @@ window.lihatDetailSiswa = function(siswaId) {
 };
 
 function renderTombolKembaliRekap() {
-  // Mencari container pembungkus di atas tabel Jurnal (sesuaikan jika id beda)
   const container = document.getElementById('viewJurnal');
   if (!container) return;
 
@@ -1100,11 +1062,9 @@ function renderTombolKembaliRekap() {
     btnBack.className = 'btn-back-rekap';
     
     btnBack.onclick = function() {
-      // 1. Pindah tab kembali ke Rekap
       const navRekap = document.getElementById('navRekap');
       if (navRekap) navRekap.click();
 
-      // 2. Kembalikan filter kelas yang dipilih sebelumnya
       const lastKelas = localStorage.getItem('lastSelectedKelasRekap');
       if (lastKelas) {
         setTimeout(() => {
@@ -1116,16 +1076,13 @@ function renderTombolKembaliRekap() {
         }, 100);
       }
 
-      // 3. Hapus tombol kembali
       btnBack.remove();
     };
 
-    // Sisipkan tombol di bagian paling atas halaman Jurnal
     container.insertBefore(btnBack, container.firstChild);
   }
 }
 
-// Export Excel Khusus Rekapitulasi Kelas
 function exportExcelRekap() {
   const selectRekap = document.getElementById('rekapClassSelect');
   const selectedKelas = selectRekap ? selectRekap.value : '';
